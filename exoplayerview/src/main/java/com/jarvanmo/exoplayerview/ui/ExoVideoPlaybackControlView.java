@@ -220,7 +220,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         fastForwardMs = DEFAULT_FAST_FORWARD_MS;
         showTimeoutMs = DEFAULT_SHOW_TIMEOUT_MS;
 
-        float textSize = -1f;
 
         if (attrs != null) {
             TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ExoVideoPlaybackControlView, 0, 0);
@@ -229,7 +228,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 rewindMs = typedArray.getInt(R.styleable.ExoVideoPlaybackControlView_rewindIncrement, rewindMs);
                 fastForwardMs = typedArray.getInt(R.styleable.ExoVideoPlaybackControlView_fastForwardIncrement, fastForwardMs);
                 showTimeoutMs = typedArray.getInt(R.styleable.ExoVideoPlaybackControlView_showTimeout, showTimeoutMs);
-                textSize = typedArray.getDimension(R.styleable.ExoVideoPlaybackControlView_topWrapperTextSize, -1);
             } finally {
                 typedArray.recycle();
             }
@@ -245,7 +243,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         findViews();
         initViews();
         showPortraitOrLandscape();
-        initTopWrapperTextSize(textSize);
         updateTime();
     }
 
@@ -274,8 +271,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         fullScreenLandscape = (ImageButton) findViewById(R.id.fullScreenLandscape);
     }
 
-    private void initTopWrapperTextSize(float textSize) {
-        if (textSize != -1) {
+    public void setTopWrapperTextSize(float textSize) {
+        if (textSize != Float.MIN_VALUE) {
             displayName.setTextSize(textSize);
             battery.setTextSize(textSize);
             localTime.setTextSize(textSize);

@@ -4,6 +4,7 @@
     <attr name="showTimeout" format="integer" />
     <attr name="rewindIncrement" format="integer" />
     <attr name="fastForwardIncrement" format="integer" />
+    <attr name="topWrapperTextSize" format="dimension" />
 
     <attr name="resizeMode" format="enum">
         <enum name="fit" value="0" />
@@ -20,6 +21,7 @@
         <attr name="rewindIncrement" />
         <attr name="fastForwardIncrement" />
         <attr name="resizeMode" />
+        <attr name="topWrapperTextSize"/>
     </declare-styleable>
 
 
@@ -27,7 +29,6 @@
         <attr name="showTimeout" />
         <attr name="rewindIncrement" />
         <attr name="fastForwardIncrement" />
-        <attr name="topWrapperTextSize" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="SuperAspectRatioFrameLayout">

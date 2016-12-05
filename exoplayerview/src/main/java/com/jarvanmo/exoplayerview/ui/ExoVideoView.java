@@ -117,6 +117,7 @@ public class ExoVideoView extends FrameLayout {
         int fastForwardMs = ExoVideoPlaybackControlView.DEFAULT_FAST_FORWARD_MS;
         int controllerShowTimeoutMs = ExoVideoPlaybackControlView.DEFAULT_SHOW_TIMEOUT_MS;
 
+        float textSize = Float.MIN_VALUE;
 
         if (attrs != null) {
             TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs,
@@ -130,6 +131,7 @@ public class ExoVideoView extends FrameLayout {
                 fastForwardMs = typedArray.getInt(R.styleable.ExoVideoView_fastForwardIncrement, fastForwardMs);
                 controllerShowTimeoutMs = typedArray.getInt(R.styleable.ExoVideoView_showTimeout, controllerShowTimeoutMs);
                 portrait = typedArray.getBoolean(R.styleable.ExoVideoView_isPortrait, true);
+                textSize = typedArray.getDimension(R.styleable.ExoVideoView_topWrapperTextSize, Float.MIN_VALUE);
             } finally {
                 typedArray.recycle();
             }
@@ -148,6 +150,7 @@ public class ExoVideoView extends FrameLayout {
         subtitleLayout.setUserDefaultTextSize();
 
         controller = (ExoVideoPlaybackControlView) findViewById(R.id.control);
+        controller.setTopWrapperTextSize(textSize);
         controller.setPortrait(portrait);
         controller.hide();
         controller.setRewindIncrementMs(rewindMs);
