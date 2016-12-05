@@ -64,7 +64,7 @@ Note:The method `changeOrientation()` only determine the style of the
 playback controller view.
 
 The ExoPlayer also support simple gesture action, such as change-volume,
-change-brightness and so on.If your target skd version is 23
+change-brightness and so on.If your target SDK version is 23
 or higher, don't forget to request the following permission:
 ```xml
 <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
