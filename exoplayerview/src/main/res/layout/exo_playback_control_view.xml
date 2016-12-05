@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/topWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/default_playback_background"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/displayName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:drawableStart="@drawable/ic_arrow_back_white_36dp"
+            android:gravity="center_vertical|start"
+            android:paddingEnd="@dimen/common_zero_dp"
+            android:paddingStart="@dimen/video_view_controller_padding"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/localTime"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/common_zero_dp"
+            android:paddingStart="@dimen/video_view_controller_padding"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/battery"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|start"
+            android:paddingEnd="@dimen/common_zero_dp"
+            android:paddingStart="@dimen/video_view_controller_padding"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/centerContentWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomWrapper"
+        android:layout_below="@+id/topWrapper"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <ProgressBar
+            android:id="@+id/loadingProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+
+        <TextView
+            android:id="@+id/centerInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/default_playback_background"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/video_view_center_info_txt_size"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottomWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/video_view_controller"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingEnd="@dimen/common_zero_dp"
+            android:paddingStart="@dimen/video_view_controller_padding" />
+
+
+        <include
+            android:id="@+id/controllerWrapperLandscape"
+            layout="@layout/video_view_controller_landscape"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:paddingBottom="20dp"
+            android:paddingEnd="@dimen/common_zero_dp"
+            android:paddingStart="@dimen/video_view_controller_padding" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/controllerWrapperLandscape"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_playback_background"
+    android:orientation="vertical">
+
+    <SeekBar
+        android:id="@+id/videoProgressLandscape"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/playLandscape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_pause_white_36dp" />
+
+        <ImageButton
+            android:id="@+id/nextLandscape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/playLandscape"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_skip_next_white_36dp" />
+
+        <TextView
+            android:id="@+id/timeLandscape"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/nextLandscape"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/default_video_combined_time"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/default_video_view_time_text_size" />
+
+        <FrameLayout
+            android:id="@+id/customView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/timeLandscape"
+            android:layout_toStartOf="@+id/fullScreenLandscape" />
+
+        <ImageButton
+            android:id="@+id/fullScreenLandscape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_fullscreen_exit_white_36dp" />
+    </RelativeLayout>
+
+</LinearLayout>

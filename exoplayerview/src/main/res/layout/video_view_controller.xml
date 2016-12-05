@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/controllerWrapper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_playback_background"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_play_arrow_white_36dp" />
+
+    <TextView
+        android:id="@+id/currentTime"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="1"
+        android:text="@string/default_video_time"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/default_video_view_time_text_size" />
+
+
+    <SeekBar
+        android:id="@+id/videoProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:maxHeight="10dp"
+        android:maxWidth="10dp" />
+
+    <TextView
+        android:id="@+id/endTime"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="1"
+        android:text="@string/default_video_time"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/default_video_view_time_text_size" />
+
+    <ImageButton
+        android:id="@+id/fullScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_fullscreen_white_36dp" />
+
+
+</LinearLayout>
