@@ -7,6 +7,9 @@ ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/goo
 ![fast_forward_rewind](/images/fastforward_rewind.png)![landscape](/images/landscap.png)
 ![portrait](/images/portrait.png)![volume](/images/volume.png)
 
+I already add this lib to jcenter.We can use this lib in `build.gradle` once
+it was passed.
+
 ExoPlayerView can play simple video directly, such as mp4,m3u8 and so on.
 It's easy to use.
 Just declare ExoPlayerVIew in your layout files:
@@ -71,7 +74,7 @@ Also you can add you view to the controller view when landscape:
 ```java
        videoView.addViewToControllerWhenLandscape(view);
 ```
-the view you want to add will add into Framelayout．
+the view you want to add will add into FrameLayout．
 
 The ExoPlayer also support simple gesture action, such as change-volume,
 change-brightness and so on.If your target SDK version is 23
