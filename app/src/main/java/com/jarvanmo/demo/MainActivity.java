@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        videoView.addViewToControllerWhenLandscape(view);
+
 
         videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override

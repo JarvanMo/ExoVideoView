@@ -1,15 +1,12 @@
 # ExoPlayerView
-ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/google/ExoPlayer).
-
-[中文](/README_CN.md).
+ExoPlayerView 是一款简基于[ExoPlayer](https://github.com/google/ExoPlayer)的播放器控件.
 
 ![brightness](/images/brightness.png)![controller_1](/images/conroller_1.png)
 ![fast_forward_rewind](/images/fastforward_rewind.png)![landscape](/images/landscap.png)
 ![portrait](/images/portrait.png)![volume](/images/volume.png)
 
-ExoPlayerView can play simple video directly, such as mp4,m3u8 and so on.
-It's easy to use.
-Just declare ExoPlayerVIew in your layout files:
+ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，也可以用于直播.使用起来也很简单.
+你需要在你的布局文件里面做如下声明:
 ```xml
 
     <com.jarvanmo.exoplayerview.ui.ExoVideoView
@@ -21,24 +18,24 @@ Just declare ExoPlayerVIew in your layout files:
         />
         
 ```
-The ExoPlayerView provide 3 modes to resize your video: fit ,  fit_width , fit_height
-and none.
+ExoPlayerView 提供了 3　 视频适应模式: fit ,  fit_width , fit_height
+以及 none.
 
-We can play a video just like:
+播放代码如下:
 ```java
    videoView.play(mediaSource);
 ```
-also we can give a display name:
+可以提供一个显示名字:
 ```java
  mediaSource.setDisplayName("LuYu YouYue");
 ```
-or;
+或者;
 ```java
  videoView.setDisplayName("LuYu YouYue");
 ```
 
 
-There are also some listeners for you :
+也有一些监听器供你使用 :
 ```java
 
         videoView.setBackListener(new ExoVideoPlaybackControlView.ExoClickListener() {
@@ -62,20 +59,16 @@ There are also some listeners for you :
             }
         });
 ```
-Note:The method `changeOrientation()` only determine the style of the 
-playback controller view.
-
-
-Also you can add you view to the controller view when landscape:
+也提供了横屏时在控制条添加自定义view:
 
 ```java
        videoView.addViewToControllerWhenLandscape(view);
 ```
-the view you want to add will add into Framelayout．
+其中，view会添加到FrameLayout中．
 
-The ExoPlayer also support simple gesture action, such as change-volume,
-change-brightness and so on.If your target SDK version is 23
-or higher, don't forget to request the following permission:
+注意:`changeOrientation()` 只会影响控制控件的样式，不会做任何旋转操作.
+ExoPlayerView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退.
+如果你的target SDK version 是在23或以上, 不要忘记申请权限：
 ```xml
 <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 ```
