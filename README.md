@@ -7,8 +7,10 @@ ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/goo
 ![fast_forward_rewind](/images/fastforward_rewind.png)![landscape](/images/landscap.png)
 ![portrait](/images/portrait.png)![volume](/images/volume.png)
 
-I already add this lib to jcenter.We can use this lib in `build.gradle` once
-it was passed.
+Just add the following to your `build.gradle` file:
+    ```groovy
+    compile 'com.jarvanmo:exoplayerview:0.0.1'
+    ```
 
 ExoPlayerView can play simple video directly, such as mp4,m3u8 and so on.
 It's easy to use.
