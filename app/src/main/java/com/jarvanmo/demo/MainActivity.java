@@ -91,4 +91,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //you should release the player created by ExoPlayerView
+        videoView.releaseSelfPlayer();
+    }
 }
