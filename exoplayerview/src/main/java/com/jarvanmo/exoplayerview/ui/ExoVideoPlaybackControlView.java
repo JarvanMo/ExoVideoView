@@ -1237,7 +1237,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 next();
             } else if (play == view || playLandscape == view) {
                 player.setPlayWhenReady(!player.getPlayWhenReady());
-            } else if (fullScreen == view || fullScreenLandscape == view && fullScreenListener != null) {
+            } else if ((fullScreen == view || fullScreenLandscape == view )&& fullScreenListener != null) {
                 fullScreenListener.onClick(view, portrait);
             } else if (displayName == view && backListener != null) {
                 backListener.onClick(view, portrait);

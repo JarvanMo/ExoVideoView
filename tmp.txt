@@ -1,0 +1,3 @@
+![brightness](/images/brightness.png)![controller_1](/images/conroller_1.png)
+![fast_forward_rewind](/images/fastforward_rewind.png)![landscape](/images/landscap.png)
+![portrait](/images/portrait.png)![volume](/images/volume.png)

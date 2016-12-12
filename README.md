@@ -11,7 +11,7 @@ Just add the following to your `build.gradle` file
 
 ExoPlayerView can play simple video directly, such as mp4,m3u8 and so on.
 It's easy to use.
-Just declare ExoPlayerVIew in your layout files:
+Just declare ExoVideoView in your layout files:
 ```xml
 
     <com.jarvanmo.exoplayerview.ui.ExoVideoView
@@ -23,14 +23,14 @@ Just declare ExoPlayerVIew in your layout files:
         />
         
 ```
-The ExoPlayerView provide 3 modes to resize your video: fit ,  fit_width , fit_height
+The ExoVideoView provide 3 modes to resize your video: fit ,  fit_width , fit_height
 and none.
 
 We can play a video just like:
 ```java
    videoView.play(mediaSource);
 ```
-The ExoPlayerView will create SimpleExoPlayer by itself if we play mediaSource.
+The ExoVideoView will create SimpleExoPlayer by itself if we play mediaSource.
 Actually, you can set a player by yourself;
 ```java
     videoView.setPlayer(player);

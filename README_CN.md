@@ -18,7 +18,7 @@ ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，�
         />
         
 ```
-ExoPlayerView 提供了3种视频适应模式: fit ,  fit_width , fit_height
+ExoVideoView 提供了3种视频适应模式: fit ,  fit_width , fit_height
 以及 none.
 
 播放代码如下:
@@ -77,7 +77,7 @@ videoView.releaseSelfPlayer();
 其中，view会添加到FrameLayout中．
 
 注意:`changeOrientation()` 只会影响控制控件的样式，不会做任何旋转操作.
-ExoPlayerView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退.
+ExoVideoView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退.
 如果你的target SDK version 是在23或以上, 不要忘记申请权限：
 ```xml
 <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
