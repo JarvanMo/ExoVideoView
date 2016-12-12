@@ -1,14 +1,10 @@
 # ExoPlayerView
 ExoPlayerView 是一款简基于[ExoPlayer](https://github.com/google/ExoPlayer)的播放器控件.
 
-![brightness](/images/brightness.png)![controller_1](/images/conroller_1.png)
-![fast_forward_rewind](/images/fastforward_rewind.png)![landscape](/images/landscap.png)
-![portrait](/images/portrait.png)![volume](/images/volume.png)
-
 
 在 `build.gradle` 文件中加入下面语句即可引用ExoPlayerView:
 
-    compile 'com.jarvanmo:exoplayerview:0.0.1'
+    compile 'com.jarvanmo:exoplayerview:0.0.2'
 ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，也可以用于直播.使用起来也很简单.
 你需要在你的布局文件里面做如下声明:
 ```xml
@@ -22,12 +18,21 @@ ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，�
         />
         
 ```
-ExoPlayerView 提供了 3　 视频适应模式: fit ,  fit_width , fit_height
+ExoPlayerView 提供了3种视频适应模式: fit ,  fit_width , fit_height
 以及 none.
 
 播放代码如下:
 ```java
    videoView.play(mediaSource);
+```
+当你调用play(mediaSource)方法播放时ExoPlayerView会自动为你创建一个SimpleExoPlayer;
+当然你也可以构建你自己的ExoPlayer:
+```java
+    videoView.setPlayer(player);
+```
+注意:不要忘记释放ExoPlayer:
+```java
+videoView.releaseSelfPlayer();
 ```
 可以提供一个显示名字:
 ```java
@@ -37,6 +42,7 @@ ExoPlayerView 提供了 3　 视频适应模式: fit ,  fit_width , fit_height
 ```java
  videoView.setDisplayName("LuYu YouYue");
 ```
+
 
 
 也有一些监听器供你使用 :
