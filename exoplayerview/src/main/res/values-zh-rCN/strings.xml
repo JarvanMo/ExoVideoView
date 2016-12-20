@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">ExoPlayerView</string>
-    <string name="video_loading">正在加载…</string>
     <string name="time">时间:</string>
     <string name="time_am">上午</string>
     <string name="time_pm">下午</string>
     <string name="battery_percent">电量:%1$d%%</string>
-    <string name="battery_charging">充电中</string>
     <string name="volume_changing">音量:%1$d%%</string>
     <string name="brightness_changing">亮度:%1$d%%</string>
 </resources>

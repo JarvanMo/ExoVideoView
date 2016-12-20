@@ -221,9 +221,9 @@ public class ExoVideoView extends FrameLayout {
 
 
     /**
-     * Sets the resize mode which can be of value {@link AspectRatioFrameLayout#RESIZE_MODE_FIT},
-     * {@link AspectRatioFrameLayout#RESIZE_MODE_FIXED_HEIGHT} or
-     * {@link AspectRatioFrameLayout#RESIZE_MODE_FIXED_WIDTH}.
+     * Sets the resize mode which can be of value {@link SuperAspectRatioFrameLayout#RESIZE_MODE_FIT},
+     * {@link SuperAspectRatioFrameLayout#RESIZE_MODE_FIXED_HEIGHT} or
+     * {@link SuperAspectRatioFrameLayout#RESIZE_MODE_FIXED_WIDTH}.
      *
      * @param resizeMode The resize mode.
      */

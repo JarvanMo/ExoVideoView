@@ -9,7 +9,7 @@
 
     <SeekBar
         android:id="@+id/videoProgressLandscape"
-        style="?android:attr/progressBarStyleHorizontal"
+        style="?android:attr/seekBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -28,7 +28,7 @@
 
     <SeekBar
         android:id="@+id/videoProgress"
-        style="?android:attr/progressBarStyleHorizontal"
+        style="?android:attr/seekBarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
