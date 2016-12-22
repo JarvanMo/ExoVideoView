@@ -1214,7 +1214,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         @Override
         public void onLoadingChanged(boolean isLoading) {
 
-            showLoading(isLoading);
+//            showLoading(isLoading);
 
             if (isLoading && lastPlayerPosition == player.getCurrentPosition()) {
                 showUtilHideCalled();
