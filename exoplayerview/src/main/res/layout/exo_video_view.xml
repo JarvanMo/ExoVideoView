@@ -13,13 +13,6 @@
         app:resize_mode="fit"
         android:layout_gravity="center"
        >
-        <ImageView
-            android:id="@+id/frameCover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:scaleType="fitXY"
-            />
         <View
             android:id="@+id/shutter"
             android:layout_width="match_parent"
@@ -29,6 +22,14 @@
             android:id="@+id/subtitles"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/frameCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            />
     </com.jarvanmo.exoplayerview.widget.SuperAspectRatioFrameLayout>
 
     <com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView
