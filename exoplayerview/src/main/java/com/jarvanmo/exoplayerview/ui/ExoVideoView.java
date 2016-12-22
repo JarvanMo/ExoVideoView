@@ -3,6 +3,8 @@ package com.jarvanmo.exoplayerview.ui;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -17,7 +19,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -40,7 +42,6 @@ import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SubtitleView;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -52,7 +53,11 @@ import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.R;
 import com.jarvanmo.exoplayerview.widget.SuperAspectRatioFrameLayout;
 
+import java.util.HashMap;
 import java.util.List;
+
+import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
+import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
 
 /**
  * Created by mo on 16-11-7.
@@ -72,9 +77,11 @@ public class ExoVideoView extends FrameLayout {
     private final ExoVideoPlaybackControlView controller;
     private final ComponentListener componentListener;
     private final SuperAspectRatioFrameLayout layout;
+
     //    private final View surfaceView;
     private final View shutterView;
     private final SubtitleView subtitleLayout;
+    private final ImageView frameCover;
 
     private SimpleExoPlayer player;
     private boolean useController = true;
@@ -95,6 +102,7 @@ public class ExoVideoView extends FrameLayout {
     private long playerPosition;
 
     private boolean isPauseFromUser = false;
+
 
 
     public ExoVideoView(Context context) {
@@ -142,6 +150,8 @@ public class ExoVideoView extends FrameLayout {
 
         layout = (SuperAspectRatioFrameLayout) findViewById(R.id.videoFrame);
         layout.setResizeMode(resizeMode);
+
+        frameCover = (ImageView) findViewById(R.id.frameCover);
 
         shutterView = findViewById(R.id.shutter);
 
@@ -480,6 +490,9 @@ public class ExoVideoView extends FrameLayout {
         }
 
         setDisplayName(source.getDisplayName());
+
+        getFrameCover(source.getUrl());
+
         MediaSource mediaSource = buildMediaSource(Uri.parse(source.getUrl()), null);
         player.prepare(mediaSource, !isTimelineStatic, !isTimelineStatic);
 //        player.prepare(mediaSource,false,false);
@@ -517,6 +530,35 @@ public class ExoVideoView extends FrameLayout {
 //            postDelayed(resumeAction,1500);
         }
 
+    }
+
+    private void getFrameCover(String dataSource){
+        frameCover.setVisibility(VISIBLE);
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+
+        try {
+
+
+            retriever.setDataSource(dataSource,new HashMap<String, String>());
+
+            Bitmap bitmap = retriever.getFrameAtTime(1000 * 1000);
+
+            frameCover.setImageBitmap(bitmap);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        } finally {
+
+            try {
+
+                retriever.release();
+
+            } catch (RuntimeException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private MediaSource buildMediaSource(Uri uri, String overrideExtension) {
@@ -603,6 +645,14 @@ public class ExoVideoView extends FrameLayout {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            if(playWhenReady && STATE_READY == playbackState){
+                frameCover.setVisibility(GONE);
+            }
+
+            if(playbackState == STATE_ENDED){
+                playerPosition = C.TIME_UNSET;
+            }
+
             maybeShowController(false);
         }
 

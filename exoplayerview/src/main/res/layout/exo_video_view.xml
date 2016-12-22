@@ -13,6 +13,13 @@
         app:resize_mode="fit"
         android:layout_gravity="center"
        >
+        <ImageView
+            android:id="@+id/frameCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            />
         <View
             android:id="@+id/shutter"
             android:layout_width="match_parent"

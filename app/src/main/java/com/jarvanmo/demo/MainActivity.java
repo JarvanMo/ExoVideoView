@@ -1,19 +1,27 @@
 package com.jarvanmo.demo;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
 import com.jarvanmo.exoplayerview.ui.ExoVideoView;
 import com.jarvanmo.exoplayerview.ui.SimpleMediaSource;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
 
 
     private ExoVideoView videoView;
+
+    private ImageView frame;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
         videoView.setBackListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override
             public void onClick(View view, boolean isPortrait) {
-                if(isPortrait){
+                if (isPortrait) {
                     finish();
-                }else {
+                } else {
                     videoView.changeOrientation();
                 }
             }
@@ -42,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        frame = (ImageView) findViewById(R.id.frame);
 
 
         videoView.setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
