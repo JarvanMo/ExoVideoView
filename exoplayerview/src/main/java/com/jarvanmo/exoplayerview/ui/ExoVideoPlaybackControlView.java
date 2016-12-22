@@ -17,6 +17,7 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -623,8 +624,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             timeResult += "0" + minute;
         }
 
-        if (!strTimeFormat.equals("24")) {
-
+        if(!TextUtils.equals("24",strTimeFormat)){
             String str = amOrPm == Calendar.AM ? res.getString(R.string.time_am) : res.getString(R.string.time_pm);
             timeResult = timeResult + " " + str;
         }
