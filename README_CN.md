@@ -4,7 +4,7 @@ ExoPlayerView 是一款简基于[ExoPlayer](https://github.com/google/ExoPlayer)
 
 在 `build.gradle` 文件中加入下面语句即可引用ExoPlayerView:
 
-    compile 'com.jarvanmo:exoplayerview:0.0.2'
+    compile 'com.jarvanmo:exoplayerview:0.0.5'
 ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，也可以用于直播.使用起来也很简单.
 你需要在你的布局文件里面做如下声明:
 ```xml
