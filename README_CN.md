@@ -4,7 +4,7 @@ ExoPlayerView 是一款简基于[ExoPlayer](https://github.com/google/ExoPlayer)
 
 在 `build.gradle` 文件中加入下面语句即可引用ExoPlayerView:
 
-    compile 'com.jarvanmo:exoplayerview:0.0.5'
+    compile 'com.jarvanmo:exoplayerview:0.1.0'
 ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，也可以用于直播.使用起来也很简单.
 你需要在你的布局文件里面做如下声明:
 ```xml
@@ -15,11 +15,24 @@ ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，�
         android:layout_height="300dp"
         app:useController="true"
         app:resizeMode="fit"
+          app:orientationAuto="true"
         />
         
 ```
 ExoVideoView 提供了3种视频适应模式: fit ,  fit_width , fit_height
 以及 none.
+
+
+属性 orientationAuto 决定了controller的方向是否由传感器控制，当方向发生变化时，会回调:
+```java
+   videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
+         @Override
+         public void onClick(View view, boolean isPortrait) {
+             videoView.changeOrientation();
+          }
+   });
+```
+此时,如果是传感器引起的方向变化，参数view则为null.
 
 播放代码如下:
 ```java

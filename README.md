@@ -7,7 +7,7 @@ ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/goo
 
 Just add the following to your `build.gradle` file
 
-    compile 'com.jarvanmo:exoplayerview:0.0.5'
+    compile 'com.jarvanmo:exoplayerview:0.1.0'
 
 ExoPlayerView can play simple video directly, such as mp4,m3u8 and so on.
 It's easy to use.
@@ -20,11 +20,24 @@ Just declare ExoVideoView in your layout files:
         android:layout_height="300dp"
         app:useController="true"
         app:resizeMode="fit"
+        app:orientationAuto="true"
         />
         
 ```
 The ExoVideoView provide 3 modes to resize your video: fit ,  fit_width , fit_height
 and none.
+
+The attribute  orientationAuto determines that the orientation of controller should 
+be managed by sensor or not.The video view will call this when orientation is changed.
+```java
+   videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
+         @Override
+         public void onClick(View view, boolean isPortrait) {
+             videoView.changeOrientation();
+          }
+   });
+```
+and the parameter(view) will be null if changed by sensor.
 
 We can play a video just like:
 ```java
@@ -34,6 +47,11 @@ The ExoVideoView will create SimpleExoPlayer by itself if we play mediaSource.
 Actually, you can set a player by yourself;
 ```java
     videoView.setPlayer(player);
+```
+
+We can play from a particular position too:
+```java
+   videoView.play(mediaSource,where);
 ```
 Note:don't forget to release ExoPlayer:
 ```java
