@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/topWrapper"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -12,10 +12,9 @@
 
         <TextView
             android:id="@+id/displayName"
-            android:layout_width="0dp"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
-            android:layout_weight="10"
-            android:drawableStart="@drawable/ic_arrow_back_white_36dp"
+            android:lines="1"
             android:gravity="center_vertical|start"
             android:paddingEnd="@dimen/common_zero_dp"
             android:paddingStart="@dimen/video_view_controller_padding"
@@ -25,26 +24,30 @@
 
         <TextView
             android:id="@+id/localTime"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
             android:gravity="center_vertical|end"
+            android:layout_toEndOf="@id/displayName"
             android:paddingEnd="@dimen/common_zero_dp"
             android:paddingStart="@dimen/video_view_controller_padding"
+            android:lines="1"
+            android:ellipsize="end"
             android:textColor="@android:color/white"
+            android:layout_toStartOf="@+id/battery"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/battery"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
             android:gravity="center_vertical|start"
+            android:layout_alignParentEnd="true"
             android:paddingEnd="@dimen/common_zero_dp"
             android:paddingStart="@dimen/video_view_controller_padding"
+            android:ellipsize="end"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <FrameLayout

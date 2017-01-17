@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override
             public void onClick(View view, boolean isPortrait) {
-                videoView.changeOrientation();
+//                videoView.changeOrientation();
             }
         });
 
@@ -54,11 +54,17 @@ public class MainActivity extends AppCompatActivity {
         frame = (ImageView) findViewById(R.id.frame);
 
 
-        videoView.setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+//        videoView.setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
 
         SimpleMediaSource mediaSource = new SimpleMediaSource("http://video19.ifeng.com/video07/2013/11/11/281708-102-007-1138.mp4");
+//        SimpleMediaSource mediaSource  = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_example_v2/master.m3u8");
+//        SimpleMediaSource mediaSource = new SimpleMediaSource("http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8");
+//        SimpleMediaSource mediaSource  = new SimpleMediaSource(" https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8");
+//       SimpleMediaSource mediaSource = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_fmp4_example/master.m3u8");
+
+
         mediaSource.setDisplayName("LuYu YouYue");
-        videoView.play(mediaSource);
+        videoView.play(mediaSource,1000 * 15);
     }
 
     @Override

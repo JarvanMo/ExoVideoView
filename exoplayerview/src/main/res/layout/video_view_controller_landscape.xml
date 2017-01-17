@@ -16,13 +16,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        >
 
         <ImageButton
             android:id="@+id/playLandscape"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
+            android:layout_centerVertical="true"
             android:contentDescription="@null"
             android:src="@drawable/ic_pause_white_36dp" />
 
@@ -32,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/playLandscape"
             android:background="@null"
+            android:layout_centerVertical="true"
             android:contentDescription="@null"
             android:src="@drawable/ic_skip_next_white_36dp" />
 
@@ -39,18 +41,19 @@
             android:id="@+id/timeLandscape"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/nextLandscape"
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/default_video_combined_time"
             android:textColor="@android:color/white"
+            android:layout_centerVertical="true"
             android:textSize="@dimen/default_video_view_time_text_size" />
 
         <FrameLayout
             android:id="@+id/customView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/timeLandscape"
             android:layout_toStartOf="@+id/fullScreenLandscape" />
 
@@ -62,6 +65,7 @@
             android:layout_gravity="end"
             android:background="@null"
             android:contentDescription="@null"
+            android:layout_centerVertical="true"
             android:src="@drawable/ic_fullscreen_exit_white_36dp" />
     </RelativeLayout>
 

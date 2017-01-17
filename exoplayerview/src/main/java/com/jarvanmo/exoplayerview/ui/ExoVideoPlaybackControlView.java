@@ -32,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -39,6 +40,8 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.R;
 import com.jarvanmo.exoplayerview.util.Permissions;
@@ -121,7 +124,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final Formatter formatter;
 
 
-    private LinearLayout topWrapper;
+    private RelativeLayout topWrapper;
     private TextView displayName;
     private TextView localTime;
     private TextView battery;
@@ -249,7 +252,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     private void findViews() {
-        topWrapper = (LinearLayout) findViewById(R.id.topWrapper);
+        topWrapper = (RelativeLayout) findViewById(R.id.topWrapper);
         displayName = (TextView) findViewById(R.id.displayName);
         localTime = (TextView) findViewById(R.id.localTime);
         battery = (TextView) findViewById(R.id.battery);
@@ -503,47 +506,69 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     private void updateNavigation() {
+
         if (!isVisible() || !isAttachedToWindow) {
             return;
         }
         Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
-        boolean haveTimeline = currentTimeline != null;
-        boolean canSeek = false;
-//        boolean enablePrevious = false;
+        boolean haveNonEmptyTimeline = currentTimeline != null && !currentTimeline.isEmpty();
+        boolean isSeekable = false;
         boolean enableNext = false;
-        if (haveTimeline) {
+        if (haveNonEmptyTimeline) {
             int currentWindowIndex = player.getCurrentWindowIndex();
             currentTimeline.getWindow(currentWindowIndex, currentWindow);
-            canSeek = currentWindow.isSeekable;
-//            enablePrevious = currentWindowIndex > 0 || canSeek || !currentWindow.isDynamic;
+            isSeekable = currentWindow.isSeekable;
+//            enablePrevious = currentWindowIndex > 0 || isSeekable || !currentWindow.isDynamic;
             enableNext = (currentWindowIndex < currentTimeline.getWindowCount() - 1)
                     || currentWindow.isDynamic;
         }
+        if (videoProgress != null) {
+            videoProgress.setEnabled(isSeekable);
+        }
+        if (videoProgressLandscape != null) {
+            videoProgressLandscape.setEnabled(isSeekable);
+        }
+
+
+//        if (!isVisible() || !isAttachedToWindow) {
+//            return;
+//        }
+//        Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
+//        boolean haveTimeline = currentTimeline != null;
+//        boolean canSeek = false;
+////        boolean enablePrevious = false;
+//        boolean enableNext = false;
+//        if (haveTimeline) {
+//            int currentWindowIndex = player.getCurrentWindowIndex();
+//            currentTimeline.getWindow(currentWindowIndex, currentWindow);
+//            canSeek = currentWindow.isSeekable;
+////            enablePrevious = currentWindowIndex > 0 || canSeek || !currentWindow.isDynamic;
+//            enableNext = (currentWindowIndex < currentTimeline.getWindowCount() - 1)
+//                    || currentWindow.isDynamic;
+//        }
 
 //        setButtonEnabled(enablePrevious , mViewBinding.controllerWrapper);
         setButtonEnabled(enableNext, nextLandscape);
 //        setButtonEnabled(fastForwardMs > 0 && canSeek, fastForwardButton);
 //        setButtonEnabled(rewindMs > 0 && canSeek, rewindButton);
-        videoProgress.setEnabled(canSeek);
-        videoProgressLandscape.setEnabled(canSeek);
+//        videoProgress.setEnabled(canSeek);
+//        videoProgressLandscape.setEnabled(canSeek);
     }
 
 
     private boolean canSeek() {
 
-        if (player == null) {
-            return false;
+        Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
+        boolean haveNonEmptyTimeline = currentTimeline != null && !currentTimeline.isEmpty();
+        boolean isSeekable = false;
+        if (haveNonEmptyTimeline) {
+            int currentWindowIndex = player.getCurrentWindowIndex();
+            currentTimeline.getWindow(currentWindowIndex, currentWindow);
+            isSeekable = currentWindow.isSeekable;
+//            enablePrevious = currentWindowIndex > 0 || isSeekable || !currentWindow.isDynamic;
         }
 
-
-        if (window == null) {
-            window = new Timeline.Window();
-        }
-
-        Timeline timeline = player.getCurrentTimeline();
-        int playerWindow = player.getCurrentWindowIndex();
-        return timeline != null && timeline.getWindow(playerWindow, window).isSeekable;
-
+        return isSeekable;
     }
 
     private void updateProgress() {
@@ -950,6 +975,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             localTime.setVisibility(VISIBLE);
             battery.setVisibility(VISIBLE);
         }
+
+
     }
 
     private void showLoading(boolean isLoading) {
@@ -1209,6 +1236,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         public void onTimelineChanged(Timeline timeline, Object manifest) {
             updateNavigation();
             updateProgress();
+        }
+
+        @Override
+        public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
         }
 
         @Override

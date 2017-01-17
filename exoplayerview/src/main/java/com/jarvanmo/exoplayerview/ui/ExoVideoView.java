@@ -4,6 +4,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener2;
+import android.hardware.SensorManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -11,9 +15,11 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.OrientationEventListener;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
@@ -31,6 +37,7 @@ import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
@@ -42,6 +49,7 @@ import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SubtitleView;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -58,6 +66,7 @@ import java.util.List;
 
 import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
+import static com.google.android.exoplayer2.SimpleExoPlayer.EXTENSION_RENDERER_MODE_OFF;
 
 /**
  * Created by mo on 16-11-7.
@@ -71,6 +80,22 @@ public class ExoVideoView extends FrameLayout {
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
+    private SensorEventListener2 sensorEventListener = new SensorEventListener2() {
+        @Override
+        public void onFlushCompleted(Sensor sensor) {
+
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 
     private final View surfaceView;
 
@@ -103,7 +128,9 @@ public class ExoVideoView extends FrameLayout {
 
     private boolean isPauseFromUser = false;
 
+    private boolean orientationAuto = true;
 
+    private  OrientationEventListener screenOrientationEventListener;
 
     public ExoVideoView(Context context) {
         this(context, null);
@@ -140,10 +167,12 @@ public class ExoVideoView extends FrameLayout {
                 controllerShowTimeoutMs = typedArray.getInt(R.styleable.ExoVideoView_showTimeout, controllerShowTimeoutMs);
                 portrait = typedArray.getBoolean(R.styleable.ExoVideoView_isPortrait, true);
                 textSize = typedArray.getDimension(R.styleable.ExoVideoView_topWrapperTextSize, Float.MIN_VALUE);
+                orientationAuto = typedArray.getBoolean(R.styleable.ExoVideoView_orientationAuto,true);
             } finally {
                 typedArray.recycle();
             }
         }
+
 
         LayoutInflater.from(getContext()).inflate(R.layout.exo_video_view, this);
         componentListener = new ComponentListener();
@@ -159,9 +188,42 @@ public class ExoVideoView extends FrameLayout {
         subtitleLayout.setUserDefaultStyle();
         subtitleLayout.setUserDefaultTextSize();
 
+
+        if(orientationAuto){
+            screenOrientationEventListener = new OrientationEventListener(context) {
+                @Override
+                public void onOrientationChanged(int orientation) {
+                    Log.w("tag","changing  " + orientation);
+                    // i的范围是0～359
+                    // 屏幕左边在顶部的时候 i = 90;
+                    // 屏幕顶部在底部的时候 i = 180;
+                    // 屏幕右边在底部的时候 i = 270;
+                    // 正常情况默认i = 0;
+                    if(orientation == 0 || orientation == 180){
+                        controller.setPortrait(true);
+                        Log.w("tag","changing  " + true);
+                    }else if(orientation == 90 || orientation == 270){
+                        controller.setPortrait(false);
+                        Log.w("tag","changing  " + false);
+                    }
+
+//                    if(45 <= orientation && orientation < 135) {
+//                    } else if(135 <= orientation && orientation < 225) {
+//                    } else if(225 <= orientation && orientation < 315) {
+//                    } else {
+//                    }
+                }
+            };
+            screenOrientationEventListener.enable();
+        }
+
+
+
         controller = (ExoVideoPlaybackControlView) findViewById(R.id.control);
         controller.setTopWrapperTextSize(textSize);
-        controller.setPortrait(portrait);
+        if(!orientationAuto) {
+            controller.setPortrait(portrait);
+        }
         controller.hide();
         controller.setRewindIncrementMs(rewindMs);
         controller.setFastForwardIncrementMs(fastForwardMs);
@@ -434,31 +496,21 @@ public class ExoVideoView extends FrameLayout {
 
         if (trackSelector == null) {
             TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(BANDWIDTH_METER);
-            trackSelector = new DefaultTrackSelector(mainHandler, videoTrackSelectionFactory);
+            trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         }
 
 
-        eventLogger = new EventLogger();
+        eventLogger = new EventLogger(trackSelector);
 
 //            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(BANDWIDTH_METER);
-        trackSelector.addListener(eventLogger);
-        player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, new DefaultLoadControl());
+        player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, new DefaultLoadControl(),
+                null, EXTENSION_RENDERER_MODE_OFF);
         player.addListener(eventLogger);
         player.setAudioDebugListener(eventLogger);
         player.setVideoDebugListener(eventLogger);
         player.setId3Output(eventLogger);
 
         setPlayer(player, true);
-
-        if (isTimelineStatic) {
-            if (playerPosition == C.TIME_UNSET) {
-                player.seekToDefaultPosition(playerWindow);
-            } else {
-                player.seekTo(playerWindow, playerPosition);
-            }
-        }
-
-        player.setPlayWhenReady(true);
 
 
     }
@@ -483,7 +535,7 @@ public class ExoVideoView extends FrameLayout {
     }
 
 
-    public void play(SimpleMediaSource source) {
+    public void play(SimpleMediaSource source, long where) {
 
         if (player == null) {
             initSelfPlayer();
@@ -494,8 +546,22 @@ public class ExoVideoView extends FrameLayout {
         getFrameCover(source.getUrl());
 
         MediaSource mediaSource = buildMediaSource(Uri.parse(source.getUrl()), null);
+        player.setPlayWhenReady(true);
+
         player.prepare(mediaSource, !isTimelineStatic, !isTimelineStatic);
+        if (where == C.TIME_UNSET) {
+            player.seekToDefaultPosition(playerWindow);
+        } else {
+            player.seekTo(playerWindow, where);
+        }
+
+
 //        player.prepare(mediaSource,false,false);
+    }
+
+
+    public void play(SimpleMediaSource source) {
+        play(source, C.TIME_UNSET);
     }
 
     public void pause() {
@@ -532,20 +598,15 @@ public class ExoVideoView extends FrameLayout {
 
     }
 
-    private void getFrameCover(String dataSource){
+    private void getFrameCover(String dataSource) {
         frameCover.setVisibility(VISIBLE);
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
         try {
-
-
-            retriever.setDataSource(dataSource,new HashMap<String, String>());
-
-            Bitmap bitmap = retriever.getFrameAtTime(1000 * 1000);
-
+            retriever.setDataSource(dataSource, new HashMap<String, String>());
+            Bitmap bitmap = retriever.getFrameAtTime();
             frameCover.setImageBitmap(bitmap);
-
         } catch (Exception ex) {
             ex.printStackTrace();
 
@@ -631,10 +692,6 @@ public class ExoVideoView extends FrameLayout {
             shutterView.setVisibility(GONE);
         }
 
-        @Override
-        public void onVideoTracksDisabled() {
-            shutterView.setVisibility(VISIBLE);
-        }
 
         // ExoPlayer.EventListener implementation
 
@@ -645,11 +702,11 @@ public class ExoVideoView extends FrameLayout {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if(playWhenReady && STATE_READY == playbackState){
+            if (playWhenReady && STATE_READY == playbackState) {
                 frameCover.setVisibility(GONE);
             }
 
-            if(playbackState == STATE_ENDED){
+            if (playbackState == STATE_ENDED) {
                 playerPosition = C.TIME_UNSET;
             }
 
@@ -668,8 +725,13 @@ public class ExoVideoView extends FrameLayout {
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest) {
-            isTimelineStatic = timeline != null && timeline.getWindowCount() > 0
+            isTimelineStatic = !timeline.isEmpty()
                     && !timeline.getWindow(timeline.getWindowCount() - 1, window).isDynamic;
+        }
+
+        @Override
+        public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
         }
 
     }
