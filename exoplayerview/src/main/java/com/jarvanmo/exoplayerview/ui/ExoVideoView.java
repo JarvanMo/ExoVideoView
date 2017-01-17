@@ -130,7 +130,7 @@ public class ExoVideoView extends FrameLayout {
 
     private boolean orientationAuto = true;
 
-    private  OrientationEventListener screenOrientationEventListener;
+    private  OrientationEventListener screenOrientationEventListener ;
 
     public ExoVideoView(Context context) {
         this(context, null);
@@ -174,6 +174,34 @@ public class ExoVideoView extends FrameLayout {
         }
 
 
+        screenOrientationEventListener = new OrientationEventListener(context) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                if(!orientationAuto){
+                    return;
+                }
+                Log.w("tag","changing  " + orientation);
+                // i的范围是0～359
+                // 屏幕左边在顶部的时候 i = 90;
+                // 屏幕顶部在底部的时候 i = 180;
+                // 屏幕右边在底部的时候 i = 270;
+                // 正常情况默认i = 0;
+                if(orientation == 0 || orientation == 180){
+                    controller.setPortrait(true);
+                    Log.w("tag","changing  " + true);
+                }else if(orientation == 90 || orientation == 270){
+                    controller.setPortrait(false);
+                    Log.w("tag","changing  " + false);
+                }
+
+//                    if(45 <= orientation && orientation < 135) {
+//                    } else if(135 <= orientation && orientation < 225) {
+//                    } else if(225 <= orientation && orientation < 315) {
+//                    } else {
+//                    }
+            }
+        };
+
         LayoutInflater.from(getContext()).inflate(R.layout.exo_video_view, this);
         componentListener = new ComponentListener();
 
@@ -189,33 +217,6 @@ public class ExoVideoView extends FrameLayout {
         subtitleLayout.setUserDefaultTextSize();
 
 
-        if(orientationAuto){
-            screenOrientationEventListener = new OrientationEventListener(context) {
-                @Override
-                public void onOrientationChanged(int orientation) {
-                    Log.w("tag","changing  " + orientation);
-                    // i的范围是0～359
-                    // 屏幕左边在顶部的时候 i = 90;
-                    // 屏幕顶部在底部的时候 i = 180;
-                    // 屏幕右边在底部的时候 i = 270;
-                    // 正常情况默认i = 0;
-                    if(orientation == 0 || orientation == 180){
-                        controller.setPortrait(true);
-                        Log.w("tag","changing  " + true);
-                    }else if(orientation == 90 || orientation == 270){
-                        controller.setPortrait(false);
-                        Log.w("tag","changing  " + false);
-                    }
-
-//                    if(45 <= orientation && orientation < 135) {
-//                    } else if(135 <= orientation && orientation < 225) {
-//                    } else if(225 <= orientation && orientation < 315) {
-//                    } else {
-//                    }
-                }
-            };
-            screenOrientationEventListener.enable();
-        }
 
 
 
@@ -223,6 +224,8 @@ public class ExoVideoView extends FrameLayout {
         controller.setTopWrapperTextSize(textSize);
         if(!orientationAuto) {
             controller.setPortrait(portrait);
+        }else {
+            screenOrientationEventListener.enable();
         }
         controller.hide();
         controller.setRewindIncrementMs(rewindMs);
@@ -239,6 +242,14 @@ public class ExoVideoView extends FrameLayout {
 //        this.controllerShowTimeoutMs = controllerShowTimeoutMs;
 
 
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if(orientationAuto){
+            screenOrientationEventListener.disable();
+        }
     }
 
     /**

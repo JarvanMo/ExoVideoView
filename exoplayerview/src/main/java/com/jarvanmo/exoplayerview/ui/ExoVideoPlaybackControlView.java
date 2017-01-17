@@ -368,6 +368,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public void setPortrait(boolean portrait) {
         this.portrait = portrait;
         showPortraitOrLandscape();
+        if(fullScreenListener != null){
+            fullScreenListener.onClick(null,this.portrait);
+        }
     }
 
     public void changeOrientation() {
@@ -530,29 +533,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
 
-//        if (!isVisible() || !isAttachedToWindow) {
-//            return;
-//        }
-//        Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
-//        boolean haveTimeline = currentTimeline != null;
-//        boolean canSeek = false;
-////        boolean enablePrevious = false;
-//        boolean enableNext = false;
-//        if (haveTimeline) {
-//            int currentWindowIndex = player.getCurrentWindowIndex();
-//            currentTimeline.getWindow(currentWindowIndex, currentWindow);
-//            canSeek = currentWindow.isSeekable;
-////            enablePrevious = currentWindowIndex > 0 || canSeek || !currentWindow.isDynamic;
-//            enableNext = (currentWindowIndex < currentTimeline.getWindowCount() - 1)
-//                    || currentWindow.isDynamic;
-//        }
 
-//        setButtonEnabled(enablePrevious , mViewBinding.controllerWrapper);
         setButtonEnabled(enableNext, nextLandscape);
-//        setButtonEnabled(fastForwardMs > 0 && canSeek, fastForwardButton);
-//        setButtonEnabled(rewindMs > 0 && canSeek, rewindButton);
-//        videoProgress.setEnabled(canSeek);
-//        videoProgressLandscape.setEnabled(canSeek);
+
     }
 
 
@@ -975,7 +958,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             localTime.setVisibility(VISIBLE);
             battery.setVisibility(VISIBLE);
         }
-
 
     }
 
