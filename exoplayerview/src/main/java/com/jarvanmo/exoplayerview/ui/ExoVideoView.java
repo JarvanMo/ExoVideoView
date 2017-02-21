@@ -140,10 +140,12 @@ public class ExoVideoView extends FrameLayout {
         this(context, attrs, 0);
     }
 
+    @SuppressWarnings("WrongConstant")
     public ExoVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         boolean useTextureView = false;
+        @SuperAspectRatioFrameLayout.ResizeMode
         int resizeMode = SuperAspectRatioFrameLayout.RESIZE_MODE_FIT;
 
         boolean portrait = true;
