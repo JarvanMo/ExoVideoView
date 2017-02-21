@@ -18,11 +18,30 @@
         app:orientationAuto="true"
         />
 
-    <ImageView
-        android:id="@+id/frame"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:contentDescription="@null"
-  />
+   <Button
+       android:id="@+id/mode_none"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="mode_none"
+       />
+    <Button
+        android:id="@+id/mode_fit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mode_fit"
+        />
+    <Button
+        android:id="@+id/mode_width"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mode_width"
+        />
+
+    <Button
+        android:id="@+id/mode_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mode_height"
+        />
 
 </LinearLayout>

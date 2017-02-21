@@ -2,10 +2,15 @@ package com.jarvanmo.exoplayerview.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.IntDef;
+import android.support.annotation.StringDef;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import com.jarvanmo.exoplayerview.R;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by mo on 16-12-5.
@@ -31,6 +36,9 @@ public class SuperAspectRatioFrameLayout extends FrameLayout {
      * no resize
      * */
     public static final int RESIZE_MODE_NONE = 3;
+    @Retention(RetentionPolicy.SOURCE )
+    @IntDef({RESIZE_MODE_NONE,RESIZE_MODE_FIXED_HEIGHT,RESIZE_MODE_FIXED_WIDTH, RESIZE_MODE_FIT})
+    public @interface ResizeMode{}
 
     /**
      * The {@link FrameLayout} will not resize itself if the fractional difference between its natural
@@ -82,7 +90,7 @@ public class SuperAspectRatioFrameLayout extends FrameLayout {
      *
      * @param resizeMode The resize mode.
      */
-    public void setResizeMode(int resizeMode) {
+    public void setResizeMode(@SuperAspectRatioFrameLayout.ResizeMode int resizeMode) {
         if (this.resizeMode != resizeMode) {
             this.resizeMode = resizeMode;
             requestLayout();
