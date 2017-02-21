@@ -19,7 +19,7 @@ ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，�
         />
         
 ```
-ExoVideoView 提供了3种视频适应模式: fit ,  fit_width , fit_height
+ExoVideoView 提供了4种视频适应模式: fit ,  fit_width , fit_height
 以及 none.
 
 

@@ -24,7 +24,7 @@ Just declare ExoVideoView in your layout files:
         />
         
 ```
-The ExoVideoView provide 3 modes to resize your video: fit ,  fit_width , fit_height
+The ExoVideoView provide 4 modes to resize your video: fit ,  fit_width , fit_height
 and none.
 
 The attribute  orientationAuto determines that the orientation of controller should 
