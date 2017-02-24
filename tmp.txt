@@ -1,3 +1,6 @@
-![brightness](/images/brightness.png)![controller_1](/images/conroller_1.png)
-![fast_forward_rewind](/images/fastforward_rewind.png)![landscape](/images/landscap.png)
-![portrait](/images/portrait.png)![volume](/images/volume.png)
+![brightness](/images/brightness_new.png)
+![controller_1](/images/controller_1_new.png)
+![fast_forward_rewind](/images/fastforward_rewind_new.png)
+![landscape](/images/landscape_new.png)
+![portrait](/images/portrait_new.png)!
+[volume](/images/volume_new.png)

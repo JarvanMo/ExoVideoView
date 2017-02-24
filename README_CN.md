@@ -1,7 +1,12 @@
 # ExoPlayerView
 ExoPlayerView 是一款简基于[ExoPlayer](https://github.com/google/ExoPlayer)的播放器控件.
 
-
+![brightness](/images/brightness_new.png)
+![controller_1](/images/controller_1_new.png)
+![fast_forward_rewind](/images/fastforward_rewind_new.png)
+![landscape](/images/landscape_new.png)
+![portrait](/images/portrait_new.png)
+![volume](/images/volume_new.png)
 在 `build.gradle` 文件中加入下面语句即可引用ExoPlayerView:
 
     compile 'com.jarvanmo:exoplayerview:0.1.0'

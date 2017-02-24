@@ -3,7 +3,12 @@ ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/goo
 
 [中文](/README_CN.md).
 
-
+![brightness](/images/brightness_new.png)
+![controller_1](/images/controller_1_new.png)
+![fast_forward_rewind](/images/fastforward_rewind_new.png)
+![landscape](/images/landscape_new.png)
+![portrait](/images/portrait_new.png)
+![volume](/images/volume_new.png)
 
 Just add the following to your `build.gradle` file
 
