@@ -38,6 +38,10 @@ be managed by sensor or not.The video view will call this when orientation is ch
    });
 ```
 and the parameter(view) will be null if changed by sensor.
+NOTE:The video view won't change its orientation by sensor automatically because I
+want user to change it by code in current version.That's what I do during my work.
+I'll add this function in the future.  
+
 
 We can play a video just like:
 ```java
