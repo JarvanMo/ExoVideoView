@@ -368,9 +368,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public void setPortrait(boolean portrait) {
         this.portrait = portrait;
         showPortraitOrLandscape();
-        if(fullScreenListener != null){
-            fullScreenListener.onClick(null,this.portrait);
-        }
     }
 
     public void changeOrientation() {

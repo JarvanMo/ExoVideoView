@@ -1,10 +1,15 @@
 package com.jarvanmo.demo;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
@@ -16,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ExoVideoView videoView;
+    private Button modeFit;
+    private Button modeNone;
+    private Button modeHeight;
+    private Button modeWidth;
+    private View wrapper;
 
 
     @Override
@@ -24,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         videoView = (ExoVideoView) findViewById(R.id.videoView);
+        modeFit = (Button) findViewById(R.id.mode_fit);
+        modeNone = (Button) findViewById(R.id.mode_none);
+        modeHeight = (Button) findViewById(R.id.mode_height);
+        modeWidth = (Button) findViewById(R.id.mode_width);
+        wrapper = findViewById(R.id.wrapper);
+
+
 
         videoView.setBackListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override
@@ -31,22 +48,34 @@ public class MainActivity extends AppCompatActivity {
                 if (isPortrait) {
                     finish();
                 } else {
-                    videoView.changeOrientation();
+                    changeToPortrait();
                 }
             }
         });
 
-//        videoView.addViewToControllerWhenLandscape(view);
 
+        videoView.setOrientationListener(new ExoVideoView.OrientationListener() {
+            @Override
+            public void onChange(boolean isPortrait) {
+                Toast.makeText(getApplicationContext(),"--"+isPortrait,Toast.LENGTH_SHORT).show();
+                if (isPortrait) {
+                    changeToPortrait();
+                } else {
+                    changeToLandscape();
+                }
+            }
+        });
 
         videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override
             public void onClick(View view, boolean isPortrait) {
-                videoView.changeOrientation();
+                if (!isPortrait) {
+                    changeToPortrait();
+                } else {
+                    changeToLandscape();
+                }
             }
         });
-
-
 
 
         videoView.setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
@@ -58,42 +87,65 @@ public class MainActivity extends AppCompatActivity {
 //       SimpleMediaSource mediaSource = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_fmp4_example/master.m3u8");
 
 
-        mediaSource.setDisplayName("LuYu YouYue");
+        mediaSource.setDisplayName("VideoPlaying");
         videoView.play(mediaSource);
-        findViewById(R.id.mode_fit).setOnClickListener(new View.OnClickListener() {
+        modeFit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoView.setResizeMode(SuperAspectRatioFrameLayout.RESIZE_MODE_FIT);
             }
         });
 
-        findViewById(R.id.mode_none).setOnClickListener(new View.OnClickListener() {
+        modeNone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoView.setResizeMode(SuperAspectRatioFrameLayout.RESIZE_MODE_NONE);
             }
         });
-        findViewById(R.id.mode_height).setOnClickListener(new View.OnClickListener() {
+        modeHeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoView.setResizeMode(SuperAspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
             }
         });
 
-        findViewById(R.id.mode_width).setOnClickListener(new View.OnClickListener() {
+        modeWidth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoView.setResizeMode(SuperAspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH );
+                videoView.setResizeMode(SuperAspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
             }
         });
 //        videoView.play(mediaSource,1000 * 15); // play from a particular position(ms)...
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-//        videoView.changeOrientation();
+    private void changeToPortrait() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        videoView.setPortrait(true);
+        wrapper.setVisibility(View.VISIBLE);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+//            }
+//        },1000);
+
     }
+
+
+    private void changeToLandscape() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        videoView.setPortrait(false);
+        wrapper.setVisibility(View.GONE);
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+//            }
+//        },1000);
+    }
+
+
 
     @Override
     protected void onStart() {

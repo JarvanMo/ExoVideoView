@@ -12,12 +12,21 @@
     <com.jarvanmo.exoplayerview.ui.ExoVideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:resizeMode="fit"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:resizeMode="none"
         app:useController="true"
-        app:orientationAuto="true"
+
         />
 
+    <LinearLayout
+        android:id="@+id/wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
    <Button
        android:id="@+id/mode_none"
        android:layout_width="wrap_content"
@@ -43,5 +52,5 @@
         android:layout_height="wrap_content"
         android:text="mode_height"
         />
-
+    </LinearLayout>
 </LinearLayout>

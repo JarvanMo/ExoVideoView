@@ -22,7 +22,6 @@
         <attr name="fastForwardIncrement" />
         <attr name="resizeMode" />
         <attr name="topWrapperTextSize"/>
-        <attr name="orientationAuto" format="boolean"/>
     </declare-styleable>
 
 

@@ -2,6 +2,7 @@ package com.jarvanmo.exoplayerview.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
@@ -45,7 +46,7 @@ import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.TextRenderer;
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -97,6 +98,10 @@ public class ExoVideoView extends FrameLayout {
         }
     };
 
+    public interface OrientationListener {
+        void onChange(boolean isPortrait);
+    }
+
     private final View surfaceView;
 
     private final ExoVideoPlaybackControlView controller;
@@ -128,9 +133,10 @@ public class ExoVideoView extends FrameLayout {
 
     private boolean isPauseFromUser = false;
 
-    private boolean orientationAuto = true;
+    private OrientationEventListener screenOrientationEventListener;
+    private OrientationListener orientationListener;
+    private boolean isPortraitLastTime;
 
-    private  OrientationEventListener screenOrientationEventListener ;
 
     public ExoVideoView(Context context) {
         this(context, null);
@@ -169,32 +175,41 @@ public class ExoVideoView extends FrameLayout {
                 controllerShowTimeoutMs = typedArray.getInt(R.styleable.ExoVideoView_showTimeout, controllerShowTimeoutMs);
                 portrait = typedArray.getBoolean(R.styleable.ExoVideoView_isPortrait, true);
                 textSize = typedArray.getDimension(R.styleable.ExoVideoView_topWrapperTextSize, Float.MIN_VALUE);
-                orientationAuto = typedArray.getBoolean(R.styleable.ExoVideoView_orientationAuto,true);
             } finally {
                 typedArray.recycle();
             }
         }
 
 
+        isPortraitLastTime = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         screenOrientationEventListener = new OrientationEventListener(context) {
+
+
             @Override
             public void onOrientationChanged(int orientation) {
-                if(!orientationAuto){
+                if(orientationListener == null){
                     return;
                 }
-                Log.w("tag","changing  " + orientation);
+
+
+                boolean orientationFromConfig = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+                if(orientationFromConfig != isPortraitLastTime){
+                    orientationListener.onChange(orientationFromConfig);
+                    isPortraitLastTime = orientationFromConfig;
+                }
+
+
                 // i的范围是0～359
                 // 屏幕左边在顶部的时候 i = 90;
                 // 屏幕顶部在底部的时候 i = 180;
                 // 屏幕右边在底部的时候 i = 270;
                 // 正常情况默认i = 0;
-                if(orientation == 0 || orientation == 180){
-                    controller.setPortrait(true);
-                    Log.w("tag","changing  " + true);
-                }else if(orientation == 90 || orientation == 270){
-                    controller.setPortrait(false);
-                    Log.w("tag","changing  " + false);
-                }
+//                if (orientation == 0 || orientation == 180) {
+//                    orientationListener.onChange(true);
+//                } else if (orientation == 90 || orientation == 270 ) {
+//                    orientationListener.onChange(false);
+//                }
 
 //                    if(45 <= orientation && orientation < 135) {
 //                    } else if(135 <= orientation && orientation < 225) {
@@ -203,6 +218,7 @@ public class ExoVideoView extends FrameLayout {
 //                    }
             }
         };
+
 
         LayoutInflater.from(getContext()).inflate(R.layout.exo_video_view, this);
         componentListener = new ComponentListener();
@@ -219,16 +235,15 @@ public class ExoVideoView extends FrameLayout {
         subtitleLayout.setUserDefaultTextSize();
 
 
-
-
-
         controller = (ExoVideoPlaybackControlView) findViewById(R.id.control);
         controller.setTopWrapperTextSize(textSize);
-        if(!orientationAuto) {
-            controller.setPortrait(portrait);
-        }else {
-            screenOrientationEventListener.enable();
-        }
+        controller.setPortrait(portrait);
+        screenOrientationEventListener.enable();
+//        if(!orientationAuto) {
+//            controller.setPortrait(portrait);
+//        }else {
+//            screenOrientationEventListener.enable();
+//        }
         controller.hide();
         controller.setRewindIncrementMs(rewindMs);
         controller.setFastForwardIncrementMs(fastForwardMs);
@@ -249,9 +264,7 @@ public class ExoVideoView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(orientationAuto){
-            screenOrientationEventListener.disable();
-        }
+        screenOrientationEventListener.disable();
     }
 
     /**
@@ -309,7 +322,8 @@ public class ExoVideoView extends FrameLayout {
      * Sets the resize mode which can be of value {@link SuperAspectRatioFrameLayout#RESIZE_MODE_FIT},
      * {@link SuperAspectRatioFrameLayout#RESIZE_MODE_FIXED_HEIGHT} ,
      * {@link SuperAspectRatioFrameLayout#RESIZE_MODE_FIXED_WIDTH} or
-     *{@link SuperAspectRatioFrameLayout#RESIZE_MODE_NONE}
+     * {@link SuperAspectRatioFrameLayout#RESIZE_MODE_NONE}
+     *
      * @param resizeMode The resize mode.
      */
     public void setResizeMode(@SuperAspectRatioFrameLayout.ResizeMode int resizeMode) {
@@ -413,6 +427,9 @@ public class ExoVideoView extends FrameLayout {
 
     }
 
+    public void setOrientationListener(OrientationListener orientationListener) {
+        this.orientationListener = orientationListener;
+    }
 
     public void setFullScreenListener(@NonNull ExoVideoPlaybackControlView.ExoClickListener fullScreenListener) {
         if (controller != null) {
@@ -508,7 +525,7 @@ public class ExoVideoView extends FrameLayout {
         }
 
         if (trackSelector == null) {
-            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(BANDWIDTH_METER);
+            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
             trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         }
 
@@ -521,8 +538,7 @@ public class ExoVideoView extends FrameLayout {
         player.addListener(eventLogger);
         player.setAudioDebugListener(eventLogger);
         player.setVideoDebugListener(eventLogger);
-        player.setId3Output(eventLogger);
-
+        player.setMetadataOutput(eventLogger);
         setPlayer(player, true);
 
 
