@@ -1,14 +1,11 @@
 package com.jarvanmo.demo;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.util.Util;
@@ -53,18 +50,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        videoView.setOrientationListener(new ExoVideoView.OrientationListener() {
-            @Override
-            public void onChange(boolean isPortrait) {
-                Toast.makeText(getApplicationContext(),"--"+isPortrait,Toast.LENGTH_SHORT).show();
-                if (isPortrait) {
-                    changeToPortrait();
-                } else {
-                    changeToLandscape();
-                }
-            }
-        });
+//
+//        videoView.setOrientationListener(new ExoVideoView.OrientationListener() {
+//            @Override
+//            public void onChange(boolean isPortrait) {
+//                Toast.makeText(getApplicationContext(),"--"+isPortrait,Toast.LENGTH_SHORT).show();
+//                if (isPortrait) {
+//                    changeToPortrait();
+//                } else {
+//                    changeToLandscape();
+//                }
+//            }
+//        });
 
         videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override

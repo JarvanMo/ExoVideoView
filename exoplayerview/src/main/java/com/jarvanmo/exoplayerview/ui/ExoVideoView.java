@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener2;
-import android.hardware.SensorManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -16,7 +15,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -98,9 +96,7 @@ public class ExoVideoView extends FrameLayout {
         }
     };
 
-    public interface OrientationListener {
-        void onChange(boolean isPortrait);
-    }
+
 
     private final View surfaceView;
 
@@ -134,7 +130,7 @@ public class ExoVideoView extends FrameLayout {
     private boolean isPauseFromUser = false;
 
     private OrientationEventListener screenOrientationEventListener;
-    private OrientationListener orientationListener;
+    private ExoVideoPlaybackControlView.OrientationListener orientationListener;
     private boolean isPortraitLastTime;
 
 
@@ -195,7 +191,6 @@ public class ExoVideoView extends FrameLayout {
                 boolean orientationFromConfig = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
                 if(orientationFromConfig != isPortraitLastTime){
-                    orientationListener.onChange(orientationFromConfig);
                     isPortraitLastTime = orientationFromConfig;
                 }
 
@@ -206,9 +201,9 @@ public class ExoVideoView extends FrameLayout {
                 // 屏幕右边在底部的时候 i = 270;
                 // 正常情况默认i = 0;
 //                if (orientation == 0 || orientation == 180) {
-//                    orientationListener.onChange(true);
+//                    orientationListener.onOrientationChange(true);
 //                } else if (orientation == 90 || orientation == 270 ) {
-//                    orientationListener.onChange(false);
+//                    orientationListener.onOrientationChange(false);
 //                }
 
 //                    if(45 <= orientation && orientation < 135) {
@@ -427,7 +422,7 @@ public class ExoVideoView extends FrameLayout {
 
     }
 
-    public void setOrientationListener(OrientationListener orientationListener) {
+    public void setOrientationListener(ExoVideoPlaybackControlView.OrientationListener orientationListener) {
         this.orientationListener = orientationListener;
     }
 

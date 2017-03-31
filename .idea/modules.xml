@@ -5,8 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/ExoPlayerVideoView.iml" filepath="$PROJECT_DIR$/ExoPlayerVideoView.iml" />
       <module fileurl="file://$PROJECT_DIR$/ExoPlayerView.iml" filepath="$PROJECT_DIR$/ExoPlayerView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/exoplayerview/exoplayerview.iml" filepath="$PROJECT_DIR$/exoplayerview/exoplayerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/exoplayerview/exoplayerview.iml" filepath="$PROJECT_DIR$/exoplayerview/exoplayerview.iml" />
     </modules>
   </component>

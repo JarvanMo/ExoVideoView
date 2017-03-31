@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -25,6 +26,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -32,7 +34,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -42,10 +43,11 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.R;
 import com.jarvanmo.exoplayerview.util.Permissions;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Calendar;
 import java.util.Formatter;
 import java.util.Locale;
@@ -78,6 +80,22 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         void onClick(View view, boolean isPortrait);
 
     }
+
+
+    public interface OrientationListener {
+        void onOrientationChange(@SensorOrientationType int orientation);
+    }
+
+    public static final int SENSOR_UNKNOWN = -1;
+    public static final int SENSOR_PORTRAIT = SENSOR_UNKNOWN + 1;
+    public static final int SENSOR_LANDSCAPE = SENSOR_PORTRAIT + 1;
+
+    @IntDef({SENSOR_UNKNOWN, SENSOR_PORTRAIT, SENSOR_LANDSCAPE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SensorOrientationType {
+
+    }
+
 
     public static final int DEFAULT_FAST_FORWARD_MS = 15000;
     public static final int DEFAULT_REWIND_MS = 5000;
@@ -124,14 +142,12 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final Formatter formatter;
 
 
-    private RelativeLayout topWrapper;
     private TextView displayName;
     private TextView localTime;
     private TextView battery;
     private FrameLayout centerContentWrapper;
     private ProgressBar loadingProgressBar;
     private TextView centerInfo;
-    private LinearLayout bottomWrapper;
     private LinearLayout controllerWrapper;
     private ImageButton play;
     private TextView currentTime;
@@ -160,6 +176,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
     };
 
+
+    private int oldScreenOrientation = -1;
+    private OrientationEventListener screenOrientationEventListener;
+    private OrientationListener orientationListener;
 
     private final BroadcastReceiver timeReceiver = new BroadcastReceiver() {
         @Override
@@ -246,20 +266,19 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         findViews();
         initViews();
+        initOrientationListener();
         showPortraitOrLandscape();
         updateTime();
     }
 
 
     private void findViews() {
-        topWrapper = (RelativeLayout) findViewById(R.id.topWrapper);
         displayName = (TextView) findViewById(R.id.displayName);
         localTime = (TextView) findViewById(R.id.localTime);
         battery = (TextView) findViewById(R.id.battery);
         centerContentWrapper = (FrameLayout) findViewById(R.id.centerContentWrapper);
         loadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
         centerInfo = (TextView) findViewById(R.id.centerInfo);
-        bottomWrapper = (LinearLayout) findViewById(R.id.bottomWrapper);
         controllerWrapper = (LinearLayout) findViewById(R.id.controllerWrapper);
         play = (ImageButton) findViewById(R.id.play);
         currentTime = (TextView) findViewById(R.id.currentTime);
@@ -306,6 +325,51 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         playLandscape.setOnClickListener(componentListener);
         fullScreenLandscape.setOnClickListener(componentListener);
         nextLandscape.setOnClickListener(componentListener);
+    }
+
+
+    private void initOrientationListener() {
+        screenOrientationEventListener = new OrientationEventListener(getContext()) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+
+                if(orientationListener == null || !isScreenOpenRotate()){
+                    return;
+                }
+
+
+                if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
+                    return;  //手机平放时，检测不到有效的角度
+                }
+//只检测是否有四个角度的改变
+                if (orientation > 350 || orientation < 10) { //0度
+                    orientation = 0;
+                } else if (orientation > 80 && orientation < 100) { //90度
+                    orientation = 90;
+                } else if (orientation > 170 && orientation < 190) { //180度
+                    orientation = 180;
+                } else if (orientation > 260 && orientation < 280) { //270度
+                    orientation = 270;
+                } else {
+                    return;
+                }
+
+                if (oldScreenOrientation == orientation) {
+                    return;
+                }
+
+
+                oldScreenOrientation = orientation;
+
+                if (orientation == 0 || orientation == 180) {
+                    orientationListener.onOrientationChange(SENSOR_PORTRAIT);
+                } else {
+                    orientationListener.onOrientationChange(SENSOR_LANDSCAPE);
+                }
+            }
+        };
+
+        screenOrientationEventListener.enable();
     }
 
     private void initVol() {
@@ -530,7 +594,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
 
-
         setButtonEnabled(enableNext, nextLandscape);
 
     }
@@ -629,7 +692,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             timeResult += "0" + minute;
         }
 
-        if(!TextUtils.equals("24",strTimeFormat)){
+        if (!TextUtils.equals("24", strTimeFormat)) {
             String str = amOrPm == Calendar.AM ? res.getString(R.string.time_am) : res.getString(R.string.time_pm);
             timeResult = timeResult + " " + str;
         }
@@ -639,15 +702,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private void setButtonEnabled(boolean enabled, View view) {
         view.setEnabled(enabled);
-        if (Util.SDK_INT >= 11) {
-            setViewAlphaV11(view, enabled ? 1f : 0.3f);
-            view.setVisibility(VISIBLE);
-        } else {
-            view.setVisibility(enabled ? VISIBLE : INVISIBLE);
-        }
+        view.setVisibility(enabled ? VISIBLE : INVISIBLE);
     }
 
-    public boolean dispatchCenterWrapperTouchEvent(MotionEvent event) {
+    private boolean dispatchCenterWrapperTouchEvent(MotionEvent event) {
 
 
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -1124,6 +1182,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         mAudioManager = null;
 
+        screenOrientationEventListener.disable();
+
         unregisterBroadcast();
         removeCallbacks(updateProgressAction);
         removeCallbacks(hideAction);
@@ -1167,7 +1227,28 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    private final class ComponentListener implements ExoPlayer.EventListener,
+    private boolean isScreenOpenRotate() {
+
+        int gravity = 0;
+        try {
+
+            gravity = Settings.System.getInt(getContext().getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
+
+        } catch (Settings.SettingNotFoundException e) {
+
+            e.printStackTrace();
+
+        }
+        if (gravity == 1) {
+
+            return true;
+
+        }
+
+        return false;
+    }
+
+        private final class ComponentListener implements ExoPlayer.EventListener,
             SeekBar.OnSeekBarChangeListener, OnClickListener {
 
         @Override
@@ -1248,7 +1329,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 next();
             } else if (play == view || playLandscape == view) {
                 player.setPlayWhenReady(!player.getPlayWhenReady());
-            } else if ((fullScreen == view || fullScreenLandscape == view )&& fullScreenListener != null) {
+            } else if ((fullScreen == view || fullScreenLandscape == view) && fullScreenListener != null) {
                 fullScreenListener.onClick(view, portrait);
             } else if (displayName == view && backListener != null) {
                 backListener.onClick(view, portrait);
