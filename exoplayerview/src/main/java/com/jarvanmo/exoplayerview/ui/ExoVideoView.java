@@ -423,7 +423,9 @@ public class ExoVideoView extends FrameLayout {
     }
 
     public void setOrientationListener(ExoVideoPlaybackControlView.OrientationListener orientationListener) {
-        this.orientationListener = orientationListener;
+        if(orientationListener != null && controller != null){
+            controller.setOrientationListener(orientationListener);
+        }
     }
 
     public void setFullScreenListener(@NonNull ExoVideoPlaybackControlView.ExoClickListener fullScreenListener) {

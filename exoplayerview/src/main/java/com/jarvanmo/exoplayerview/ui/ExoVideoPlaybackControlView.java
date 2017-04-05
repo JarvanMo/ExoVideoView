@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
@@ -339,6 +340,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
                 if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
+                    changeOrientationBySensor(SENSOR_UNKNOWN);
                     return;  //手机平放时，检测不到有效的角度
                 }
 //只检测是否有四个角度的改变
@@ -355,6 +357,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 }
 
                 if (oldScreenOrientation == orientation) {
+                    changeOrientationBySensor(SENSOR_UNKNOWN);
                     return;
                 }
 
@@ -362,9 +365,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 oldScreenOrientation = orientation;
 
                 if (orientation == 0 || orientation == 180) {
-                    orientationListener.onOrientationChange(SENSOR_PORTRAIT);
+                    changeOrientationBySensor(SENSOR_PORTRAIT);
                 } else {
-                    orientationListener.onOrientationChange(SENSOR_LANDSCAPE);
+                    changeOrientationBySensor(SENSOR_LANDSCAPE);
                 }
             }
         };
@@ -407,6 +410,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         this.backListener = backListener;
     }
 
+
+    public void setOrientationListener(OrientationListener orientationListener){
+        this.orientationListener = orientationListener;
+    }
 
     public void setDisplayName(String displayName) {
         this.displayName.setText(displayName);
@@ -994,6 +1001,37 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
+    private void changeOrientationBySensor(@SensorOrientationType int orientation){
+        orientationListener.onOrientationChange(orientation);
+        Context context = getContext();
+        Activity activity ;
+        if(! (context instanceof Activity)){
+            return;
+        }
+        activity = (Activity) context;
+        switch (orientation) {
+            case SENSOR_PORTRAIT:
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                break;
+            case SENSOR_LANDSCAPE:
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                break;
+            case SENSOR_UNKNOWN:
+            default:
+                break;
+        }
+
+    }
+
+
+    private void changeToPortrait(){
+
+
+
+
+
+    }
+
     private void seek(long position) {
         if (player != null) {
             player.seekTo(position);
@@ -1239,13 +1277,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             e.printStackTrace();
 
         }
-        if (gravity == 1) {
+        return 1 == gravity;
 
-            return true;
-
-        }
-
-        return false;
     }
 
         private final class ComponentListener implements ExoPlayer.EventListener,

@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -13,6 +14,9 @@ import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
 import com.jarvanmo.exoplayerview.ui.ExoVideoView;
 import com.jarvanmo.exoplayerview.ui.SimpleMediaSource;
 import com.jarvanmo.exoplayerview.widget.SuperAspectRatioFrameLayout;
+
+import static com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView.SENSOR_LANDSCAPE;
+import static com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView.SENSOR_PORTRAIT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,35 +46,23 @@ public class MainActivity extends AppCompatActivity {
         videoView.setBackListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override
             public void onClick(View view, boolean isPortrait) {
-                if (isPortrait) {
-                    finish();
-                } else {
-                    changeToPortrait();
-                }
             }
         });
 
-//
-//        videoView.setOrientationListener(new ExoVideoView.OrientationListener() {
-//            @Override
-//            public void onChange(boolean isPortrait) {
-//                Toast.makeText(getApplicationContext(),"--"+isPortrait,Toast.LENGTH_SHORT).show();
-//                if (isPortrait) {
-//                    changeToPortrait();
-//                } else {
-//                    changeToLandscape();
-//                }
-//            }
-//        });
 
+        videoView.setOrientationListener(new ExoVideoPlaybackControlView.OrientationListener() {
+            @Override
+            public void onOrientationChange(@ExoVideoPlaybackControlView.SensorOrientationType int orientation) {
+                if(orientation == SENSOR_PORTRAIT){
+                    changeToPortrait();
+                }else if(orientation == SENSOR_LANDSCAPE){
+                    changeToLandscape();
+                }
+            }
+        });
         videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override
             public void onClick(View view, boolean isPortrait) {
-                if (!isPortrait) {
-                    changeToPortrait();
-                } else {
-                    changeToLandscape();
-                }
             }
         });
 
@@ -116,30 +108,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void changeToPortrait() {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        videoView.setPortrait(true);
         wrapper.setVisibility(View.VISIBLE);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-//            }
-//        },1000);
-
     }
 
 
     private void changeToLandscape() {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        videoView.setPortrait(false);
         wrapper.setVisibility(View.GONE);
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-//            }
-//        },1000);
     }
 
 
