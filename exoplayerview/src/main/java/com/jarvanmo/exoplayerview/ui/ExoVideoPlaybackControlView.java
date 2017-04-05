@@ -1011,9 +1011,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         activity = (Activity) context;
         switch (orientation) {
             case SENSOR_PORTRAIT:
+                setPortrait(true);
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
                 break;
             case SENSOR_LANDSCAPE:
+                setPortrait(false);
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
             case SENSOR_UNKNOWN:
