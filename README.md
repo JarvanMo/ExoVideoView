@@ -43,7 +43,8 @@ Declare ExoVideoView in your layout files:
         
 ```
 
-***Play***    
+***Play***  
+  
 play a video :
 ```java
    videoView.play(mediaSource);
@@ -72,6 +73,7 @@ or
 ```
 
 ***Manage Orientation***
+
 The ExoVideoView can change its orientation by sensor automatically only when you set
 a not-null orientation listener:
 ```java
@@ -99,6 +101,7 @@ Or
 videoView.setPortrait(true);
 ```
 ***Handle Back Events***
+
 In activity :
 ```java
 
@@ -145,7 +148,9 @@ Also you can add you view to the controller view when landscape:
        videoView.addViewToControllerWhenLandscape(view);
 ```
 the view you want to add will add into FrameLayout．
+
 ***NOTE***
+
 Never forget to release the ExoPlayer.
 ```
  videoView.releaseSelfPlayer();

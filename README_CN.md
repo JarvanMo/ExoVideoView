@@ -69,6 +69,7 @@ videoView.releaseSelfPlayer();
 ```
 
 ***管理ExoVideoView方向***
+
 如果你为ExoVideoView设置了一个非空```OrientationListener```,ExoVideoView可以通过感器自动
 变换方向。
 ```java
@@ -95,6 +96,7 @@ videoView.toggleControllerOrientation();
 videoView.setPortrait(true);
 ```
 ***处理返回事件***
+
 在activity:
 ```java
 
@@ -139,7 +141,9 @@ be called.
        videoView.addViewToControllerWhenLandscape(view);
 ```
 你添加的布局将被加入FrameLayout中．
+
 ***提示***
+
 永远不要忘记去释放ExoPlayer.
 ```
  videoView.releaseSelfPlayer();
