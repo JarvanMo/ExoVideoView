@@ -153,7 +153,4 @@ or
 player.release();
 ```
 
-ExoVideoView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退. 如果你的target SDK version 是在23或以上, 不要忘记申请权限：
-```xml
-<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-```
+ExoVideoView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退.

@@ -145,7 +145,7 @@ be called.
 Also you can add you view to the controller view when landscape:
 
 ```java
-       videoView.addViewToControllerWhenLandscape(view);
+  videoView.addViewToControllerWhenLandscape(view);
 ```
 the view you want to add will add into FrameLayout．
 
@@ -160,9 +160,4 @@ or
 player.release();
 ```
 
-The ExoPlayer also support simple gesture action, such as change-volume,
-change-brightness and so on.If your target SDK version is 23
-or higher, don't forget to request the following permission:
-```xml
-<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-```
+The ExoPlayer also support simple gesture action, such as change-volume,change-brightness and so on.

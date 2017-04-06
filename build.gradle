@@ -28,6 +28,5 @@ ext {
     minSdkVersion = 17
     targetSdkVersion = 25
 
-    retrofit2Version = '2.2.0'
     androidSupportVersion = '25.3.0'
 }
