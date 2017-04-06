@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -78,7 +79,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     public interface ExoClickListener {
 
-        void onClick(View view, boolean isPortrait);
+        /***
+         * called when buttons clicked in controller
+         * @param view The view clicked
+         * @param isPortrait the controller is portrait  or not
+         * @return will interrupt operation in controller if return true
+         * **/
+        boolean onClick(View view, boolean isPortrait);
 
     }
 
@@ -340,7 +347,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
                 if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
-                    changeOrientationBySensor(SENSOR_UNKNOWN);
+                    changeOrientation(SENSOR_UNKNOWN);
                     return;  //手机平放时，检测不到有效的角度
                 }
 //只检测是否有四个角度的改变
@@ -357,7 +364,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 }
 
                 if (oldScreenOrientation == orientation) {
-                    changeOrientationBySensor(SENSOR_UNKNOWN);
+                    changeOrientation(SENSOR_UNKNOWN);
                     return;
                 }
 
@@ -365,9 +372,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 oldScreenOrientation = orientation;
 
                 if (orientation == 0 || orientation == 180) {
-                    changeOrientationBySensor(SENSOR_PORTRAIT);
+                    changeOrientation(SENSOR_PORTRAIT);
                 } else {
-                    changeOrientationBySensor(SENSOR_LANDSCAPE);
+                    changeOrientation(SENSOR_LANDSCAPE);
                 }
             }
         };
@@ -441,9 +448,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         showPortraitOrLandscape();
     }
 
-    public void changeOrientation() {
-        portrait = !portrait;
-        showPortraitOrLandscape();
+    public void toggleControllerOrientation() {
+        if (orientationListener == null) {
+            setPortrait(!portrait);
+        }else {
+            changeOrientation(portrait ? SENSOR_LANDSCAPE:SENSOR_PORTRAIT);
+        }
+
     }
 
     /**
@@ -768,8 +779,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                     // Brightness (Up or Down - Left side)
                     if ((int) touchX < (3 * screen.widthPixels / 7)) {
                         doBrightnessTouch(y_changed);
-//                        hideCenterInfo();
-//                            hideOverlay(true);
                     }
 
                 } else {
@@ -988,20 +997,15 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (length > 0) {
             //Show the jump's size
             setFastForwardOrRewind(time + jump, jump > 0 ? R.drawable.ic_fast_forward_white_36dp : R.drawable.ic_fast_rewind_white_36dp);
-//            showInfo(String.format("%s%s (%s)%s",
-//                    jump >= 0 ? "+" : "",
-//                    Strings.millisToString(jump),
-//                    Strings.millisToString(time + jump),
-//                    coef > 1 ? String.format(" x%.1g", 1.0 / coef) : ""), 50);
         }
-
-//        else {
-//            showInfo(R.string.unseekable_stream, 1000);
-//        }
     }
 
 
-    private void changeOrientationBySensor(@SensorOrientationType int orientation){
+    private synchronized void changeOrientation(@SensorOrientationType int orientation){
+        if (orientationListener == null) {
+            return;
+        }
+
         orientationListener.onOrientationChange(orientation);
         Context context = getContext();
         Activity activity ;
@@ -1026,13 +1030,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    private void changeToPortrait(){
-
-
-
-
-
-    }
 
     private void seek(long position) {
         if (player != null) {
@@ -1235,6 +1232,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (player == null || event.getAction() != KeyEvent.ACTION_DOWN) {
             return super.dispatchKeyEvent(event);
         }
+
         switch (event.getKeyCode()) {
             case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
             case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -1364,10 +1362,17 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 next();
             } else if (play == view || playLandscape == view) {
                 player.setPlayWhenReady(!player.getPlayWhenReady());
-            } else if ((fullScreen == view || fullScreenLandscape == view) && fullScreenListener != null) {
-                fullScreenListener.onClick(view, portrait);
             } else if (displayName == view && backListener != null) {
-                backListener.onClick(view, portrait);
+                if(!backListener.onClick(view, portrait)){
+                    if(!portrait){
+                        changeOrientation(SENSOR_PORTRAIT);
+                    }
+                }
+
+            } else if(fullScreen == view){
+                changeOrientation(SENSOR_LANDSCAPE);
+            }else if(fullScreenLandscape == view){
+                changeOrientation(SENSOR_PORTRAIT);
             }
 
 //            else if (previousButton == view) {

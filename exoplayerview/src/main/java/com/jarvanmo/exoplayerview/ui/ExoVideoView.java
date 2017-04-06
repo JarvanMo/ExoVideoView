@@ -2,12 +2,12 @@ package com.jarvanmo.exoplayerview.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener2;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -18,7 +18,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.OrientationEventListener;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
@@ -63,6 +62,7 @@ import com.jarvanmo.exoplayerview.widget.SuperAspectRatioFrameLayout;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.content.Context.AUDIO_SERVICE;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
 import static com.google.android.exoplayer2.SimpleExoPlayer.EXTENSION_RENDERER_MODE_OFF;
@@ -97,7 +97,6 @@ public class ExoVideoView extends FrameLayout {
     };
 
 
-
     private final View surfaceView;
 
     private final ExoVideoPlaybackControlView controller;
@@ -129,10 +128,25 @@ public class ExoVideoView extends FrameLayout {
 
     private boolean isPauseFromUser = false;
 
-    private OrientationEventListener screenOrientationEventListener;
-    private ExoVideoPlaybackControlView.OrientationListener orientationListener;
-    private boolean isPortraitLastTime;
 
+    private final AudioManager audioManager;
+    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                // Pause playback
+                pause();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Resume playback
+                resume();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                // audioManager.unregisterMediaButtonEventReceiver(RemoteControlReceiver);
+                audioManager.abandonAudioFocus(afChangeListener);
+                // Stop playback
+                stop();
+
+            }
+        }
+    };
 
     public ExoVideoView(Context context) {
         this(context, null);
@@ -177,45 +191,9 @@ public class ExoVideoView extends FrameLayout {
         }
 
 
-        isPortraitLastTime = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-        screenOrientationEventListener = new OrientationEventListener(context) {
-
-
-            @Override
-            public void onOrientationChanged(int orientation) {
-                if(orientationListener == null){
-                    return;
-                }
-
-
-                boolean orientationFromConfig = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-
-                if(orientationFromConfig != isPortraitLastTime){
-                    isPortraitLastTime = orientationFromConfig;
-                }
-
-
-                // i的范围是0～359
-                // 屏幕左边在顶部的时候 i = 90;
-                // 屏幕顶部在底部的时候 i = 180;
-                // 屏幕右边在底部的时候 i = 270;
-                // 正常情况默认i = 0;
-//                if (orientation == 0 || orientation == 180) {
-//                    orientationListener.onOrientationChange(true);
-//                } else if (orientation == 90 || orientation == 270 ) {
-//                    orientationListener.onOrientationChange(false);
-//                }
-
-//                    if(45 <= orientation && orientation < 135) {
-//                    } else if(135 <= orientation && orientation < 225) {
-//                    } else if(225 <= orientation && orientation < 315) {
-//                    } else {
-//                    }
-            }
-        };
-
 
         LayoutInflater.from(getContext()).inflate(R.layout.exo_video_view, this);
+
         componentListener = new ComponentListener();
 
         layout = (SuperAspectRatioFrameLayout) findViewById(R.id.videoFrame);
@@ -233,12 +211,6 @@ public class ExoVideoView extends FrameLayout {
         controller = (ExoVideoPlaybackControlView) findViewById(R.id.control);
         controller.setTopWrapperTextSize(textSize);
         controller.setPortrait(portrait);
-        screenOrientationEventListener.enable();
-//        if(!orientationAuto) {
-//            controller.setPortrait(portrait);
-//        }else {
-//            screenOrientationEventListener.enable();
-//        }
         controller.hide();
         controller.setRewindIncrementMs(rewindMs);
         controller.setFastForwardIncrementMs(fastForwardMs);
@@ -251,6 +223,9 @@ public class ExoVideoView extends FrameLayout {
         view.setLayoutParams(params);
         surfaceView = view;
         layout.addView(surfaceView, 0);
+
+        audioManager =  (AudioManager) context.getSystemService(AUDIO_SERVICE);
+
 //        this.controllerShowTimeoutMs = controllerShowTimeoutMs;
 
 
@@ -259,7 +234,7 @@ public class ExoVideoView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        screenOrientationEventListener.disable();
+        audioManager.abandonAudioFocus(afChangeListener);
     }
 
     /**
@@ -423,7 +398,7 @@ public class ExoVideoView extends FrameLayout {
     }
 
     public void setOrientationListener(ExoVideoPlaybackControlView.OrientationListener orientationListener) {
-        if(orientationListener != null && controller != null){
+        if (orientationListener != null && controller != null) {
             controller.setOrientationListener(orientationListener);
         }
     }
@@ -441,9 +416,9 @@ public class ExoVideoView extends FrameLayout {
     }
 
 
-    public void changeOrientation() {
+    public void toggleControllerOrientation() {
         if (controller != null) {
-            controller.changeOrientation();
+            controller.toggleControllerOrientation();
         }
     }
 
@@ -506,6 +481,16 @@ public class ExoVideoView extends FrameLayout {
         }
     }
 
+
+    private boolean requestAudioFocus() {
+        // Request audio focus for playback
+        int result = audioManager.requestAudioFocus(afChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+    }
 
     public void initSelfPlayer() {
 
@@ -572,7 +557,7 @@ public class ExoVideoView extends FrameLayout {
         getFrameCover(source.getUrl());
 
         MediaSource mediaSource = buildMediaSource(Uri.parse(source.getUrl()), null);
-        player.setPlayWhenReady(true);
+        player.setPlayWhenReady(requestAudioFocus());
 
         player.prepare(mediaSource, !isTimelineStatic, !isTimelineStatic);
         if (where == C.TIME_UNSET) {
@@ -622,6 +607,12 @@ public class ExoVideoView extends FrameLayout {
 //            postDelayed(resumeAction,1500);
         }
 
+    }
+
+    public void stop() {
+        if (player != null) {
+            player.stop();
+        }
     }
 
     private void getFrameCover(String dataSource) {

@@ -1,5 +1,7 @@
 # ExoPlayerView
-ExoPlayerView 是一款简基于[ExoPlayer](https://github.com/google/ExoPlayer)的播放器控件.
+ExoPlayerView 是一个基于[ExoPlayer](https://github.com/google/ExoPlayer)的视频播放器，
+并且做了很多封装.
+
 
 ![brightness](/images/brightness_new.png)
 ![controller_1](/images/controller_1_new.png)
@@ -7,11 +9,25 @@ ExoPlayerView 是一款简基于[ExoPlayer](https://github.com/google/ExoPlayer)
 ![landscape](/images/landscape_new.png)
 ![portrait](/images/portrait_new.png)
 ![volume](/images/volume_new.png)
-在 `build.gradle` 文件中加入下面语句即可引用ExoPlayerView:
 
-    compile 'com.jarvanmo:exoplayerview:0.1.0'
-ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，也可以用于直播.使用起来也很简单.
-你需要在你的布局文件里面做如下声明:
+
+**特性**
+
+    1.提供了4种视频适应模式: 
+      fit ,  fit_width , fit_height and none。
+    2.自动处理音频焦点问题。
+    3.可以根据传感器自动处理视频方向问题。
+    4.支持简单的手势操作
+**用法**
+
+***导入***
+
+在 `build.gradle` 中加入
+
+    compile 'com.jarvanmo:exoplayerview:1.0.0'
+
+ExoPlayerView 可以直接播放如mp4,m3u8 等简单视频，可以用于直播.
+在布局文件中引入 ExoVideoView:
 ```xml
 
     <com.jarvanmo.exoplayerview.ui.ExoVideoView
@@ -19,85 +35,121 @@ ExoPlayerView 可以直接播放一像常用视频, 比如说 mp4,m3u8等等，�
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:useController="true"
-        app:resizeMode="fit"
-          app:orientationAuto="true"
+        app:resizeMode="none"
+        app:orientationAuto="true"
         />
         
 ```
-ExoVideoView 提供了4种视频适应模式: fit ,  fit_width , fit_height
-以及 none.
-
-
-属性 orientationAuto 决定了controller的方向是否由传感器控制，当方向发生变化时，会回调:
-```java
-   videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
-         @Override
-         public void onClick(View view, boolean isPortrait) {
-             videoView.changeOrientation();
-          }
-   });
-```
-此时,如果是传感器引起的方向变化，参数view则为null.当前版本中，布局的方面不是由传感器决定的，你需要在代码中
-控制，因为在我实际工作，我们是不以传感器为准的。后续版本可能会提供开关。
-
-播放代码如下:
+***Play***    
+播放一个视频:
 ```java
    videoView.play(mediaSource);
 ```
-当你调用play(mediaSource)方法播放时ExoPlayerView会自动为你创建一个SimpleExoPlayer;
-当然你也可以构建你自己的ExoPlayer:
+如果你直接调用了上面的方法，ExoVideoView可以自动创建ExoPlayer.
+当然了, 你也可以自己创建ExoPlayer;
 ```java
     videoView.setPlayer(player);
+```
+
+也可以从指定位置播放:
+```java
+   videoView.play(mediaSource,where);
 ```
 注意:不要忘记释放ExoPlayer:
 ```java
 videoView.releaseSelfPlayer();
 ```
-可以提供一个显示名字:
+可以通过如下方式为视频设置一个显示名称:
 ```java
  mediaSource.setDisplayName("LuYu YouYue");
 ```
-或者;
+或者
 ```java
  videoView.setDisplayName("LuYu YouYue");
 ```
 
-
-
-也有一些监听器供你使用 :
+***管理ExoVideoView方向***
+如果你为ExoVideoView设置了一个非空```OrientationListener```,ExoVideoView可以通过感器自动
+变换方向。
 ```java
-
-        videoView.setBackListener(new ExoVideoPlaybackControlView.ExoClickListener() {
+      videoView.setOrientationListener(new ExoVideoPlaybackControlView.OrientationListener() {
             @Override
-            public void onClick(View view, boolean isPortrait) {
-                if(isPortrait){
-                    finish();
-                }else {
-                    videoView.changeOrientation();
+            public void onOrientationChange(@ExoVideoPlaybackControlView.SensorOrientationType int orientation) {
+                if(orientation == SENSOR_PORTRAIT){
+                    changeToPortrait();
+                }else if(orientation == SENSOR_LANDSCAPE){
+                    changeToLandscape();
                 }
             }
         });
+```
+只有当在controller中的context是Activity的时候，ExoVideoView才会调用：
+```activity.setRequestedOrientation()```
+全屏按钮也是如此。
+也可以通过如下方式更改ExoVideoView方向:
+```java
+videoView.toggleControllerOrientation();
+```
+或者
+```java
+videoView.setPortrait(true);
+```
+***处理返回事件***
+在activity:
+```java
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK){
+
+            if(videoView.isPortrait()){
+               finish();
+                return false;
+            }else {
+                videoView.toggleControllerOrientation();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 ```
-
+当 controller 中的返回键钮被点击了:
 ```java
-        videoView.setFullScreenListener(new ExoVideoPlaybackControlView.ExoClickListener() {
+        videoView.setBackListener(new ExoVideoPlaybackControlView.ExoClickListener() {
             @Override
-            public void onClick(View view, boolean isPortrait) {
-                videoView.changeOrientation();
+            public boolean onClick(View view, boolean isPortrait) {
+                if(isPortrait){
+                    finish();
+                }
+              return false;
             }
         });
+
 ```
-也提供了横屏时在控制条添加自定义view:
+如果 ```onClick()``` 返回了true,它会拦截controller中的事件.如果返回的是false 并且你设置了一个非空的OrientationListener，
+ExoVideoView 如果处于横屏，ExoVideoView将尝试变回竖屏并调用```OrientationLister.onOrientationChange()```。
+be called.
+
+***Others***
+
+你也可以在横屏的时候加入一个自定义布局：
 
 ```java
        videoView.addViewToControllerWhenLandscape(view);
 ```
-其中，view会添加到FrameLayout中．
+你添加的布局将被加入FrameLayout中．
+***提示***
+永远不要忘记去释放ExoPlayer.
+```
+ videoView.releaseSelfPlayer();
+```
+or
+```
+player.release();
+```
 
-注意:`changeOrientation()` 只会影响控制控件的样式，不会做任何旋转操作.
-ExoVideoView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退.
-如果你的target SDK version 是在23或以上, 不要忘记申请权限：
+ExoVideoView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退. 如果你的target SDK version 是在23或以上, 不要忘记申请权限：
 ```xml
 <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 ```
