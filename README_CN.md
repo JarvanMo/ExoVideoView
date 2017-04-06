@@ -130,8 +130,7 @@ videoView.setPortrait(true);
 
 ```
 如果 ```onClick()``` 返回了true,它会拦截controller中的事件.如果返回的是false 并且你设置了一个非空的OrientationListener，
-ExoVideoView 如果处于横屏，ExoVideoView将尝试变回竖屏并调用```OrientationLister.onOrientationChange()```。
-be called.
+
 
 ***Others***
 
