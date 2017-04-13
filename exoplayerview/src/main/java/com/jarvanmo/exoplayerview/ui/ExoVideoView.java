@@ -532,10 +532,6 @@ public class ExoVideoView extends FrameLayout {
         if (player != null) {
             playerWindow = player.getCurrentWindowIndex();
             playerPosition = C.TIME_UNSET;
-            Timeline timeline = player.getCurrentTimeline();
-            if (timeline != null && timeline.getWindow(playerWindow, window).isSeekable) {
-                playerPosition = player.getCurrentPosition();
-            }
             player.release();
             player = null;
             trackSelector = null;
@@ -581,8 +577,10 @@ public class ExoVideoView extends FrameLayout {
         }
 
         if (player.getPlayWhenReady()) {
-            Timeline timeline = player.getCurrentTimeline();
-            if (timeline != null && timeline.getWindow(playerWindow, window).isSeekable) {
+
+            Timeline currentTimeline = player.getCurrentTimeline();
+            boolean haveNonEmptyTimeline = currentTimeline != null && !currentTimeline.isEmpty();
+            if (haveNonEmptyTimeline && currentTimeline.getWindow(playerWindow, window).isSeekable) {
                 playerPosition = player.getCurrentPosition();
             }
 
