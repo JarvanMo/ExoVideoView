@@ -18,6 +18,7 @@
             android:gravity="center_vertical|start"
             android:paddingEnd="@dimen/common_zero_dp"
             android:paddingStart="@dimen/video_view_controller_padding"
+            android:background="?android:attr/selectableItemBackground"
             android:textColor="@android:color/white"
             android:drawableStart="@drawable/ic_arrow_back_white_36dp"
             android:textStyle="bold" />

@@ -22,7 +22,7 @@
             android:id="@+id/playLandscape"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_centerVertical="true"
             android:contentDescription="@null"
             android:src="@drawable/ic_pause_white_36dp" />
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/playLandscape"
-            android:background="@null"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_centerVertical="true"
             android:contentDescription="@null"
             android:src="@drawable/ic_skip_next_white_36dp" />
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_gravity="end"
-            android:background="@null"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@null"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_fullscreen_exit_white_36dp" />

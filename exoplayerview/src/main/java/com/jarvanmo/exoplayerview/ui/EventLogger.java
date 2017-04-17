@@ -105,25 +105,6 @@ import java.util.Locale;
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
-        int periodCount = timeline.getPeriodCount();
-        int windowCount = timeline.getWindowCount();
-        Log.d(TAG, "sourceInfo [periodCount=" + periodCount + ", windowCount=" + windowCount);
-        for (int i = 0; i < Math.min(periodCount, MAX_TIMELINE_ITEM_LINES); i++) {
-            timeline.getPeriod(i, period);
-            Log.d(TAG, "  " + "period [" + getTimeString(period.getDurationMs()) + "]");
-        }
-        if (periodCount > MAX_TIMELINE_ITEM_LINES) {
-            Log.d(TAG, "  ...");
-        }
-        for (int i = 0; i < Math.min(windowCount, MAX_TIMELINE_ITEM_LINES); i++) {
-            timeline.getWindow(i, window);
-            Log.d(TAG, "  " + "window [" + getTimeString(window.getDurationMs()) + ", "
-                    + window.isSeekable + ", " + window.isDynamic + "]");
-        }
-        if (windowCount > MAX_TIMELINE_ITEM_LINES) {
-            Log.d(TAG, "  ...");
-        }
-        Log.d(TAG, "]");
     }
 
     @Override
