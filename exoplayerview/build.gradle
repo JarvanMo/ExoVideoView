@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 12
-        versionName "1.0.1"
+        versionCode 13
+        versionName "1.0.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -33,7 +33,7 @@ publish {
     userOrg = 'jarvanmo'//bintray.com用户名
     groupId = 'com.jarvanmo'//jcenter上的路径
     artifactId = 'exoplayerview'//项目名称
-    publishVersion = '1.0.1'//版本号
+    publishVersion = '1.0.2'//版本号
     desc = 'exo player view'//描述，不重要
     website = 'https://github.com/JarvanMo/ExoPlayerView'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }
