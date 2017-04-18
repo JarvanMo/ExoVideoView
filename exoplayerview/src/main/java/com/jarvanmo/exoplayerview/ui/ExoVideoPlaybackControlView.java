@@ -695,7 +695,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         Resources res = getResources();
         String timeResult = res.getString(R.string.time);
-        hourOfDay = is24HourFormat ? hourOfDay : (hourOfDay >= 12 ? hourOfDay - 12: hourOfDay);
+        hourOfDay = is24HourFormat ? hourOfDay : (hourOfDay > 12 ? hourOfDay - 12: hourOfDay);
         if (hourOfDay >= 10) {
             timeResult += Integer.toString(hourOfDay);
         } else {

@@ -33,7 +33,7 @@ publish {
     userOrg = 'jarvanmo'
     groupId = 'com.jarvanmo'
     artifactId = 'exoplayerview'
-    publishVersion = '1.0.3'
+    publishVersion = '1.0.4'
     desc = 'exo player view'
     website = 'https://github.com/JarvanMo/ExoPlayerView'
 }
