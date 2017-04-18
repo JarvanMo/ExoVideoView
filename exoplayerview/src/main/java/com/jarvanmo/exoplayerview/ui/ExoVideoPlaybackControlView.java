@@ -20,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -687,19 +688,18 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private void updateTime() {
         final Calendar calendar = Calendar.getInstance();
 
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         int amOrPm = calendar.get(Calendar.AM_PM);
-
-        ContentResolver cv = getContext().getContentResolver();
-        String strTimeFormat = android.provider.Settings.System.getString(cv, android.provider.Settings.System.TIME_12_24);
+        boolean is24HourFormat = DateFormat.is24HourFormat(getContext());
 
         Resources res = getResources();
         String timeResult = res.getString(R.string.time);
-        if (hour >= 10) {
-            timeResult += Integer.toString(hour);
+        hourOfDay = is24HourFormat ? hourOfDay : (hourOfDay >= 12 ? hourOfDay - 12: hourOfDay);
+        if (hourOfDay >= 10) {
+            timeResult += Integer.toString(hourOfDay);
         } else {
-            timeResult += "0" + hour;
+            timeResult += "0" + hourOfDay;
         }
 
         timeResult += ":";
@@ -710,11 +710,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             timeResult += "0" + minute;
         }
 
-        if (!TextUtils.equals("24", strTimeFormat)) {
+        if (!is24HourFormat) {
             String str = amOrPm == Calendar.AM ? res.getString(R.string.time_am) : res.getString(R.string.time_pm);
             timeResult = timeResult + " " + str;
         }
-
         localTime.setText(timeResult);
     }
 

@@ -543,7 +543,20 @@ public class ExoVideoView extends FrameLayout {
 
 
     public void play(SimpleMediaSource source, long where) {
+        play(source,true,where);
+//        player.prepare(mediaSource,false,false);
+    }
 
+
+    public void play(SimpleMediaSource source) {
+        play(source, true ,C.TIME_UNSET);
+    }
+
+    public void play(SimpleMediaSource source,boolean playWhenReady){
+        play(source,playWhenReady,C.TIME_UNSET);
+    }
+
+    public void play(SimpleMediaSource source,boolean playWhenReady,long where){
         if (player == null) {
             initSelfPlayer();
         }
@@ -553,7 +566,7 @@ public class ExoVideoView extends FrameLayout {
         getFrameCover(source.getUrl());
 
         MediaSource mediaSource = buildMediaSource(Uri.parse(source.getUrl()), null);
-        player.setPlayWhenReady(requestAudioFocus());
+        player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
 
         player.prepare(mediaSource, !isTimelineStatic, !isTimelineStatic);
         if (where == C.TIME_UNSET) {
@@ -562,15 +575,7 @@ public class ExoVideoView extends FrameLayout {
             player.seekTo(playerWindow, where);
         }
 
-
-//        player.prepare(mediaSource,false,false);
     }
-
-
-    public void play(SimpleMediaSource source) {
-        play(source, C.TIME_UNSET);
-    }
-
     public void pause() {
         if (player == null) {
             return;
