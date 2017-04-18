@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.google.android.exoplayer2.util.Util;
@@ -110,11 +112,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void changeToPortrait() {
+
+        WindowManager.LayoutParams attr = getWindow().getAttributes();
+        attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Window window = getWindow();
+        window.setAttributes(attr);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         wrapper.setVisibility(View.VISIBLE);
     }
 
 
     private void changeToLandscape() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        Window window = getWindow();
+        window.setAttributes(lp);
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         wrapper.setVisibility(View.GONE);
     }
 
@@ -125,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (Util.SDK_INT > 23) {
             videoView.resume();
-//            videoView.initSelfPlayer(simpleMediaSource);
         }
     }
 
@@ -141,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         if (Util.SDK_INT <= 23) {
-//            videoView.releaseSelfPlayer();
             videoView.pause();
         }
     }

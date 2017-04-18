@@ -350,7 +350,7 @@ public class ExoVideoView extends FrameLayout {
     }
 
     /**
-     * Set the {@link PlaybackControlView.VisibilityListener}.
+     * Set the {@link ExoVideoPlaybackControlView.VisibilityListener}.
      *
      * @param listener The listener to be notified about visibility changes.
      */
@@ -628,9 +628,7 @@ public class ExoVideoView extends FrameLayout {
         } finally {
 
             try {
-
                 retriever.release();
-
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
             }
