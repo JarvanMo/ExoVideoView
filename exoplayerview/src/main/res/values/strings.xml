@@ -1,8 +1,7 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">ExoPlayerView</string>
     <string name="default_video_time" translatable="false">00:00</string>
     <string name="default_video_combined_time" translatable="false">00:00/00:00</string>
-    <string name="time">time:</string>
     <string name="time_am">AM</string>
     <string name="time_pm">PM</string>
     <string name="battery_percent">battery:%1$d%%</string>

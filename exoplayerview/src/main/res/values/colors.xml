@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="default_playback_background">#3D000000</color>
+
+    <color name="batterymeter_frame_color">#4DFFFFFF</color><!-- 30% white -->
+    <color name="batterymeter_charge_color">#FFFFFFFF</color>
+    <color name="batterymeter_bolt_color">#FFFFFFFF</color>
+
+    <color name="dark_mode_icon_color_single_tone">#99000000</color>
+    <color name="dark_mode_icon_color_dual_tone_background">#3d000000</color>
+    <color name="dark_mode_icon_color_dual_tone_fill">#7a000000</color>
+
+    <color name="light_mode_icon_color_single_tone">#ffffff</color>
+    <color name="light_mode_icon_color_dual_tone_background">#4dffffff</color>
+    <color name="light_mode_icon_color_dual_tone_fill">#ffffff</color>
 </resources>

@@ -3,7 +3,6 @@ package com.jarvanmo.exoplayerview.ui;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,7 +10,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
-import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
@@ -19,12 +17,10 @@ import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -131,29 +127,25 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     //Volume
     private AudioManager mAudioManager;
     private int mAudioMax;
-    private boolean mMute = false;
-    private int mVolSave;
     private float mVol;
 
 
     // Brightness
     private boolean mIsFirstBrightnessGesture = true;
-    private float mRestoreAutoBrightness = -1f;
 
 
     private final Timeline.Window currentWindow;
     private final ComponentListener componentListener;
 
-    private Timeline.Window window;
 
 
     private final StringBuilder formatBuilder;
     private final Formatter formatter;
 
 
+    private View timeInfoWrapper;
     private TextView displayName;
     private TextView localTime;
-    private TextView battery;
     private FrameLayout centerContentWrapper;
     private ProgressBar loadingProgressBar;
     private TextView centerInfo;
@@ -201,22 +193,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     };
 
 
-    private final BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
-                Bundle bundle = intent.getExtras();
-                // 获取当前电量
-                int current = bundle.getInt("level");
-                // 获取总电量
-                int total = bundle.getInt("scale");
-                int percent = current * 100 / total;
-                battery.setText(getResources().getString(R.string.battery_percent, percent));
-            }
-
-        }
-    };
 
     private boolean isAttachedToWindow;
     private boolean dragging;
@@ -282,9 +258,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     private void findViews() {
+        timeInfoWrapper = findViewById(R.id.timeInfoWrapper);
         displayName = (TextView) findViewById(R.id.displayName);
-        localTime = (TextView) findViewById(R.id.localTime);
-        battery = (TextView) findViewById(R.id.battery);
+        localTime =  (TextView) findViewById(R.id.localTime);
         centerContentWrapper = (FrameLayout) findViewById(R.id.centerContentWrapper);
         loadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
         centerInfo = (TextView) findViewById(R.id.centerInfo);
@@ -306,7 +282,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public void setTopWrapperTextSize(float textSize) {
         if (textSize != Float.MIN_VALUE) {
             displayName.setTextSize(textSize);
-            battery.setTextSize(textSize);
             localTime.setTextSize(textSize);
         }
     }
@@ -694,7 +669,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         boolean is24HourFormat = DateFormat.is24HourFormat(getContext());
 
         Resources res = getResources();
-        String timeResult = res.getString(R.string.time);
+        String timeResult = "";
         hourOfDay = is24HourFormat ? hourOfDay : (hourOfDay > 12 ? hourOfDay - 12: hourOfDay);
         if (hourOfDay >= 10) {
             timeResult += Integer.toString(hourOfDay);
@@ -709,6 +684,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         } else {
             timeResult += "0" + minute;
         }
+
+
 
         if (!is24HourFormat) {
             String str = amOrPm == Calendar.AM ? res.getString(R.string.time_am) : res.getString(R.string.time_pm);
@@ -918,7 +895,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private void initBrightnessTouch() {
 
-
         if (!(getContext() instanceof Activity)) {
             return;
         }
@@ -935,8 +911,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 Settings.System.putInt(activity.getContentResolver(),
                         Settings.System.SCREEN_BRIGHTNESS_MODE,
                         Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-                mRestoreAutoBrightness = android.provider.Settings.System.getInt(activity.getContentResolver(),
-                        android.provider.Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
+//                restoreAutoBrightness = android.provider.Settings.System.getInt(activity.getContentResolver(),
+//                        android.provider.Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
             } else if (brightnesstemp == 0.6f) {
                 brightnesstemp = android.provider.Settings.System.getInt(activity.getContentResolver(),
                         android.provider.Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
@@ -1041,13 +1017,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (portrait) {
             controllerWrapper.setVisibility(View.VISIBLE);
             controllerWrapperLandscape.setVisibility(View.GONE);
-            localTime.setVisibility(GONE);
-            battery.setVisibility(GONE);
+            timeInfoWrapper.setVisibility(GONE);
         } else {
             controllerWrapper.setVisibility(View.GONE);
             controllerWrapperLandscape.setVisibility(View.VISIBLE);
-            localTime.setVisibility(VISIBLE);
-            battery.setVisibility(VISIBLE);
+            timeInfoWrapper.setVisibility(VISIBLE);
         }
 
     }
@@ -1179,14 +1153,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         IntentFilter timeFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
         getContext().registerReceiver(timeReceiver, timeFilter);
 
-        IntentFilter batterFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        getContext().registerReceiver(batteryReceiver, batterFilter);
     }
 
 
     private void unregisterBroadcast() {
         getContext().unregisterReceiver(timeReceiver);
-        getContext().unregisterReceiver(batteryReceiver);
     }
 
     @Override

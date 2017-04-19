@@ -79,24 +79,6 @@ public class ExoVideoView extends FrameLayout {
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
-    private SensorEventListener2 sensorEventListener = new SensorEventListener2() {
-        @Override
-        public void onFlushCompleted(Sensor sensor) {
-
-        }
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
-
-
     private final View surfaceView;
 
     private final ExoVideoPlaybackControlView controller;

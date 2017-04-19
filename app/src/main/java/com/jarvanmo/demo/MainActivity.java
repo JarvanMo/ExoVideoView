@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 //       SimpleMediaSource mediaSource = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_fmp4_example/master.m3u8");
 
 
-//        mediaSource.setDisplayName("VideoPlaying");
+        mediaSource.setDisplayName("VideoPlaying");
         videoView.play(mediaSource);
         modeFit.setOnClickListener(new View.OnClickListener() {
             @Override

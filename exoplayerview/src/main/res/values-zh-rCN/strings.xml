@@ -1,6 +1,5 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">ExoPlayerView</string>
-    <string name="time">时间:</string>
     <string name="time_am">上午</string>
     <string name="time_pm">下午</string>
     <string name="battery_percent">电量:%1$d%%</string>
