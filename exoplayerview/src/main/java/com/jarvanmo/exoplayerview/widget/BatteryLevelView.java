@@ -36,9 +36,9 @@ public class BatteryLevelView extends View {
      *
      * 电池参数
      */
-    private float mBatteryHeight = 20f; // 电池的高度
-    private float mBatteryWidth = 40f; // 电池的宽度
-    private float mCapHeight = 10f;
+    private float mBatteryHeight = 30f; // 电池的高度
+    private float mBatteryWidth = 60f; // 电池的宽度
+    private float mCapHeight = 15f;
     private float mCapWidth = 5f;
     /**
      *
