@@ -261,6 +261,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private void findViews() {
         displayName = (TextView) findViewById(R.id.displayName);
         localTime =  (TextView) findViewById(R.id.localTime);
+        battery = (BatteryLevelView) findViewById(R.id.battery);
         centerContentWrapper = (FrameLayout) findViewById(R.id.centerContentWrapper);
         loadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
         centerInfo = (TextView) findViewById(R.id.centerInfo);
