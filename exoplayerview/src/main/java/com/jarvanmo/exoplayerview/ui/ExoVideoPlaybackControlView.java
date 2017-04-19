@@ -44,6 +44,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.jarvanmo.exoplayerview.R;
 import com.jarvanmo.exoplayerview.util.Permissions;
+import com.jarvanmo.exoplayerview.widget.BatteryLevelView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -143,9 +144,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final Formatter formatter;
 
 
-    private View timeInfoWrapper;
     private TextView displayName;
     private TextView localTime;
+    private BatteryLevelView battery;
     private FrameLayout centerContentWrapper;
     private ProgressBar loadingProgressBar;
     private TextView centerInfo;
@@ -258,7 +259,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     private void findViews() {
-        timeInfoWrapper = findViewById(R.id.timeInfoWrapper);
         displayName = (TextView) findViewById(R.id.displayName);
         localTime =  (TextView) findViewById(R.id.localTime);
         centerContentWrapper = (FrameLayout) findViewById(R.id.centerContentWrapper);
@@ -1017,11 +1017,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (portrait) {
             controllerWrapper.setVisibility(View.VISIBLE);
             controllerWrapperLandscape.setVisibility(View.GONE);
-            timeInfoWrapper.setVisibility(GONE);
+            battery.setVisibility(GONE);
+            localTime.setVisibility(GONE);
         } else {
             controllerWrapper.setVisibility(View.GONE);
             controllerWrapperLandscape.setVisibility(View.VISIBLE);
-            timeInfoWrapper.setVisibility(VISIBLE);
+            battery.setVisibility(VISIBLE);
+            localTime.setVisibility(VISIBLE);
         }
 
     }
