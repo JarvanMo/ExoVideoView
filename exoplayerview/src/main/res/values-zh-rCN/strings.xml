@@ -1,4 +1,4 @@
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
     <string name="app_name">ExoPlayerView</string>
     <string name="time_am">上午</string>
     <string name="time_pm">下午</string>

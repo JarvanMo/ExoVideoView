@@ -3,7 +3,6 @@ package com.jarvanmo.exoplayerview.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.IntDef;
-import android.support.annotation.StringDef;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 

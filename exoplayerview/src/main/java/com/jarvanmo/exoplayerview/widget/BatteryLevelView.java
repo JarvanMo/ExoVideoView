@@ -11,7 +11,6 @@ import android.graphics.RectF;
 import android.os.BatteryManager;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -37,7 +36,7 @@ public class BatteryLevelView extends View {
      * 电池参数
      */
     private float mBatteryHeight = 30f; // 电池的高度
-    private float mBatteryWidth = 60f; // 电池的宽度
+    private float mBatteryWidth = 55f; // 电池的宽度
     private float mCapHeight = 15f;
     private float mCapWidth = 5f;
     /**

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
 import android.os.SystemClock;
@@ -666,12 +665,12 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        int amOrPm = calendar.get(Calendar.AM_PM);
+//        int amOrPm = calendar.get(Calendar.AM_PM);
         boolean is24HourFormat = DateFormat.is24HourFormat(getContext());
 
-        Resources res = getResources();
+//        Resources res = getResources();
         String timeResult = "";
-        hourOfDay = is24HourFormat ? hourOfDay : (hourOfDay > 12 ? hourOfDay - 12: hourOfDay);
+//        hourOfDay = is24HourFormat ? hourOfDay : (hourOfDay > 12 ? hourOfDay - 12: hourOfDay);
         if (hourOfDay >= 10) {
             timeResult += Integer.toString(hourOfDay);
         } else {
@@ -687,11 +686,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
 
-
-        if (!is24HourFormat) {
-            String str = amOrPm == Calendar.AM ? res.getString(R.string.time_am) : res.getString(R.string.time_pm);
-            timeResult = timeResult + " " + str;
-        }
+//
+//        if (!is24HourFormat) {
+//            String str = amOrPm == Calendar.AM ? res.getString(R.string.time_am) : res.getString(R.string.time_pm);
+//            timeResult = timeResult + " " + str;
+//        }
         localTime.setText(timeResult);
     }
 
