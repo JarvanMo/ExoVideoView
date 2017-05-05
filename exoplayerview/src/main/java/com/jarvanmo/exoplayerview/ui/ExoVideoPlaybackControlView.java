@@ -40,6 +40,8 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.hls.HlsManifest;
+import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.jarvanmo.exoplayerview.R;
 import com.jarvanmo.exoplayerview.util.Permissions;
@@ -138,7 +140,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final ComponentListener componentListener;
 
 
-
     private final StringBuilder formatBuilder;
     private final Formatter formatter;
 
@@ -163,6 +164,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private FrameLayout customView;
     private ImageButton fullScreenLandscape;
 
+    private boolean isTimelineStatic;
+    private Timeline.Window window;
 
     private final Runnable updateProgressAction = new Runnable() {
         @Override
@@ -170,6 +173,14 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             updateProgress();
         }
     };
+
+    private final Runnable updateLiveStreamProgressAction = new Runnable() {
+        @Override
+        public void run() {
+            updateLiveStreamProgress();
+        }
+    };
+
     private final Runnable hideAction = new Runnable() {
         @Override
         public void run() {
@@ -193,7 +204,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     };
 
 
-
     private boolean isAttachedToWindow;
     private boolean dragging;
     private int rewindMs;
@@ -205,6 +215,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private long lastPlayerPosition = -1;
 
+    private long liveStreamPosition = 0L;
+
+    private boolean isLiveStream = false;
 
     private ExoPlayer player;
     private VisibilityListener visibilityListener;
@@ -247,6 +260,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         currentWindow = new Timeline.Window();
         componentListener = new ComponentListener();
 
+        window = new Timeline.Window();
+
+
         LayoutInflater.from(context).inflate(R.layout.exo_playback_control_view, this);
 
         findViews();
@@ -259,7 +275,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private void findViews() {
         displayName = (TextView) findViewById(R.id.displayName);
-        localTime =  (TextView) findViewById(R.id.localTime);
+        localTime = (TextView) findViewById(R.id.localTime);
         battery = (BatteryLevelView) findViewById(R.id.battery);
         centerContentWrapper = (FrameLayout) findViewById(R.id.centerContentWrapper);
         loadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
@@ -317,7 +333,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             @Override
             public void onOrientationChanged(int orientation) {
 
-                if(orientationListener == null || !isScreenOpenRotate()){
+                if (orientationListener == null || !isScreenOpenRotate()) {
                     return;
                 }
 
@@ -394,7 +410,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    public void setOrientationListener(OrientationListener orientationListener){
+    public void setOrientationListener(OrientationListener orientationListener) {
         this.orientationListener = orientationListener;
     }
 
@@ -427,8 +443,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public void toggleControllerOrientation() {
         if (orientationListener == null) {
             setPortrait(!portrait);
-        }else {
-            changeOrientation(portrait ? SENSOR_LANDSCAPE:SENSOR_PORTRAIT);
+        } else {
+            changeOrientation(portrait ? SENSOR_LANDSCAPE : SENSOR_PORTRAIT);
         }
 
     }
@@ -570,21 +586,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
         Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
         boolean haveNonEmptyTimeline = currentTimeline != null && !currentTimeline.isEmpty();
-        boolean isSeekable = false;
         boolean enableNext = false;
         if (haveNonEmptyTimeline) {
             int currentWindowIndex = player.getCurrentWindowIndex();
             currentTimeline.getWindow(currentWindowIndex, currentWindow);
-            isSeekable = currentWindow.isSeekable;
 //            enablePrevious = currentWindowIndex > 0 || isSeekable || !currentWindow.isDynamic;
             enableNext = (currentWindowIndex < currentTimeline.getWindowCount() - 1)
                     || currentWindow.isDynamic;
-        }
-        if (videoProgress != null) {
-            videoProgress.setEnabled(isSeekable);
-        }
-        if (videoProgressLandscape != null) {
-            videoProgressLandscape.setEnabled(isSeekable);
         }
 
 
@@ -605,7 +613,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 //            enablePrevious = currentWindowIndex > 0 || isSeekable || !currentWindow.isDynamic;
         }
 
-        return isSeekable;
+        return isSeekable && isTimelineStatic;
     }
 
     private void updateProgress() {
@@ -617,22 +625,30 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         long duration = player == null ? 0 : player.getDuration();
         long position = player == null ? 0 : player.getCurrentPosition();
         lastPlayerPosition = position;
+
+        if(isLiveStream){
+            duration = 0L;
+            position = 0L;
+        }
+
         endTime.setText(stringForTime(duration));
 
 
         if (!dragging) {
             currentTime.setText(stringForTime(position));
             timeLandscape.setText(stringForTime(position) + "/" + stringForTime(duration));
+        }
 
-            if (canSeek()) {
-                videoProgress.setProgress(progressBarValue(position));
-                videoProgressLandscape.setProgress(progressBarValue(position));
-            } else {
-                videoProgress.setProgress(PROGRESS_BAR_MAX);
-                videoProgressLandscape.setProgress(PROGRESS_BAR_MAX);
-            }
-
-
+        if (canSeek()) {
+            videoProgress.setEnabled(true);
+            videoProgress.setProgress(progressBarValue(position));
+            videoProgressLandscape.setEnabled(true);
+            videoProgressLandscape.setProgress(progressBarValue(position));
+        } else {
+            videoProgress.setEnabled(false);
+            videoProgress.setProgress(PROGRESS_BAR_MAX);
+            videoProgressLandscape.setEnabled(false);
+            videoProgressLandscape.setProgress(PROGRESS_BAR_MAX);
         }
 
 
@@ -659,6 +675,16 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     }
 
+    private void updateLiveStreamProgress() {
+
+
+        videoProgress.setEnabled(false);
+        videoProgress.setProgress(PROGRESS_BAR_MAX);
+        videoProgressLandscape.setEnabled(false);
+        videoProgressLandscape.setProgress(PROGRESS_BAR_MAX);
+
+        postDelayed(updateLiveStreamProgressAction, 1000);
+    }
 
     private void updateTime() {
         final Calendar calendar = Calendar.getInstance();
@@ -666,7 +692,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 //        int amOrPm = calendar.get(Calendar.AM_PM);
-        boolean is24HourFormat = DateFormat.is24HourFormat(getContext());
+//        boolean is24HourFormat = DateFormat.is24HourFormat(getContext());
 
 //        Resources res = getResources();
         String timeResult = "";
@@ -976,15 +1002,15 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    private synchronized void changeOrientation(@SensorOrientationType int orientation){
+    private synchronized void changeOrientation(@SensorOrientationType int orientation) {
         if (orientationListener == null) {
             return;
         }
 
         orientationListener.onOrientationChange(orientation);
         Context context = getContext();
-        Activity activity ;
-        if(! (context instanceof Activity)){
+        Activity activity;
+        if (!(context instanceof Activity)) {
             return;
         }
         activity = (Activity) context;
@@ -1003,7 +1029,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
     }
-
 
 
     private void seek(long position) {
@@ -1253,7 +1278,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     }
 
-        private final class ComponentListener implements ExoPlayer.EventListener,
+    private final class ComponentListener implements ExoPlayer.EventListener,
             SeekBar.OnSeekBarChangeListener, OnClickListener {
 
         @Override
@@ -1299,8 +1324,19 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest) {
+            isTimelineStatic = !timeline.isEmpty()
+                    && !timeline.getWindow(timeline.getWindowCount() - 1, window).isDynamic;
+
+
+            if (manifest instanceof HlsManifest) {
+                HlsManifest hlsManifest = (HlsManifest) manifest;
+                isLiveStream = !hlsManifest.mediaPlaylist.hasEndTag && hlsManifest.mediaPlaylist.playlistType == HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
+            }
+
+
             updateNavigation();
             updateProgress();
+
         }
 
         @Override
@@ -1335,27 +1371,19 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             } else if (play == view || playLandscape == view) {
                 player.setPlayWhenReady(!player.getPlayWhenReady());
             } else if (displayName == view && backListener != null) {
-                if(!backListener.onClick(view, portrait)){
-                    if(!portrait){
+                if (!backListener.onClick(view, portrait)) {
+                    if (!portrait) {
                         changeOrientation(SENSOR_PORTRAIT);
                     }
                 }
 
-            } else if(fullScreen == view){
+            } else if (fullScreen == view) {
                 changeOrientation(SENSOR_LANDSCAPE);
-            }else if(fullScreenLandscape == view){
+            } else if (fullScreenLandscape == view) {
                 changeOrientation(SENSOR_PORTRAIT);
             }
 
-//            else if (previousButton == view) {
-//                previous();
-//            } else if (fastForwardButton == view) {
-//                fastForward();
-//            } else if (rewindButton == view && currentTimeline != null) {
-//                rewind();
-//            } else if (playButton == view) {
-//                player.setPlayWhenReady(!player.getPlayWhenReady());
-//            }
+
             hideAfterTimeout();
         }
 
