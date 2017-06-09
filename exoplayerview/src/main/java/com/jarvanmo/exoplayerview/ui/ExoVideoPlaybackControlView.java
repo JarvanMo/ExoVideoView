@@ -16,10 +16,10 @@ import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -217,7 +217,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private long liveStreamPosition = 0L;
 
-    private boolean isLiveStream = false;
+    private boolean isHls = false;
 
     private ExoPlayer player;
     private VisibilityListener visibilityListener;
@@ -626,7 +626,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         long position = player == null ? 0 : player.getCurrentPosition();
         lastPlayerPosition = position;
 
-        if(isLiveStream){
+        if(isHls){
             duration = 0L;
             position = 0L;
         }
@@ -1330,7 +1330,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
             if (manifest instanceof HlsManifest) {
                 HlsManifest hlsManifest = (HlsManifest) manifest;
-                isLiveStream = !hlsManifest.mediaPlaylist.hasEndTag && hlsManifest.mediaPlaylist.playlistType == HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
+                isHls = !hlsManifest.mediaPlaylist.hasEndTag && hlsManifest.mediaPlaylist.playlistType == HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
+                Log.e("time->",stringForTime(hlsManifest.mediaPlaylist.startOffsetUs));
             }
 
 
