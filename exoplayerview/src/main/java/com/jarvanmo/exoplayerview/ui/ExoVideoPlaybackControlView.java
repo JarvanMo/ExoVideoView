@@ -510,7 +510,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    public void showUtilHideCalled() {
+    public void showUntilHideCalled() {
         if (!isVisible()) {
             setVisibility(VISIBLE);
             if (visibilityListener != null) {
@@ -1308,7 +1308,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             updatePlayPauseButton();
             updateProgress();
             if (playbackState == ExoPlayer.STATE_IDLE || playbackState == ExoPlayer.STATE_BUFFERING) {
-                showUtilHideCalled();
+                showUntilHideCalled();
                 showLoading(true);
             } else if (playbackState == ExoPlayer.STATE_READY && player.getPlayWhenReady() || playbackState == ExoPlayer.STATE_ENDED) {
                 showLoading(false);
@@ -1351,7 +1351,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 //            showLoading(isLoading);
 
             if (isLoading && lastPlayerPosition == player.getCurrentPosition()) {
-                showUtilHideCalled();
+                showUntilHideCalled();
             } else if (isVisible()) {
                 hide();
             }
