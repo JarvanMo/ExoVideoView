@@ -24,36 +24,42 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
         android:gravity="center"
-        >
-   <Button
-       android:id="@+id/mode_none"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="5dp"
-       android:text="mode_none"
-       />
-    <Button
-        android:id="@+id/mode_fit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="mode_fit"
-        android:layout_marginTop="5dp"
-        />
-    <Button
-        android:id="@+id/mode_width"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="mode_width"
-        />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/mode_height"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="mode_height"
-        />
+        <Button
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:text="play" />
+
+        <Button
+            android:id="@+id/mode_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="mode_none" />
+
+        <Button
+            android:id="@+id/mode_fit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="mode_fit" />
+
+        <Button
+            android:id="@+id/mode_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="mode_width" />
+
+        <Button
+            android:id="@+id/mode_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mode_height" />
     </LinearLayout>
 </LinearLayout>

@@ -25,9 +25,11 @@ import android.widget.ImageView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -63,7 +65,6 @@ import java.util.List;
 import static android.content.Context.AUDIO_SERVICE;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_ENDED;
 import static com.google.android.exoplayer2.ExoPlayer.STATE_READY;
-import static com.google.android.exoplayer2.SimpleExoPlayer.EXTENSION_RENDERER_MODE_OFF;
 
 /**
  * Created by mo on 16-11-7.
@@ -493,10 +494,14 @@ public class ExoVideoView extends FrameLayout {
 
 
         eventLogger = new EventLogger(trackSelector);
+        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(getContext(),
+                null, DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+
+        player = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector);
 
 //            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(BANDWIDTH_METER);
-        player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, new DefaultLoadControl(),
-                null, EXTENSION_RENDERER_MODE_OFF);
+//        player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, new DefaultLoadControl(),
+//                null, EXTENSION_RENDERER_MODE_OFF);
         player.addListener(eventLogger);
         player.setAudioDebugListener(eventLogger);
         player.setVideoDebugListener(eventLogger);
@@ -712,6 +717,11 @@ public class ExoVideoView extends FrameLayout {
         }
 
         @Override
+        public void onRepeatModeChanged(int repeatMode) {
+
+        }
+
+        @Override
         public void onPlayerError(ExoPlaybackException e) {
             // Do nothing.
         }
@@ -719,6 +729,10 @@ public class ExoVideoView extends FrameLayout {
         @Override
         public void onPositionDiscontinuity() {
             // Do nothing.
+        }
+
+        @Override
+        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
         }
 
         @Override
