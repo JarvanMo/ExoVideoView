@@ -4,3 +4,5 @@
 ![landscape](/images/landscape_new.png)
 ![portrait](/images/portrait_new.png)!
 [volume](/images/volume_new.png)
+
+./gradlew clean build bintrayUpload -PbintrayUser=jarvanmo -PbintrayKey=xxxxx -PdryRun=false
