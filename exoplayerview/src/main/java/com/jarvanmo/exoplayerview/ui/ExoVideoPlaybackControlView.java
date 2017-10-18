@@ -39,6 +39,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
@@ -1308,10 +1309,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             updatePlayPauseButton();
             updateProgress();
-            if (playbackState == ExoPlayer.STATE_IDLE || playbackState == ExoPlayer.STATE_BUFFERING) {
+            if (playbackState == Player.STATE_IDLE || playbackState == Player.STATE_BUFFERING) {
                 showUntilHideCalled();
                 showLoading(true);
-            } else if (playbackState == ExoPlayer.STATE_READY && player.getPlayWhenReady() || playbackState == ExoPlayer.STATE_ENDED) {
+            } else if (playbackState == Player.STATE_READY && player.getPlayWhenReady() || playbackState == Player.STATE_ENDED) {
                 showLoading(false);
                 hide();
             }
