@@ -1,5 +1,6 @@
 package com.jarvanmo.demo;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -8,10 +9,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
 import com.jarvanmo.exoplayerview.ui.ExoVideoView;
 import com.jarvanmo.exoplayerview.ui.SimpleMediaSource;
+import com.jarvanmo.exoplayerview.util.AndroidUtil;
 import com.jarvanmo.exoplayerview.widget.SuperAspectRatioFrameLayout;
 
 import static com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView.SENSOR_LANDSCAPE;
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23) {
+        if ( Build.VERSION.SDK_INT > 23) {
             videoView.resume();
         }
     }
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if ((Util.SDK_INT <= 23)) {
+        if (( Build.VERSION.SDK_INT <= 23)) {
             videoView.resume();
         }
     }
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23) {
+        if ( Build.VERSION.SDK_INT <= 23) {
             videoView.pause();
         }
     }
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23) {
+        if ( Build.VERSION.SDK_INT > 23) {
             videoView.pause();
         }
     }
