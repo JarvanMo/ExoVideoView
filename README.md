@@ -1,6 +1,8 @@
 # ExoPlayerView
 ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
+The new ExoPlayerView based on ExoPlayer-2.6.0 is under development.
+
 [中文](/README_CN.md).
 
 ![brightness](/images/brightness_new.png)
