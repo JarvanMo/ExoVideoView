@@ -102,7 +102,7 @@ public class ExoVideoView extends FrameLayout {
     private Timeline.Window window;
 
 
-    private boolean isTimelineStatic;
+//    private boolean isTimelineStatic;
 
     private int playerWindow;
     private long playerPosition;
@@ -553,7 +553,7 @@ public class ExoVideoView extends FrameLayout {
         MediaSource mediaSource = buildMediaSource(Uri.parse(source.getUrl()), null);
         player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
 
-        player.prepare(mediaSource, !isTimelineStatic, !isTimelineStatic);
+        player.prepare(mediaSource);
         if (where == C.TIME_UNSET) {
             player.seekToDefaultPosition(playerWindow);
         } else {
@@ -737,8 +737,8 @@ public class ExoVideoView extends FrameLayout {
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest) {
-            isTimelineStatic = !timeline.isEmpty()
-                    && !timeline.getWindow(timeline.getWindowCount() - 1, window).isDynamic;
+//            isTimelineStatic = !timeline.isEmpty()
+//                    && !timeline.getWindow(timeline.getWindowCount() - 1, window).isDynamic;
         }
 
         @Override
