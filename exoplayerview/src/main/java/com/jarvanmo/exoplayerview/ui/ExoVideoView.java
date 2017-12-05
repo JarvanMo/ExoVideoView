@@ -30,6 +30,7 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -177,19 +178,19 @@ public class ExoVideoView extends FrameLayout {
 
         componentListener = new ComponentListener();
 
-        layout = (SuperAspectRatioFrameLayout) findViewById(R.id.videoFrame);
+        layout =  findViewById(R.id.videoFrame);
         layout.setResizeMode(resizeMode);
 
-        frameCover = (ImageView) findViewById(R.id.frameCover);
+        frameCover =  findViewById(R.id.frameCover);
 
         shutterView = findViewById(R.id.shutter);
 
-        subtitleLayout = (SubtitleView) findViewById(R.id.subtitles);
+        subtitleLayout =  findViewById(R.id.subtitles);
         subtitleLayout.setUserDefaultStyle();
         subtitleLayout.setUserDefaultTextSize();
 
 
-        controller = (ExoVideoPlaybackControlView) findViewById(R.id.control);
+        controller =  findViewById(R.id.control);
         controller.setTopWrapperTextSize(textSize);
         controller.setPortrait(portrait);
         controller.hide();
@@ -205,7 +206,7 @@ public class ExoVideoView extends FrameLayout {
         surfaceView = view;
         layout.addView(surfaceView, 0);
 
-        audioManager =  (AudioManager) context.getSystemService(AUDIO_SERVICE);
+        audioManager =  (AudioManager) context.getApplicationContext().getSystemService(AUDIO_SERVICE);
 
 //        this.controllerShowTimeoutMs = controllerShowTimeoutMs;
 
@@ -453,8 +454,8 @@ public class ExoVideoView extends FrameLayout {
             return;
         }
         int playbackState = player.getPlaybackState();
-        boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
-                || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
+        boolean showIndefinitely = playbackState == Player.STATE_IDLE
+                || playbackState == Player.STATE_ENDED || !player.getPlayWhenReady();
         boolean wasShowingIndefinitely = controller.isVisible() && controller.getShowTimeoutMs() <= 0;
         controller.setShowTimeoutMs(showIndefinitely ? 0 : controllerShowTimeoutMs);
         if (isForced || showIndefinitely || wasShowingIndefinitely) {
