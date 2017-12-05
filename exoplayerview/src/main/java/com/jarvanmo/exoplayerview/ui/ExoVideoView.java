@@ -555,9 +555,9 @@ public class ExoVideoView extends FrameLayout {
 
         player.prepare(mediaSource);
         if (where == C.TIME_UNSET) {
-            player.seekToDefaultPosition(playerWindow);
+            player.seekToDefaultPosition();
         } else {
-            player.seekTo(playerWindow, where);
+            player.seekTo(where);
         }
 
     }
