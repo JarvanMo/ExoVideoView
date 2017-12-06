@@ -111,7 +111,7 @@ public class ExoVideoView extends FrameLayout {
     private boolean isPauseFromUser = false;
 
 
-    private final AudioManager audioManager;
+    private  AudioManager audioManager;
     AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
@@ -463,6 +463,10 @@ public class ExoVideoView extends FrameLayout {
 
 
     private boolean requestAudioFocus() {
+
+        if (audioManager == null) {
+            audioManager =  (AudioManager) getContext().getApplicationContext().getSystemService(AUDIO_SERVICE);
+        }
         // Request audio focus for playback
         int result = audioManager.requestAudioFocus(afChangeListener,
                 // Use the music stream.
@@ -520,6 +524,11 @@ public class ExoVideoView extends FrameLayout {
             player = null;
             trackSelector = null;
             eventLogger = null;
+        }
+
+        if (audioManager != null) {
+            audioManager.abandonAudioFocus(afChangeListener);
+            audioManager = null;
         }
 
 
