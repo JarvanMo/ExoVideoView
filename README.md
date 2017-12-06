@@ -27,7 +27,7 @@ The new ExoPlayerView based on ExoPlayer-2.6.0 is under development.
 
 Add the following to your `build.gradle` file
 
-    compile 'com.jarvanmo:exoplayerview:1.1.2'
+    compile 'com.jarvanmo:exoplayerview:1.1.3'
 
 ExoPlayerView can play simple video directly, such as mp4,m3u8 and so on.
 It's easy to use.

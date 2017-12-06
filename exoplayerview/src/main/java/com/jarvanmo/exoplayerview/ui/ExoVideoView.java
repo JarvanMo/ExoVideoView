@@ -243,8 +243,6 @@ public class ExoVideoView extends FrameLayout {
             return;
         }
         if (this.player != null) {
-            this.player.setTextOutput(null);
-            this.player.setVideoListener(null);
             this.player.removeListener(componentListener);
             this.player.setVideoSurface(null);
         }
