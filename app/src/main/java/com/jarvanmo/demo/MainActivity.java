@@ -34,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        videoView = (ExoVideoView) findViewById(R.id.videoView);
-        modeFit = (Button) findViewById(R.id.mode_fit);
-        modeNone = (Button) findViewById(R.id.mode_none);
-        modeHeight = (Button) findViewById(R.id.mode_height);
-        modeWidth = (Button) findViewById(R.id.mode_width);
+        videoView = findViewById(R.id.videoView);
+        modeFit = findViewById(R.id.mode_fit);
+        modeNone = findViewById(R.id.mode_none);
+        modeHeight = findViewById(R.id.mode_height);
+        modeWidth = findViewById(R.id.mode_width);
         wrapper = findViewById(R.id.wrapper);
 
 

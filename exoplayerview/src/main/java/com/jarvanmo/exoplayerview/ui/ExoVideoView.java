@@ -199,7 +199,7 @@ public class ExoVideoView extends FrameLayout {
         this.controllerShowTimeoutMs = controllerShowTimeoutMs;
 
         View view = useTextureView ? new TextureView(context) : new SurfaceView(context);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(params);
