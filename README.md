@@ -1,6 +1,8 @@
 # ExoPlayerView
 ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
+The new ExoPlayerView based on ExoPlayer-2.6.0 is under development.
+
 [中文](/README_CN.md).
 
 ![brightness](/images/brightness_new.png)
@@ -25,7 +27,7 @@ ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/goo
 
 Add the following to your `build.gradle` file
 
-    compile 'com.jarvanmo:exoplayerview:1.1.0'
+    compile 'com.jarvanmo:exoplayerview:1.1.4'
 
 ExoPlayerView can play simple video directly, such as mp4,m3u8 and so on.
 It's easy to use.

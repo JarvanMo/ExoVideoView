@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 18
-        versionName "1.1.0"
+        versionCode 22
+        versionName "1.1.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -39,7 +39,7 @@ publish {
     userOrg = 'jarvanmo'
     groupId = 'com.jarvanmo'
     artifactId = 'exoplayerview'
-    publishVersion = '1.1.0'
+    publishVersion = '1.1.4'
     desc = 'exo player view'
     website = 'https://github.com/JarvanMo/ExoPlayerView'
 }
