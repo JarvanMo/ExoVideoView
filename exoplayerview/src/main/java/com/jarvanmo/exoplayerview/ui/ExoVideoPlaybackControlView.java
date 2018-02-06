@@ -1,61 +1,54 @@
 package com.jarvanmo.exoplayerview.ui;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.media.AudioManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.ui.TimeBar;
+import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.RepeatModeUtil;
+import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.R;
-import com.jarvanmo.exoplayerview.util.Permissions;
-import com.jarvanmo.exoplayerview.widget.BatteryLevelView;
+import com.jarvanmo.exoplayerview.gesture.OnVideoGestureChangeListener;
+import com.jarvanmo.exoplayerview.gesture.VideoGesture;
+import com.jarvanmo.exoplayerview.media.ExoMediaSource;
+import com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener;
+import com.jarvanmo.exoplayerview.orientation.SensorOrientation;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
-import static android.content.Context.AUDIO_SERVICE;
+import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_LANDSCAPE;
+import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_PORTRAIT;
+import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_UNKNOWN;
 
 /**
  * Created by mo on 16-11-7.
@@ -65,16 +58,19 @@ import static android.content.Context.AUDIO_SERVICE;
 
 public class ExoVideoPlaybackControlView extends FrameLayout {
 
+
     /**
      * Listener to be notified about changes of the visibility of the UI control.
      */
     public interface VisibilityListener {
+
         /**
          * Called when the visibility changes.
          *
          * @param visibility The new visibility. Either {@link View#VISIBLE} or {@link View#GONE}.
          */
         void onVisibilityChange(int visibility);
+
     }
 
 
@@ -92,142 +88,115 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     public interface OrientationListener {
-        void onOrientationChange(@SensorOrientationType int orientation);
-    }
-
-    public static final int SENSOR_UNKNOWN = -1;
-    public static final int SENSOR_PORTRAIT = SENSOR_UNKNOWN + 1;
-    public static final int SENSOR_LANDSCAPE = SENSOR_PORTRAIT + 1;
-
-    @IntDef({SENSOR_UNKNOWN, SENSOR_PORTRAIT, SENSOR_LANDSCAPE})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface SensorOrientationType {
-
+        void onOrientationChange(@OnOrientationChangedListener.SensorOrientationType int orientation);
     }
 
 
+    /**
+     * The default fast forward increment, in milliseconds.
+     */
     public static final int DEFAULT_FAST_FORWARD_MS = 15000;
+    /**
+     * The default rewind increment, in milliseconds.
+     */
     public static final int DEFAULT_REWIND_MS = 5000;
+    /**
+     * The default show timeout, in milliseconds.
+     */
     public static final int DEFAULT_SHOW_TIMEOUT_MS = 5000;
+    /**
+     * The default repeat toggle modes.
+     */
+    public static final @RepeatModeUtil.RepeatToggleModes
+    int DEFAULT_REPEAT_TOGGLE_MODES =
+            RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE;
 
-    private static final int PROGRESS_BAR_MAX = 1000;
+    /**
+     * The maximum number of windows that can be shown in a multi-window time bar.
+     */
+    public static final int MAX_WINDOWS_FOR_MULTI_WINDOW_TIME_BAR = 100;
+
     private static final long MAX_POSITION_FOR_SEEK_TO_PREVIOUS = 3000;
 
-
-    //Touch Events
-    private static final int TOUCH_NONE = 0;
-    private static final int TOUCH_VOLUME = 1;
-    private static final int TOUCH_BRIGHTNESS = 2;
-    private static final int TOUCH_SEEK = 3;
-
-    //touch
-    private int mTouchAction = TOUCH_NONE;
-    private int mSurfaceYDisplayRange;
-    private float mInitTouchY;
-    private float touchX = -1f;
-    private float touchY = -1f;
-
-
-    //Volume
-    private AudioManager mAudioManager;
-    private int mAudioMax;
-    private float mVol;
-
-
-    // Brightness
-    private boolean mIsFirstBrightnessGesture = true;
-
-
-    private final Timeline.Window currentWindow;
     private final ComponentListener componentListener;
-
-
+    private final View previousButton;
+    private final View nextButton;
+    private final View playButton;
+    private final View pauseButton;
+    private final View fastForwardButton;
+    private final View rewindButton;
+    private final ImageView repeatToggleButton;
+    private final View shuffleButton;
+    private final TextView durationView;
+    private final TextView positionView;
+    private final TimeBar timeBar;
     private final StringBuilder formatBuilder;
     private final Formatter formatter;
+    private final Timeline.Period period;
+    private final Timeline.Window window;
 
 
-    private TextView displayName;
-    private TextView localTime;
-    private BatteryLevelView battery;
-    private FrameLayout centerContentWrapper;
-    private ProgressBar loadingProgressBar;
-    private TextView centerInfo;
-    private LinearLayout controllerWrapper;
-    private ImageButton play;
-    private TextView currentTime;
-    private SeekBar videoProgress;
-    private TextView endTime;
-    private ImageButton fullScreen;
-    private LinearLayout controllerWrapperLandscape;
-    private SeekBar videoProgressLandscape;
-    private ImageButton playLandscape;
-    private ImageButton nextLandscape;
-    private TextView timeLandscape;
-    private FrameLayout customView;
-    private ImageButton fullScreenLandscape;
+    private final Drawable repeatOffButtonDrawable;
+    private final Drawable repeatOneButtonDrawable;
+    private final Drawable repeatAllButtonDrawable;
+    private final String repeatOffButtonContentDescription;
+    private final String repeatOneButtonContentDescription;
+    private final String repeatAllButtonContentDescription;
 
-    private boolean isTimelineStatic;
-    private Timeline.Window window;
-
-    private final Runnable updateProgressAction = new Runnable() {
-        @Override
-        public void run() {
-            updateProgress();
-        }
-    };
-
-    private final Runnable updateLiveStreamProgressAction = new Runnable() {
-        @Override
-        public void run() {
-            updateLiveStreamProgress();
-        }
-    };
-
-    private final Runnable hideAction = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-
-
-    private int oldScreenOrientation = -1;
-    private OrientationEventListener screenOrientationEventListener;
-    private OrientationListener orientationListener;
-
-    private final BroadcastReceiver timeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(Intent.ACTION_TIME_TICK)) {
-                updateTime();
-            }
-        }
-    };
-
+    private Player player;
+    private com.google.android.exoplayer2.ControlDispatcher controlDispatcher;
+    private VisibilityListener visibilityListener;
 
     private boolean isAttachedToWindow;
-    private boolean dragging;
+    private boolean showMultiWindowTimeBar;
+    private boolean multiWindowTimeBar;
+    private boolean scrubbing;
     private int rewindMs;
     private int fastForwardMs;
     private int showTimeoutMs;
+    private @RepeatModeUtil.RepeatToggleModes
+    int repeatToggleModes;
+    private boolean showShuffleButton;
     private long hideAtMs;
+    private long[] adGroupTimesMs;
+    private boolean[] playedAdGroups;
+    private long[] extraAdGroupTimesMs;
+    private boolean[] extraPlayedAdGroups;
+
+    private final Runnable updateProgressAction = this::updateProgress;
+
+    private final Runnable hideAction = this::hide;
+
+
+    private final TimeBar timeBarLandscape;
+    private final View playButtonLandScape;
+    private final View pauseButtonLandScape;
+    private final TextView durationViewLandscape;
+    private final View enterFullscreen;
+    private final View exitFullscreen;
+
+
+    private final View exoPlayerControllerTop;
+    private final View exoPlayerControllerTopLandscape;
+    private final View exoPlayerControllerBottom;
+    private final View exoPlayerControllerBottomLandscape;
+
+    private final View centerInfoWrapper;
+    private final TextView centerInfo;
+
+    private final TextView exoPlayerVideoName;
+    private final TextView exoPlayerVideoNameLandscape;
+
     private boolean portrait = true;
 
 
-    private long lastPlayerPosition = -1;
+    private SensorOrientation sensorOrientation;
 
-    private long liveStreamPosition = 0L;
-
-    private boolean isHls = false;
-
-    private ExoPlayer player;
-    private VisibilityListener visibilityListener;
-
-
-    private ExoClickListener fullScreenListener;
+    private OrientationListener orientationListener;
     private ExoClickListener backListener;
 
+
+    private boolean isHls;
 
     public ExoVideoPlaybackControlView(Context context) {
         this(context, null);
@@ -238,157 +207,294 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
     public ExoVideoPlaybackControlView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr, attrs);
+    }
 
+    public ExoVideoPlaybackControlView(Context context, AttributeSet attrs, int defStyleAttr,
+                                       AttributeSet playbackAttrs) {
+        super(context, attrs, defStyleAttr);
+        int controllerLayoutId = R.layout.exo_video_playback_control_view;
         rewindMs = DEFAULT_REWIND_MS;
         fastForwardMs = DEFAULT_FAST_FORWARD_MS;
         showTimeoutMs = DEFAULT_SHOW_TIMEOUT_MS;
-
-
-        if (attrs != null) {
-            TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ExoVideoPlaybackControlView, 0, 0);
-
+        repeatToggleModes = DEFAULT_REPEAT_TOGGLE_MODES;
+        showShuffleButton = false;
+        if (playbackAttrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(playbackAttrs,
+                    R.styleable.PlaybackControlView, 0, 0);
             try {
-                rewindMs = typedArray.getInt(R.styleable.ExoVideoPlaybackControlView_rewindIncrement, rewindMs);
-                fastForwardMs = typedArray.getInt(R.styleable.ExoVideoPlaybackControlView_fastForwardIncrement, fastForwardMs);
-                showTimeoutMs = typedArray.getInt(R.styleable.ExoVideoPlaybackControlView_showTimeout, showTimeoutMs);
+                rewindMs = a.getInt(R.styleable.ExoVideoPlaybackControlView_rewind_increment, rewindMs);
+                fastForwardMs = a.getInt(R.styleable.ExoVideoPlaybackControlView_fastforward_increment,
+                        fastForwardMs);
+                showTimeoutMs = a.getInt(R.styleable.ExoVideoPlaybackControlView_show_timeout, showTimeoutMs);
+                controllerLayoutId = a.getResourceId(R.styleable.ExoVideoPlaybackControlView_controller_layout_id,
+                        controllerLayoutId);
+                repeatToggleModes = getRepeatToggleModes(a, repeatToggleModes);
+                showShuffleButton = a.getBoolean(R.styleable.ExoVideoPlaybackControlView_show_shuffle_button,
+                        showShuffleButton);
             } finally {
-                typedArray.recycle();
+                a.recycle();
             }
         }
-
+        period = new Timeline.Period();
+        window = new Timeline.Window();
         formatBuilder = new StringBuilder();
         formatter = new Formatter(formatBuilder, Locale.getDefault());
-        currentWindow = new Timeline.Window();
+        adGroupTimesMs = new long[0];
+        playedAdGroups = new boolean[0];
+        extraAdGroupTimesMs = new long[0];
+        extraPlayedAdGroups = new boolean[0];
         componentListener = new ComponentListener();
+        controlDispatcher = new com.google.android.exoplayer2.DefaultControlDispatcher();
 
-        window = new Timeline.Window();
+        LayoutInflater.from(context).inflate(controllerLayoutId, this);
+        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
 
-
-        LayoutInflater.from(context).inflate(R.layout.exo_playback_control_view, this);
-
-        findViews();
-        initViews();
-        initOrientationListener();
-        showPortraitOrLandscape();
-        updateTime();
-    }
-
-
-    private void findViews() {
-        displayName = (TextView) findViewById(R.id.displayName);
-        localTime = (TextView) findViewById(R.id.localTime);
-        battery = (BatteryLevelView) findViewById(R.id.battery);
-        centerContentWrapper = (FrameLayout) findViewById(R.id.centerContentWrapper);
-        loadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
-        centerInfo = (TextView) findViewById(R.id.centerInfo);
-        controllerWrapper = (LinearLayout) findViewById(R.id.controllerWrapper);
-        play = (ImageButton) findViewById(R.id.play);
-        currentTime = (TextView) findViewById(R.id.currentTime);
-        videoProgress = (SeekBar) findViewById(R.id.videoProgress);
-        endTime = (TextView) findViewById(R.id.endTime);
-        fullScreen = (ImageButton) findViewById(R.id.fullScreen);
-        controllerWrapperLandscape = (LinearLayout) findViewById(R.id.controllerWrapperLandscape);
-        videoProgressLandscape = (SeekBar) findViewById(R.id.videoProgressLandscape);
-        playLandscape = (ImageButton) findViewById(R.id.playLandscape);
-        nextLandscape = (ImageButton) findViewById(R.id.nextLandscape);
-        timeLandscape = (TextView) findViewById(R.id.timeLandscape);
-        customView = (FrameLayout) findViewById(R.id.customView);
-        fullScreenLandscape = (ImageButton) findViewById(R.id.fullScreenLandscape);
-    }
-
-    public void setTopWrapperTextSize(float textSize) {
-        if (textSize != Float.MIN_VALUE) {
-            displayName.setTextSize(textSize);
-            localTime.setTextSize(textSize);
+        durationView = findViewById(R.id.exo_player_duration);
+        positionView = findViewById(R.id.exo_player_position);
+        timeBar = findViewById(R.id.exo_player_progress);
+        if (timeBar != null) {
+            timeBar.addListener(componentListener);
         }
+
+
+        playButton = findViewById(R.id.exo_player_play);
+        if (playButton != null) {
+            playButton.setOnClickListener(componentListener);
+        }
+
+
+        pauseButton = findViewById(R.id.exo_player_pause);
+        if (pauseButton != null) {
+            pauseButton.setOnClickListener(componentListener);
+        }
+
+
+        previousButton = findViewById(R.id.exo_prev);
+        if (previousButton != null) {
+            previousButton.setOnClickListener(componentListener);
+        }
+        nextButton = findViewById(R.id.exo_next);
+        if (nextButton != null) {
+            nextButton.setOnClickListener(componentListener);
+        }
+        rewindButton = findViewById(R.id.exo_rew);
+        if (rewindButton != null) {
+            rewindButton.setOnClickListener(componentListener);
+        }
+        fastForwardButton = findViewById(R.id.exo_ffwd);
+        if (fastForwardButton != null) {
+            fastForwardButton.setOnClickListener(componentListener);
+        }
+        repeatToggleButton = findViewById(R.id.exo_repeat_toggle);
+        if (repeatToggleButton != null) {
+            repeatToggleButton.setOnClickListener(componentListener);
+        }
+        shuffleButton = findViewById(R.id.exo_shuffle);
+        if (shuffleButton != null) {
+            shuffleButton.setOnClickListener(componentListener);
+        }
+        Resources resources = context.getResources();
+        repeatOffButtonDrawable = resources.getDrawable(R.drawable.exo_controls_repeat_off);
+        repeatOneButtonDrawable = resources.getDrawable(R.drawable.exo_controls_repeat_one);
+        repeatAllButtonDrawable = resources.getDrawable(R.drawable.exo_controls_repeat_all);
+        repeatOffButtonContentDescription = resources.getString(
+                R.string.exo_controls_repeat_off_description);
+        repeatOneButtonContentDescription = resources.getString(
+                R.string.exo_controls_repeat_one_description);
+        repeatAllButtonContentDescription = resources.getString(
+                R.string.exo_controls_repeat_all_description);
+
+
+        durationViewLandscape = findViewById(R.id.exo_player_position_duration_landscape);
+
+        timeBarLandscape = findViewById(R.id.exo_player_progress_landscape);
+        if (timeBarLandscape != null) {
+            timeBarLandscape.addListener(componentListener);
+        }
+
+        playButtonLandScape = findViewById(R.id.exo_player_play_landscape);
+        if (playButtonLandScape != null) {
+            playButtonLandScape.setOnClickListener(componentListener);
+        }
+
+        pauseButtonLandScape = findViewById(R.id.exo_player_pause_landscape);
+        if (pauseButtonLandScape != null) {
+            pauseButtonLandScape.setOnClickListener(componentListener);
+        }
+
+        enterFullscreen = findViewById(R.id.exo_player_enter_fullscreen);
+        if (enterFullscreen != null) {
+            enterFullscreen.setOnClickListener(componentListener);
+        }
+
+
+        exitFullscreen = findViewById(R.id.exo_player_exit_fullscreen);
+        if (exitFullscreen != null) {
+            exitFullscreen.setOnClickListener(componentListener);
+        }
+
+        centerInfoWrapper = findViewById(R.id.exo_player_center_info_wrapper);
+        centerInfo = findViewById(R.id.exo_player_center_text);
+
+
+        exoPlayerControllerTop = findViewById(R.id.exo_player_controller_top);
+        exoPlayerControllerTopLandscape = findViewById(R.id.exo_player_controller_top_landscape);
+        exoPlayerControllerBottom = findViewById(R.id.exo_player_controller_bottom);
+        exoPlayerControllerBottomLandscape = findViewById(R.id.exo_player_controller_bottom_landscape);
+
+
+        exoPlayerVideoName = findViewById(R.id.exo_player_video_name);
+        if (exoPlayerVideoName != null) {
+            exoPlayerVideoName.setOnClickListener(componentListener);
+        }
+
+        exoPlayerVideoNameLandscape = findViewById(R.id.exo_player_video_name_landscape);
+        if (exoPlayerVideoNameLandscape != null) {
+            exoPlayerVideoNameLandscape.setOnClickListener(componentListener);
+        }
+
+        if (centerInfoWrapper != null) {
+            setupVideoGesture();
+        }
+
+        sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
+
     }
 
 
-    private void initViews() {
-        displayName.setOnClickListener(componentListener);
-        centerContentWrapper.setOnClickListener(componentListener);
-        centerContentWrapper.setOnTouchListener(new OnTouchListener() {
+    private void setupVideoGesture() {
+        OnVideoGestureChangeListener onVideoGestureChangeListener = new OnVideoGestureChangeListener() {
+
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return dispatchCenterWrapperTouchEvent(event);
+            public void onVolumeChanged(int range, int type) {
+                show();
+                int drawableId;
+                if (type == VOLUME_CHANGED_MUTE) {
+                    drawableId = R.drawable.ic_volume_mute_white_36dp;
+                } else if (type == VOLUME_CHANGED_INCREMENT) {
+                    drawableId = R.drawable.ic_volume_up_white_36dp;
+                } else {
+                    drawableId = R.drawable.ic_volume_down_white_36dp;
+                }
+
+                setVolumeOrBrightnessInfo(getContext().getString(R.string.volume_changing, range), drawableId);
             }
-        });
 
-        //portrait
-        videoProgress.setMax(PROGRESS_BAR_MAX);
-        videoProgress.setOnSeekBarChangeListener(componentListener);
-        play.setOnClickListener(componentListener);
-        fullScreen.setOnClickListener(componentListener);
-
-        //landscape
-        videoProgressLandscape.setMax(PROGRESS_BAR_MAX);
-        videoProgressLandscape.setOnSeekBarChangeListener(componentListener);
-        playLandscape.setOnClickListener(componentListener);
-        fullScreenLandscape.setOnClickListener(componentListener);
-        nextLandscape.setOnClickListener(componentListener);
-    }
-
-
-    private void initOrientationListener() {
-        screenOrientationEventListener = new OrientationEventListener(getContext()) {
             @Override
-            public void onOrientationChanged(int orientation) {
+            public void onBrightnessChanged(int brightnessPercent) {
+                show();
+                String info = getContext().getString(R.string.brightness_changing, brightnessPercent);
+                int drawable = whichBrightnessImageToUse(brightnessPercent);
+                setVolumeOrBrightnessInfo(info, drawable);
+            }
 
-                if (orientationListener == null || !isScreenOpenRotate()) {
+            @Override
+            public void onNoGesture() {
+
+                if (centerInfo == null) {
+                    return;
+                }
+                centerInfo.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
+                centerInfo.setVisibility(GONE);
+            }
+
+            @Override
+            public void onShowSeekSize(long seekSize, boolean fastForward) {
+                show();
+                if (centerInfo == null) {
                     return;
                 }
 
-
-                if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
-                    changeOrientation(SENSOR_UNKNOWN);
-                    return;  //手机平放时，检测不到有效的角度
-                }
-//只检测是否有四个角度的改变
-                if (orientation > 350 || orientation < 10) { //0度
-                    orientation = 0;
-                } else if (orientation > 80 && orientation < 100) { //90度
-                    orientation = 90;
-                } else if (orientation > 170 && orientation < 190) { //180度
-                    orientation = 180;
-                } else if (orientation > 260 && orientation < 280) { //270度
-                    orientation = 270;
-                } else {
-                    return;
-                }
-
-                if (oldScreenOrientation == orientation) {
-                    changeOrientation(SENSOR_UNKNOWN);
-                    return;
-                }
-
-
-                oldScreenOrientation = orientation;
-
-                if (orientation == 0 || orientation == 180) {
-                    changeOrientation(SENSOR_PORTRAIT);
-                } else {
-                    changeOrientation(SENSOR_LANDSCAPE);
-                }
+                centerInfo.setVisibility(VISIBLE);
+                centerInfo.setText(generateFastForwardOrRewindTxt(seekSize));
+                int drawableId = fastForward ? R.drawable.ic_fast_forward_white_36dp : R.drawable.ic_fast_rewind_white_36dp;
+                Drawable drawable = ContextCompat.getDrawable(getContext(), drawableId);
+                centerInfo.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
             }
         };
 
-        screenOrientationEventListener.enable();
-    }
 
-    private void initVol() {
-
-            /* Services and miscellaneous */
-        mAudioManager = (AudioManager) getContext().getApplicationContext().getSystemService(AUDIO_SERVICE);
-        mAudioMax = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        VideoGesture videoGesture = new VideoGesture(getContext(), onVideoGestureChangeListener, () -> player);
+        centerInfoWrapper.setOnClickListener(componentListener);
+        centerInfoWrapper.setOnTouchListener(videoGesture);
 
     }
 
-    public ExoPlayer getPlayer() {
+
+    private CharSequence generateFastForwardOrRewindTxt(long changingTime) {
+
+        long duration = player == null ? 0 : player.getDuration();
+        String result = Util.getStringForTime(formatBuilder, formatter, changingTime);
+        result = result + "/";
+        result = result + Util.getStringForTime(formatBuilder, formatter, duration);
+
+        int index = result.indexOf("/");
+
+        SpannableString spannableString = new SpannableString(result);
+
+
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorAccent});
+        int color = a.getColor(0, 0);
+        a.recycle();
+        spannableString.setSpan(new ForegroundColorSpan(color), 0, index, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(Color.WHITE), index, result.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spannableString;
+    }
+
+    @DrawableRes
+    private int whichBrightnessImageToUse(int brightnessInt) {
+        if (brightnessInt <= 15) {
+            return R.drawable.ic_brightness_1_white_36dp;
+        } else if (brightnessInt <= 30 && brightnessInt > 15) {
+            return R.drawable.ic_brightness_2_white_36dp;
+        } else if (brightnessInt <= 45 && brightnessInt > 30) {
+            return R.drawable.ic_brightness_3_white_36dp;
+        } else if (brightnessInt <= 60 && brightnessInt > 45) {
+            return R.drawable.ic_brightness_4_white_36dp;
+        } else if (brightnessInt <= 75 && brightnessInt > 60) {
+            return R.drawable.ic_brightness_5_white_36dp;
+        } else if (brightnessInt <= 90 && brightnessInt > 75) {
+            return R.drawable.ic_brightness_6_white_36dp;
+        } else {
+            return R.drawable.ic_brightness_7_white_36dp;
+        }
+
+    }
+
+    private void setVolumeOrBrightnessInfo(String txt, @DrawableRes int drawableId) {
+        if (centerInfo == null) {
+            return;
+        }
+        centerInfo.setVisibility(VISIBLE);
+        centerInfo.setText(txt);
+        centerInfo.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        centerInfo.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), drawableId), null, null);
+    }
+
+
+    @SuppressWarnings("ResourceType")
+    private static @RepeatModeUtil.RepeatToggleModes
+    int getRepeatToggleModes(TypedArray a,
+                             @RepeatModeUtil.RepeatToggleModes int repeatToggleModes) {
+        return a.getInt(R.styleable.PlaybackControlView_repeat_toggle_modes, repeatToggleModes);
+    }
+
+    /**
+     * Returns the {@link Player} currently being controlled by this view, or null if no player is
+     * set.
+     */
+    public Player getPlayer() {
         return player;
     }
 
-    public void setPlayer(ExoPlayer player) {
+    /**
+     * Sets the {@link Player} to control.
+     *
+     * @param player The {@link Player} to control.
+     */
+    public void setPlayer(Player player) {
         if (this.player == player) {
             return;
         }
@@ -402,30 +508,40 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         updateAll();
     }
 
-
-    public void setFullScreenListener(ExoClickListener fullScreenListener) {
-        this.fullScreenListener = fullScreenListener;
+    /**
+     * Sets whether the time bar should show all windows, as opposed to just the current one. If the
+     * timeline has a period with unknown duration or more than
+     * {@link #MAX_WINDOWS_FOR_MULTI_WINDOW_TIME_BAR} windows the time bar will fall back to showing a
+     * single window.
+     *
+     * @param showMultiWindowTimeBar Whether the time bar should show all windows.
+     */
+    public void setShowMultiWindowTimeBar(boolean showMultiWindowTimeBar) {
+        this.showMultiWindowTimeBar = showMultiWindowTimeBar;
+        updateTimeBarMode();
     }
 
-    public void setPortraitBackListener(ExoClickListener backListener) {
-        this.backListener = backListener;
-    }
-
-
-    public void setOrientationListener(OrientationListener orientationListener) {
-        this.orientationListener = orientationListener;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName.setText(displayName);
-    }
-
-    public boolean isPortrait() {
-        return portrait;
-    }
-
-    public void addViewToControllerWhenLandscape(View view) {
-        customView.addView(view);
+    /**
+     * Sets the millisecond positions of extra ad markers relative to the start of the window (or
+     * timeline, if in multi-window mode) and whether each extra ad has been played or not. The
+     * markers are shown in addition to any ad markers for ads in the player's timeline.
+     *
+     * @param extraAdGroupTimesMs The millisecond timestamps of the extra ad markers to show, or
+     *                            {@code null} to show no extra ad markers.
+     * @param extraPlayedAdGroups Whether each ad has been played, or {@code null} to show no extra ad
+     *                            markers.
+     */
+    public void setExtraAdGroupMarkers(@Nullable long[] extraAdGroupTimesMs,
+                                       @Nullable boolean[] extraPlayedAdGroups) {
+        if (extraAdGroupTimesMs == null) {
+            this.extraAdGroupTimesMs = new long[0];
+            this.extraPlayedAdGroups = new boolean[0];
+        } else {
+            Assertions.checkArgument(extraAdGroupTimesMs.length == extraPlayedAdGroups.length);
+            this.extraAdGroupTimesMs = extraAdGroupTimesMs;
+            this.extraPlayedAdGroups = extraPlayedAdGroups;
+        }
+        updateProgress();
     }
 
     /**
@@ -437,24 +553,23 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         this.visibilityListener = listener;
     }
 
-    public void setPortrait(boolean portrait) {
-        this.portrait = portrait;
-        showPortraitOrLandscape();
-    }
-
-    public void toggleControllerOrientation() {
-        if (orientationListener == null) {
-            setPortrait(!portrait);
-        } else {
-            changeOrientation(portrait ? SENSOR_LANDSCAPE : SENSOR_PORTRAIT);
-        }
-
+    /**
+     * Sets the {@link com.google.android.exoplayer2.ControlDispatcher}.
+     *
+     * @param controlDispatcher The {@link com.google.android.exoplayer2.ControlDispatcher}, or null
+     *                          to use {@link com.google.android.exoplayer2.DefaultControlDispatcher}.
+     */
+    public void setControlDispatcher(
+            @Nullable com.google.android.exoplayer2.ControlDispatcher controlDispatcher) {
+        this.controlDispatcher = controlDispatcher == null
+                ? new com.google.android.exoplayer2.DefaultControlDispatcher() : controlDispatcher;
     }
 
     /**
      * Sets the rewind increment in milliseconds.
      *
-     * @param rewindMs The rewind increment in milliseconds.
+     * @param rewindMs The rewind increment in milliseconds. A non-positive value will cause the
+     *                 rewind button to be disabled.
      */
     public void setRewindIncrementMs(int rewindMs) {
         this.rewindMs = rewindMs;
@@ -464,7 +579,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     /**
      * Sets the fast forward increment in milliseconds.
      *
-     * @param fastForwardMs The fast forward increment in milliseconds.
+     * @param fastForwardMs The fast forward increment in milliseconds. A non-positive value will
+     *                      cause the fast forward button to be disabled.
      */
     public void setFastForwardIncrementMs(int fastForwardMs) {
         this.fastForwardMs = fastForwardMs;
@@ -482,7 +598,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         return showTimeoutMs;
     }
 
-
     /**
      * Sets the playback controls timeout. The playback controls are automatically hidden after this
      * duration of time has elapsed without user input.
@@ -495,6 +610,55 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
     /**
+     * Returns which repeat toggle modes are enabled.
+     *
+     * @return The currently enabled {@link RepeatModeUtil.RepeatToggleModes}.
+     */
+    public @RepeatModeUtil.RepeatToggleModes
+    int getRepeatToggleModes() {
+        return repeatToggleModes;
+    }
+
+    /**
+     * Sets which repeat toggle modes are enabled.
+     *
+     * @param repeatToggleModes A set of {@link RepeatModeUtil.RepeatToggleModes}.
+     */
+    public void setRepeatToggleModes(@RepeatModeUtil.RepeatToggleModes int repeatToggleModes) {
+        this.repeatToggleModes = repeatToggleModes;
+        if (player != null) {
+            @Player.RepeatMode int currentMode = player.getRepeatMode();
+            if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE
+                    && currentMode != Player.REPEAT_MODE_OFF) {
+                controlDispatcher.dispatchSetRepeatMode(player, Player.REPEAT_MODE_OFF);
+            } else if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_ONE
+                    && currentMode == Player.REPEAT_MODE_ALL) {
+                controlDispatcher.dispatchSetRepeatMode(player, Player.REPEAT_MODE_ONE);
+            } else if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_ALL
+                    && currentMode == Player.REPEAT_MODE_ONE) {
+                controlDispatcher.dispatchSetRepeatMode(player, Player.REPEAT_MODE_ALL);
+            }
+        }
+    }
+
+    /**
+     * Returns whether the shuffle button is shown.
+     */
+    public boolean getShowShuffleButton() {
+        return showShuffleButton;
+    }
+
+    /**
+     * Sets whether the shuffle button is shown.
+     *
+     * @param showShuffleButton Whether the shuffle button is shown.
+     */
+    public void setShowShuffleButton(boolean showShuffleButton) {
+        this.showShuffleButton = showShuffleButton;
+        updateShuffleButton();
+    }
+
+    /**
      * Shows the playback controls. If {@link #getShowTimeoutMs()} is positive then the controls will
      * be automatically hidden after this duration of time has elapsed without user input.
      */
@@ -504,25 +668,16 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             if (visibilityListener != null) {
                 visibilityListener.onVisibilityChange(getVisibility());
             }
-
             updateAll();
+            requestPlayPauseFocus();
         }
         // Call hideAfterTimeout even if already visible to reset the timeout.
         hideAfterTimeout();
     }
 
-
-    public void showUntilHideCalled() {
-        if (!isVisible()) {
-            setVisibility(VISIBLE);
-            if (visibilityListener != null) {
-                visibilityListener.onVisibilityChange(getVisibility());
-            }
-            updateAll();
-        }
-    }
-
-
+    /**
+     * Hides the controller.
+     */
     public void hide() {
         if (isVisible()) {
             setVisibility(GONE);
@@ -554,10 +709,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
     }
 
-
     private void updateAll() {
         updatePlayPauseButton();
         updateNavigation();
+        updateRepeatModeButton();
+        updateShuffleButton();
         updateProgress();
     }
 
@@ -565,57 +721,113 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (!isVisible() || !isAttachedToWindow) {
             return;
         }
+        boolean requestPlayPauseFocus = false;
         boolean playing = player != null && player.getPlayWhenReady();
-        String contentDescription = getResources().getString(
-                playing ? R.string.exo_controls_pause_description : R.string.exo_controls_play_description);
-
-        ImageButton playButton;
-        if (portrait) {
-            playButton = play;
-        } else {
-            playButton = playLandscape;
+        if (playButton != null) {
+            requestPlayPauseFocus |= playing && playButton.isFocused();
+            playButton.setVisibility(playing ? View.GONE : View.VISIBLE);
         }
-        playButton.setContentDescription(contentDescription);
-        playButton.setImageResource(playing ? R.drawable.ic_pause_white_36dp : R.drawable.ic_play_arrow_white_36dp);
+        if (pauseButton != null) {
+            requestPlayPauseFocus |= !playing && pauseButton.isFocused();
+            pauseButton.setVisibility(!playing ? View.GONE : View.VISIBLE);
+        }
 
+
+        if (playButtonLandScape != null) {
+            requestPlayPauseFocus |= playing && playButtonLandScape.isFocused();
+            playButtonLandScape.setVisibility(playing ? View.GONE : View.VISIBLE);
+        }
+        if (pauseButtonLandScape != null) {
+            requestPlayPauseFocus |= !playing && pauseButtonLandScape.isFocused();
+            pauseButtonLandScape.setVisibility(!playing ? View.GONE : View.VISIBLE);
+        }
+
+
+        if (requestPlayPauseFocus) {
+            requestPlayPauseFocus();
+        }
     }
 
-
     private void updateNavigation() {
-
         if (!isVisible() || !isAttachedToWindow) {
             return;
         }
-        Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
-        boolean haveNonEmptyTimeline = currentTimeline != null && !currentTimeline.isEmpty();
+        Timeline timeline = player != null ? player.getCurrentTimeline() : null;
+        boolean haveNonEmptyTimeline = timeline != null && !timeline.isEmpty();
+        boolean isSeekable = false;
+        boolean enablePrevious = false;
         boolean enableNext = false;
-        if (haveNonEmptyTimeline) {
-            int currentWindowIndex = player.getCurrentWindowIndex();
-            currentTimeline.getWindow(currentWindowIndex, currentWindow);
-//            enablePrevious = currentWindowIndex > 0 || isSeekable || !currentWindow.isDynamic;
-            enableNext = (currentWindowIndex < currentTimeline.getWindowCount() - 1)
-                    || currentWindow.isDynamic;
+        if (haveNonEmptyTimeline && !player.isPlayingAd()) {
+            int windowIndex = player.getCurrentWindowIndex();
+            timeline.getWindow(windowIndex, window);
+            isSeekable = window.isSeekable;
+            enablePrevious = isSeekable || !window.isDynamic
+                    || player.getPreviousWindowIndex() != C.INDEX_UNSET;
+            enableNext = window.isDynamic || player.getNextWindowIndex() != C.INDEX_UNSET;
         }
-
-
-        setButtonEnabled(enableNext, nextLandscape);
-
+        setButtonEnabled(enablePrevious, previousButton);
+        setButtonEnabled(enableNext, nextButton);
+        setButtonEnabled(fastForwardMs > 0 && isSeekable, fastForwardButton);
+        setButtonEnabled(rewindMs > 0 && isSeekable, rewindButton);
+        if (timeBar != null) {
+            timeBar.setEnabled(isSeekable && !isHls);
+        }
+        if (timeBarLandscape != null) {
+            timeBarLandscape.setEnabled(isSeekable && !isHls);
+        }
     }
 
-
-    private boolean canSeek() {
-
-        Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
-        boolean haveNonEmptyTimeline = currentTimeline != null && !currentTimeline.isEmpty();
-        boolean isSeekable = false;
-        if (haveNonEmptyTimeline) {
-            int currentWindowIndex = player.getCurrentWindowIndex();
-            currentTimeline.getWindow(currentWindowIndex, currentWindow);
-            isSeekable = currentWindow.isSeekable;
-//            enablePrevious = currentWindowIndex > 0 || isSeekable || !currentWindow.isDynamic;
+    private void updateRepeatModeButton() {
+        if (!isVisible() || !isAttachedToWindow || repeatToggleButton == null) {
+            return;
         }
+        if (repeatToggleModes == RepeatModeUtil.REPEAT_TOGGLE_MODE_NONE) {
+            repeatToggleButton.setVisibility(View.GONE);
+            return;
+        }
+        if (player == null) {
+            setButtonEnabled(false, repeatToggleButton);
+            return;
+        }
+        setButtonEnabled(true, repeatToggleButton);
+        switch (player.getRepeatMode()) {
+            case Player.REPEAT_MODE_OFF:
+                repeatToggleButton.setImageDrawable(repeatOffButtonDrawable);
+                repeatToggleButton.setContentDescription(repeatOffButtonContentDescription);
+                break;
+            case Player.REPEAT_MODE_ONE:
+                repeatToggleButton.setImageDrawable(repeatOneButtonDrawable);
+                repeatToggleButton.setContentDescription(repeatOneButtonContentDescription);
+                break;
+            case Player.REPEAT_MODE_ALL:
+                repeatToggleButton.setImageDrawable(repeatAllButtonDrawable);
+                repeatToggleButton.setContentDescription(repeatAllButtonContentDescription);
+                break;
+        }
+        repeatToggleButton.setVisibility(View.VISIBLE);
+    }
 
-        return isSeekable && isTimelineStatic;
+    private void updateShuffleButton() {
+        if (!isVisible() || !isAttachedToWindow || shuffleButton == null) {
+            return;
+        }
+        if (!showShuffleButton) {
+            shuffleButton.setVisibility(View.GONE);
+        } else if (player == null) {
+            setButtonEnabled(false, shuffleButton);
+        } else {
+            shuffleButton.setAlpha(player.getShuffleModeEnabled() ? 1f : 0.3f);
+            shuffleButton.setEnabled(true);
+            shuffleButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updateTimeBarMode() {
+        if (player == null) {
+            return;
+        }
+        multiWindowTimeBar = showMultiWindowTimeBar
+                && canShowMultiWindowTimeBar(player.getCurrentTimeline(), window);
     }
 
     private void updateProgress() {
@@ -623,388 +835,374 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             return;
         }
 
-
-        long duration = player == null ? 0 : player.getDuration();
-        long position = player == null ? 0 : player.getCurrentPosition();
-        lastPlayerPosition = position;
-
-        if(isHls){
-            duration = 0L;
-            position = 0L;
+        long position = 0;
+        long bufferedPosition = 0;
+        long duration = 0;
+        if (player != null) {
+            long currentWindowTimeBarOffsetUs = 0;
+            long durationUs = 0;
+            int adGroupCount = 0;
+            Timeline timeline = player.getCurrentTimeline();
+            if (!timeline.isEmpty()) {
+                int currentWindowIndex = player.getCurrentWindowIndex();
+                int firstWindowIndex = multiWindowTimeBar ? 0 : currentWindowIndex;
+                int lastWindowIndex =
+                        multiWindowTimeBar ? timeline.getWindowCount() - 1 : currentWindowIndex;
+                for (int i = firstWindowIndex; i <= lastWindowIndex; i++) {
+                    if (i == currentWindowIndex) {
+                        currentWindowTimeBarOffsetUs = durationUs;
+                    }
+                    timeline.getWindow(i, window);
+                    if (window.durationUs == C.TIME_UNSET) {
+                        Assertions.checkState(!multiWindowTimeBar);
+                        break;
+                    }
+                    for (int j = window.firstPeriodIndex; j <= window.lastPeriodIndex; j++) {
+                        timeline.getPeriod(j, period);
+                        int periodAdGroupCount = period.getAdGroupCount();
+                        for (int adGroupIndex = 0; adGroupIndex < periodAdGroupCount; adGroupIndex++) {
+                            long adGroupTimeInPeriodUs = period.getAdGroupTimeUs(adGroupIndex);
+                            if (adGroupTimeInPeriodUs == C.TIME_END_OF_SOURCE) {
+                                if (period.durationUs == C.TIME_UNSET) {
+                                    // Don't show ad markers for postrolls in periods with unknown duration.
+                                    continue;
+                                }
+                                adGroupTimeInPeriodUs = period.durationUs;
+                            }
+                            long adGroupTimeInWindowUs = adGroupTimeInPeriodUs + period.getPositionInWindowUs();
+                            if (adGroupTimeInWindowUs >= 0 && adGroupTimeInWindowUs <= window.durationUs) {
+                                if (adGroupCount == adGroupTimesMs.length) {
+                                    int newLength = adGroupTimesMs.length == 0 ? 1 : adGroupTimesMs.length * 2;
+                                    adGroupTimesMs = Arrays.copyOf(adGroupTimesMs, newLength);
+                                    playedAdGroups = Arrays.copyOf(playedAdGroups, newLength);
+                                }
+                                adGroupTimesMs[adGroupCount] = C.usToMs(durationUs + adGroupTimeInWindowUs);
+                                playedAdGroups[adGroupCount] = period.hasPlayedAdGroup(adGroupIndex);
+                                adGroupCount++;
+                            }
+                        }
+                    }
+                    durationUs += window.durationUs;
+                }
+            }
+            duration = C.usToMs(durationUs);
+            position = C.usToMs(currentWindowTimeBarOffsetUs);
+            bufferedPosition = position;
+            if (player.isPlayingAd()) {
+                position += player.getContentPosition();
+                bufferedPosition = position;
+            } else {
+                position += player.getCurrentPosition();
+                bufferedPosition += player.getBufferedPosition();
+            }
+            if (timeBar != null) {
+                int extraAdGroupCount = extraAdGroupTimesMs.length;
+                int totalAdGroupCount = adGroupCount + extraAdGroupCount;
+                if (totalAdGroupCount > adGroupTimesMs.length) {
+                    adGroupTimesMs = Arrays.copyOf(adGroupTimesMs, totalAdGroupCount);
+                    playedAdGroups = Arrays.copyOf(playedAdGroups, totalAdGroupCount);
+                }
+                System.arraycopy(extraAdGroupTimesMs, 0, adGroupTimesMs, adGroupCount, extraAdGroupCount);
+                System.arraycopy(extraPlayedAdGroups, 0, playedAdGroups, adGroupCount, extraAdGroupCount);
+                timeBar.setAdGroupTimesMs(adGroupTimesMs, playedAdGroups, totalAdGroupCount);
+            }
+        }
+        if (durationView != null && !isHls) {
+            durationView.setText(Util.getStringForTime(formatBuilder, formatter, duration));
         }
 
-        endTime.setText(stringForTime(duration));
-
-
-        if (!dragging) {
-            currentTime.setText(stringForTime(position));
-            timeLandscape.setText(stringForTime(position) + "/" + stringForTime(duration));
+        if (durationViewLandscape != null && !isHls) {
+            String positionStr = Util.getStringForTime(formatBuilder, formatter, position);
+            String durationStr = Util.getStringForTime(formatBuilder, formatter, duration);
+            durationViewLandscape.setText(positionStr.concat("/").concat(durationStr));
         }
 
-        if (canSeek()) {
-            videoProgress.setEnabled(true);
-            videoProgress.setProgress(progressBarValue(position));
-            videoProgressLandscape.setEnabled(true);
-            videoProgressLandscape.setProgress(progressBarValue(position));
-        } else {
-            videoProgress.setEnabled(false);
-            videoProgress.setProgress(PROGRESS_BAR_MAX);
-            videoProgressLandscape.setEnabled(false);
-            videoProgressLandscape.setProgress(PROGRESS_BAR_MAX);
+        if (positionView != null && !scrubbing && !isHls) {
+            positionView.setText(Util.getStringForTime(formatBuilder, formatter, position));
         }
 
 
-        long bufferedPosition = player == null ? 0 : player.getBufferedPosition();
-        videoProgress.setSecondaryProgress(progressBarValue(bufferedPosition));
-        videoProgressLandscape.setSecondaryProgress(progressBarValue(bufferedPosition));
-        // Remove scheduled updates.
+        if (timeBar != null && !isHls) {
+            timeBar.setPosition(position);
+            timeBar.setBufferedPosition(bufferedPosition);
+            timeBar.setDuration(duration);
+        }
+
+        if (timeBarLandscape != null && !isHls) {
+            timeBarLandscape.setPosition(position);
+            timeBarLandscape.setBufferedPosition(bufferedPosition);
+            timeBarLandscape.setDuration(duration);
+        }
+
+
+        // Cancel any pending updates and schedule a new one if necessary.
         removeCallbacks(updateProgressAction);
-
-        // Schedule an update if necessary.
-        int playbackState = player == null ? ExoPlayer.STATE_IDLE : player.getPlaybackState();
-        if (playbackState != ExoPlayer.STATE_IDLE && playbackState != ExoPlayer.STATE_ENDED) {
+        int playbackState = player == null ? Player.STATE_IDLE : player.getPlaybackState();
+        if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED) {
             long delayMs;
-            if (player.getPlayWhenReady() && playbackState == ExoPlayer.STATE_READY) {
-                delayMs = 1000 - (position % 1000);
-                if (delayMs < 200) {
-                    delayMs += 1000;
+            if (player.getPlayWhenReady() && playbackState == Player.STATE_READY) {
+                float playbackSpeed = player.getPlaybackParameters().speed;
+                if (playbackSpeed <= 0.1f) {
+                    delayMs = 1000;
+                } else if (playbackSpeed <= 5f) {
+                    long mediaTimeUpdatePeriodMs = 1000 / Math.max(1, Math.round(1 / playbackSpeed));
+                    long mediaTimeDelayMs = mediaTimeUpdatePeriodMs - (position % mediaTimeUpdatePeriodMs);
+                    if (mediaTimeDelayMs < (mediaTimeUpdatePeriodMs / 5)) {
+                        mediaTimeDelayMs += mediaTimeUpdatePeriodMs;
+                    }
+                    delayMs = playbackSpeed == 1 ? mediaTimeDelayMs
+                            : (long) (mediaTimeDelayMs / playbackSpeed);
+                } else {
+                    delayMs = 200;
                 }
             } else {
                 delayMs = 1000;
             }
             postDelayed(updateProgressAction, delayMs);
         }
-
     }
 
-    private void updateLiveStreamProgress() {
+    private void requestPlayPauseFocus() {
+        boolean playing = player != null && player.getPlayWhenReady();
+        if (!playing && playButton != null) {
+            playButton.requestFocus();
+        } else if (playing && pauseButton != null) {
+            pauseButton.requestFocus();
 
-
-        videoProgress.setEnabled(false);
-        videoProgress.setProgress(PROGRESS_BAR_MAX);
-        videoProgressLandscape.setEnabled(false);
-        videoProgressLandscape.setProgress(PROGRESS_BAR_MAX);
-
-        postDelayed(updateLiveStreamProgressAction, 1000);
-    }
-
-    private void updateTime() {
-        final Calendar calendar = Calendar.getInstance();
-
-        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-//        int amOrPm = calendar.get(Calendar.AM_PM);
-//        boolean is24HourFormat = DateFormat.is24HourFormat(getContext());
-
-//        Resources res = getResources();
-        String timeResult = "";
-//        hourOfDay = is24HourFormat ? hourOfDay : (hourOfDay > 12 ? hourOfDay - 12: hourOfDay);
-        if (hourOfDay >= 10) {
-            timeResult += Integer.toString(hourOfDay);
-        } else {
-            timeResult += "0" + hourOfDay;
         }
 
-        timeResult += ":";
+        if (!playing && playButtonLandScape != null) {
+            playButtonLandScape.requestFocus();
+        } else if (playing && pauseButtonLandScape != null) {
+            pauseButtonLandScape.requestFocus();
 
-        if (minute >= 10) {
-            timeResult += Integer.toString(minute);
-        } else {
-            timeResult += "0" + minute;
         }
-
-
-//
-//        if (!is24HourFormat) {
-//            String str = amOrPm == Calendar.AM ? res.getString(R.string.time_am) : res.getString(R.string.time_pm);
-//            timeResult = timeResult + " " + str;
-//        }
-        localTime.setText(timeResult);
     }
 
     private void setButtonEnabled(boolean enabled, View view) {
+        if (view == null) {
+            return;
+        }
         view.setEnabled(enabled);
-        view.setVisibility(enabled ? VISIBLE : INVISIBLE);
+        view.setAlpha(enabled ? 1f : 0.3f);
+        view.setVisibility(VISIBLE);
     }
 
-    private boolean dispatchCenterWrapperTouchEvent(MotionEvent event) {
-
-
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-
-        DisplayMetrics screen = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(screen);
-
-        if (mSurfaceYDisplayRange == 0) {
-            mSurfaceYDisplayRange = Math.min(screen.widthPixels, screen.heightPixels);
+    private void previous() {
+        Timeline timeline = player.getCurrentTimeline();
+        if (timeline.isEmpty()) {
+            return;
         }
-
-        float x_changed, y_changed;
-        if (touchX != -1f && touchY != -1f) {
-            y_changed = event.getRawY() - touchY;
-            x_changed = event.getRawX() - touchX;
+        int windowIndex = player.getCurrentWindowIndex();
+        timeline.getWindow(windowIndex, window);
+        int previousWindowIndex = player.getPreviousWindowIndex();
+        if (previousWindowIndex != C.INDEX_UNSET
+                && (player.getCurrentPosition() <= MAX_POSITION_FOR_SEEK_TO_PREVIOUS
+                || (window.isDynamic && !window.isSeekable))) {
+            seekTo(previousWindowIndex, C.TIME_UNSET);
         } else {
-            x_changed = 0f;
-            y_changed = 0f;
+            seekTo(0);
         }
+    }
 
-//        Log.e("tag","x_c=" + x_changed + "screen_x =" + screen.xdpi +" screen_rawx" + event.getRawX());
-        float coef = Math.abs(y_changed / x_changed);
-        float xgesturesize = (((event.getRawX() - touchX) / screen.xdpi) * 2.54f);//2.54f
+    private void next() {
+        Timeline timeline = player.getCurrentTimeline();
+        if (timeline.isEmpty()) {
+            return;
+        }
+        int windowIndex = player.getCurrentWindowIndex();
+        int nextWindowIndex = player.getNextWindowIndex();
+        if (nextWindowIndex != C.INDEX_UNSET) {
+            seekTo(nextWindowIndex, C.TIME_UNSET);
+        } else if (timeline.getWindow(windowIndex, window, false).isDynamic) {
+            seekTo(windowIndex, C.TIME_UNSET);
+        }
+    }
 
+    private void rewind() {
+        if (rewindMs <= 0) {
+            return;
+        }
+        seekTo(Math.max(player.getCurrentPosition() - rewindMs, 0));
+    }
 
-        float delta_y = Math.max(1f, (Math.abs(mInitTouchY - event.getRawY()) / screen.xdpi + 0.5f) * 2f);
+    private void fastForward() {
+        if (fastForwardMs <= 0) {
+            return;
+        }
+        long durationMs = player.getDuration();
+        long seekPositionMs = player.getCurrentPosition() + fastForwardMs;
+        if (durationMs != C.TIME_UNSET) {
+            seekPositionMs = Math.min(seekPositionMs, durationMs);
+        }
+        seekTo(seekPositionMs);
+    }
 
-        switch (event.getAction()) {
+    private void seekTo(long positionMs) {
+        seekTo(player.getCurrentWindowIndex(), positionMs);
+    }
 
-            case MotionEvent.ACTION_DOWN:
-                mTouchAction = TOUCH_NONE;
-                touchX = event.getRawX();
-                mVol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                touchY = mInitTouchY = event.getRawY();
-                break;
+    private void seekTo(int windowIndex, long positionMs) {
+        boolean dispatched = controlDispatcher.dispatchSeekTo(player, windowIndex, positionMs);
+        if (!dispatched) {
+            // The seek wasn't dispatched. If the progress bar was dragged by the user to perform the
+            // seek then it'll now be in the wrong position. Trigger a progress update to snap it back.
+            updateProgress();
+        }
+    }
 
-            case MotionEvent.ACTION_MOVE:
-
-                if (mTouchAction != TOUCH_SEEK && coef > 2) {
-                    if (Math.abs(y_changed / mSurfaceYDisplayRange) < 0.05) {
-                        return false;
-                    }
-
-                    touchX = event.getRawX();
-                    touchY = event.getRawY();
-
-
-                    if ((int) touchX > (4 * screen.widthPixels / 7)) {
-                        doVolumeTouch(y_changed);
-//                        hideCenterInfo();
-//                            hideOverlay(true);
-                    }
-                    // Brightness (Up or Down - Left side)
-                    if ((int) touchX < (3 * screen.widthPixels / 7)) {
-                        doBrightnessTouch(y_changed);
-                    }
-
-                } else {
-                    doSeekTouch(Math.round(delta_y), xgesturesize, false);
+    private void seekToTimeBarPosition(long positionMs) {
+        int windowIndex;
+        Timeline timeline = player.getCurrentTimeline();
+        if (multiWindowTimeBar && !timeline.isEmpty()) {
+            int windowCount = timeline.getWindowCount();
+            windowIndex = 0;
+            while (true) {
+                long windowDurationMs = timeline.getWindow(windowIndex, window).getDurationMs();
+                if (positionMs < windowDurationMs) {
+                    break;
+                } else if (windowIndex == windowCount - 1) {
+                    // Seeking past the end of the last window should seek to the end of the timeline.
+                    positionMs = windowDurationMs;
+                    break;
                 }
-
-                break;
-
-            case MotionEvent.ACTION_UP:
-                if (mTouchAction == TOUCH_SEEK) {
-                    doSeekTouch(Math.round(delta_y), xgesturesize, true);
-                }
-
-                if (mTouchAction != TOUCH_NONE) {
-                    hideCenterInfo();
-                }
-
-                touchX = -1f;
-                touchY = -1f;
-                break;
-            default:
-                break;
-        }
-
-
-        return mTouchAction != TOUCH_NONE;
-    }
-
-
-    private void doVolumeTouch(float y_changed) {
-        if (mTouchAction != TOUCH_NONE && mTouchAction != TOUCH_VOLUME) {
-            return;
-        }
-
-        int oldVol = (int) mVol;
-        mTouchAction = TOUCH_VOLUME;
-        float delta = -((y_changed / mSurfaceYDisplayRange) * mAudioMax);
-        mVol += delta;
-        int vol = (int) Math.min(Math.max(mVol, 0), mAudioMax);
-        if (delta != 0f) {
-            setAudioVolume(vol, vol > oldVol);
-        }
-    }
-
-    private void setAudioVolume(int vol, boolean up) {
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
-
-        /* Since android 4.3, the safe volume warning dialog is displayed only with the FLAG_SHOW_UI flag.
-         * We don't want to always show the default UI volume, so show it only when volume is not set. */
-        int newVol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (vol != newVol) {
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, AudioManager.FLAG_SHOW_UI);
-        }
-
-        mTouchAction = TOUCH_VOLUME;
-        vol = vol * 100 / mAudioMax;
-        int drawableId;
-        if (newVol == 0) {
-            drawableId = R.drawable.ic_volume_mute_white_36dp;
-        } else if (up) {
-            drawableId = R.drawable.ic_volume_up_white_36dp;
-        } else {
-            drawableId = R.drawable.ic_volume_down_white_36dp;
-        }
-        setVolumeOrBrightnessInfo(getContext().getString(R.string.volume_changing, vol), drawableId);
-//        showInfoWithVerticalBar(getString(R.string.volume) + "\n" + Integer.toString(vol) + '%', 1000, vol);
-    }
-
-    private void doBrightnessTouch(float y_changed) {
-        if (mTouchAction != TOUCH_NONE && mTouchAction != TOUCH_BRIGHTNESS) {
-            return;
-        }
-
-        mTouchAction = TOUCH_BRIGHTNESS;
-        if (mIsFirstBrightnessGesture) {
-            initBrightnessTouch();
-        }
-
-        mTouchAction = TOUCH_BRIGHTNESS;
-//
-        // Set delta : 2f is arbitrary for now, it possibly will change in the future
-        float delta = -y_changed / mSurfaceYDisplayRange;
-        changeBrightness(delta);
-    }
-
-
-    private void changeBrightness(float delta) {
-        // Estimate and adjust Brightness
-        if (!(getContext() instanceof Activity)) {
-            return;
-        }
-        Activity activity = (Activity) getContext();
-
-
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        float brightness = Math.min(Math.max(lp.screenBrightness + delta, 0.01f), 1f);
-        setWindowBrightness(brightness);
-        brightness = Math.round(brightness * 100);
-
-        int brightnessInt = (int) brightness;
-
-        setVolumeOrBrightnessInfo(getContext().getString(R.string.brightness_changing, brightnessInt), whichBrightnessImageToUse(brightnessInt));
-    }
-
-    @DrawableRes
-    private int whichBrightnessImageToUse(int brightnessInt) {
-        if (brightnessInt <= 15) {
-            return R.drawable.ic_brightness_1_white_36dp;
-        } else if (brightnessInt <= 30 && brightnessInt > 15) {
-            return R.drawable.ic_brightness_2_white_36dp;
-        } else if (brightnessInt <= 45 && brightnessInt > 30) {
-            return R.drawable.ic_brightness_3_white_36dp;
-        } else if (brightnessInt <= 60 && brightnessInt > 45) {
-            return R.drawable.ic_brightness_4_white_36dp;
-        } else if (brightnessInt <= 75 && brightnessInt > 60) {
-            return R.drawable.ic_brightness_5_white_36dp;
-        } else if (brightnessInt <= 90 && brightnessInt > 75) {
-            return R.drawable.ic_brightness_6_white_36dp;
-        } else {
-            return R.drawable.ic_brightness_7_white_36dp;
-        }
-
-    }
-
-    private void setWindowBrightness(float brightness) {
-        if (!(getContext() instanceof Activity)) {
-            return;
-        }
-        Activity activity = (Activity) getContext();
-
-
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        lp.screenBrightness = brightness;
-        // Set Brightness
-        activity.getWindow().setAttributes(lp);
-    }
-
-
-    private void initBrightnessTouch() {
-
-        if (!(getContext() instanceof Activity)) {
-            return;
-        }
-        Activity activity = (Activity) getContext();
-
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        float brightnesstemp = lp.screenBrightness != -1f ? lp.screenBrightness : 0.6f;
-        // Initialize the layoutParams screen brightness
-        try {
-            if (Settings.System.getInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
-                if (!Permissions.canWriteSettings(activity)) {
-                    return;
-                }
-                Settings.System.putInt(activity.getContentResolver(),
-                        Settings.System.SCREEN_BRIGHTNESS_MODE,
-                        Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-//                restoreAutoBrightness = android.provider.Settings.System.getInt(activity.getContentResolver(),
-//                        android.provider.Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
-            } else if (brightnesstemp == 0.6f) {
-                brightnesstemp = android.provider.Settings.System.getInt(activity.getContentResolver(),
-                        android.provider.Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
+                positionMs -= windowDurationMs;
+                windowIndex++;
             }
-        } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace();
+        } else {
+            windowIndex = player.getCurrentWindowIndex();
         }
-        lp.screenBrightness = brightnesstemp;
-        activity.getWindow().setAttributes(lp);
-        mIsFirstBrightnessGesture = false;
+        seekTo(windowIndex, positionMs);
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        sensorOrientation.enable();
+        isAttachedToWindow = true;
+        if (hideAtMs != C.TIME_UNSET) {
+            long delayMs = hideAtMs - SystemClock.uptimeMillis();
+            if (delayMs <= 0) {
+                hide();
+            } else {
+                postDelayed(hideAction, delayMs);
+            }
+        }
+        updateAll();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        sensorOrientation.disable();
+        isAttachedToWindow = false;
+        removeCallbacks(updateProgressAction);
+        removeCallbacks(hideAction);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return dispatchMediaKeyEvent(event) || super.dispatchKeyEvent(event);
+    }
+
+    /**
+     * Called to process media key events. Any {@link KeyEvent} can be passed but only media key
+     * events will be handled.
+     *
+     * @param event A key event.
+     * @return Whether the key event was handled.
+     */
+    public boolean dispatchMediaKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        if (player == null || !isHandledMediaKey(keyCode)) {
+            return false;
+        }
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (keyCode == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD) {
+                fastForward();
+            } else if (keyCode == KeyEvent.KEYCODE_MEDIA_REWIND) {
+                rewind();
+            } else if (event.getRepeatCount() == 0) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                        controlDispatcher.dispatchSetPlayWhenReady(player, !player.getPlayWhenReady());
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_PLAY:
+                        controlDispatcher.dispatchSetPlayWhenReady(player, true);
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                        controlDispatcher.dispatchSetPlayWhenReady(player, false);
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_NEXT:
+                        next();
+                        break;
+                    case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                        previous();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return true;
     }
 
 
-    private void doSeekTouch(int coef, float gesturesize, boolean seek) {
-
-        if (coef == 0) {
-            coef = 1;
+    private void showControllerByOrientation() {
+        if (portrait) {
+            exoPlayerControllerTop.setVisibility(View.VISIBLE);
+            exoPlayerControllerTopLandscape.setVisibility(View.INVISIBLE);
+            exoPlayerControllerBottom.setVisibility(View.VISIBLE);
+            exoPlayerControllerBottomLandscape.setVisibility(View.INVISIBLE);
+        } else {
+            exoPlayerControllerTop.setVisibility(View.INVISIBLE);
+            exoPlayerControllerTopLandscape.setVisibility(View.VISIBLE);
+            exoPlayerControllerBottom.setVisibility(View.INVISIBLE);
+            exoPlayerControllerBottomLandscape.setVisibility(View.VISIBLE);
         }
 
+    }
 
-        // No seek action if coef > 0.5 and gesturesize < 1cm
-
-        if (Math.abs(gesturesize) < 1 || !canSeek()) {
-            return;
-        }
-
-
-        if (mTouchAction != TOUCH_NONE && mTouchAction != TOUCH_SEEK) {
-            return;
-        }
-
-
-        mTouchAction = TOUCH_SEEK;
-
-        long length = player.getDuration();
-        long time = player.getCurrentPosition();
-
-        // Size of the jump, 10 minutes max (600000), with a bi-cubic progression, for a 8cm gesture
-        int jump = (int) ((Math.signum(gesturesize) * ((600000 * Math.pow((gesturesize / 8), 4)) + 3000)) / coef);
-
-        // Adjust the jump
-        if ((jump > 0) && ((time + jump) > length)) {
-            jump = (int) (length - time);
-        }
-
-
-        if ((jump < 0) && ((time + jump) < 0)) {
-            jump = (int) -time;
-        }
-
-
-        //Jump !
-        if (seek && length > 0) {
-            seek(time + jump);
-        }
-
-        if (length > 0) {
-            //Show the jump's size
-            setFastForwardOrRewind(time + jump, jump > 0 ? R.drawable.ic_fast_forward_white_36dp : R.drawable.ic_fast_rewind_white_36dp);
-        }
+    public void setBackListener(ExoClickListener backListener) {
+        this.backListener = backListener;
     }
 
 
-    private synchronized void changeOrientation(@SensorOrientationType int orientation) {
+    public void setPortrait(boolean portrait) {
+        this.portrait = portrait;
+        showControllerByOrientation();
+    }
+
+    public boolean isPortrait() {
+        return portrait;
+    }
+
+    public void toggleControllerOrientation() {
+        if (orientationListener == null) {
+            setPortrait(!portrait);
+        } else {
+            changeOrientation(portrait ? SENSOR_LANDSCAPE : SENSOR_PORTRAIT);
+        }
+
+    }
+
+
+    public void setOrientationListener(OrientationListener orientationListener) {
+        this.orientationListener = orientationListener;
+    }
+
+
+    public void setMediaSource(ExoMediaSource exoMediaSource) {
+        if (exoPlayerVideoName != null) {
+            exoPlayerVideoName.setText(exoMediaSource.getDisplayName());
+        }
+
+        if (exoPlayerVideoNameLandscape != null) {
+            exoPlayerVideoNameLandscape.setText(exoMediaSource.getDisplayName());
+        }
+    }
+
+    private synchronized void changeOrientation(@OnOrientationChangedListener.SensorOrientationType int orientation) {
         if (orientationListener == null) {
             return;
         }
@@ -1023,6 +1221,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 break;
             case SENSOR_LANDSCAPE:
                 setPortrait(false);
+                showControllerByOrientation();
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
             case SENSOR_UNKNOWN:
@@ -1033,275 +1232,59 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    private void seek(long position) {
-        if (player != null) {
-            player.seekTo(position);
+    @SuppressLint("InlinedApi")
+    private static boolean isHandledMediaKey(int keyCode) {
+        return keyCode == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD
+                || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE
+                || keyCode == KeyEvent.KEYCODE_MEDIA_NEXT
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS;
+    }
+
+    /**
+     * Returns whether the specified {@code timeline} can be shown on a multi-window time bar.
+     *
+     * @param timeline The {@link Timeline} to check.
+     * @param window   A scratch {@link Timeline.Window} instance.
+     * @return Whether the specified timeline can be shown on a multi-window time bar.
+     */
+    private static boolean canShowMultiWindowTimeBar(Timeline timeline, Timeline.Window window) {
+        if (timeline.getWindowCount() > MAX_WINDOWS_FOR_MULTI_WINDOW_TIME_BAR) {
+            return false;
         }
-
-    }
-
-    private void showPortraitOrLandscape() {
-        if (portrait) {
-            controllerWrapper.setVisibility(View.VISIBLE);
-            controllerWrapperLandscape.setVisibility(View.GONE);
-            battery.setVisibility(GONE);
-            localTime.setVisibility(GONE);
-        } else {
-            controllerWrapper.setVisibility(View.GONE);
-            controllerWrapperLandscape.setVisibility(View.VISIBLE);
-            battery.setVisibility(VISIBLE);
-            localTime.setVisibility(VISIBLE);
-        }
-
-    }
-
-    private void showLoading(boolean isLoading) {
-        if (isLoading) {
-            loadingProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            loadingProgressBar.setVisibility(GONE);
-        }
-    }
-
-    private void setFastForwardOrRewind(long changingTime, @DrawableRes int drawableId) {
-        centerInfo.setVisibility(VISIBLE);
-        centerInfo.setText(generateFastForwardOrRewindTxt(changingTime));
-        centerInfo.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), drawableId), null, null);
-    }
-
-    private void setVolumeOrBrightnessInfo(String txt, @DrawableRes int drawableId) {
-        centerInfo.setVisibility(VISIBLE);
-        centerInfo.setText(txt);
-        centerInfo.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        centerInfo.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getContext(), drawableId), null, null);
-    }
-
-
-    private void hideCenterInfo() {
-        centerInfo.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out));
-        centerInfo.setVisibility(GONE);
-
-    }
-
-
-    @TargetApi(11)
-    private void setViewAlphaV11(View view, float alpha) {
-        view.setAlpha(alpha);
-    }
-
-    private int progressBarValue(long position) {
-        long duration = player == null ? C.TIME_UNSET : player.getDuration();
-        return duration == C.TIME_UNSET || duration == 0 ? 0 : (int) ((position * PROGRESS_BAR_MAX) / duration);
-    }
-
-
-    private long positionValue(int progress) {
-        long duration = player == null ? C.TIME_UNSET : player.getDuration();
-        return duration == C.TIME_UNSET ? 0 : ((duration * progress) / PROGRESS_BAR_MAX);
-    }
-
-    private String stringForTime(long timeMs) {
-        if (timeMs == C.TIME_UNSET) {
-            timeMs = 0;
-        }
-        long totalSeconds = (timeMs + 500) / 1000;
-        long seconds = totalSeconds % 60;
-        long minutes = (totalSeconds / 60) % 60;
-        long hours = totalSeconds / 3600;
-        formatBuilder.setLength(0);
-        return hours > 0 ? formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
-                : formatter.format("%02d:%02d", minutes, seconds).toString();
-    }
-
-
-    private CharSequence generateFastForwardOrRewindTxt(long changingTime) {
-
-        long duration = player == null ? 0 : player.getDuration();
-        String result = stringForTime(changingTime) + " / " + stringForTime(duration);
-
-        int index = result.indexOf("/");
-
-        SpannableString spannableString = new SpannableString(result);
-
-
-        TypedValue typedValue = new TypedValue();
-        TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorAccent});
-        int color = a.getColor(0, 0);
-        a.recycle();
-        spannableString.setSpan(new ForegroundColorSpan(color), 0, index, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
-        return spannableString;
-    }
-
-    private void previous() {
-        Timeline currentTimeline = player.getCurrentTimeline();
-        if (currentTimeline == null) {
-            return;
-        }
-        int currentWindowIndex = player.getCurrentWindowIndex();
-        currentTimeline.getWindow(currentWindowIndex, currentWindow);
-        if (currentWindowIndex > 0 && (player.getCurrentPosition() <= MAX_POSITION_FOR_SEEK_TO_PREVIOUS
-                || (currentWindow.isDynamic && !currentWindow.isSeekable))) {
-            player.seekToDefaultPosition(currentWindowIndex - 1);
-        } else {
-            player.seekTo(0);
-        }
-    }
-
-
-    private void next() {
-        Timeline currentTimeline = player.getCurrentTimeline();
-        if (currentTimeline == null) {
-            return;
-        }
-        int currentWindowIndex = player.getCurrentWindowIndex();
-        if (currentWindowIndex < currentTimeline.getWindowCount() - 1) {
-            player.seekToDefaultPosition(currentWindowIndex + 1);
-        } else if (currentTimeline.getWindow(currentWindowIndex, currentWindow, false).isDynamic) {
-            player.seekToDefaultPosition();
-        }
-    }
-
-    private void rewind() {
-        if (rewindMs <= 0) {
-            return;
-        }
-        player.seekTo(Math.max(player.getCurrentPosition() - rewindMs, 0));
-    }
-
-    private void fastForward() {
-        if (fastForwardMs <= 0) {
-            return;
-        }
-        player.seekTo(Math.min(player.getCurrentPosition() + fastForwardMs, player.getDuration()));
-    }
-
-
-    private void registerBroadcast() {
-
-        IntentFilter timeFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
-        getContext().registerReceiver(timeReceiver, timeFilter);
-
-    }
-
-
-    private void unregisterBroadcast() {
-        getContext().unregisterReceiver(timeReceiver);
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        isAttachedToWindow = true;
-
-        registerBroadcast();
-
-        initVol();
-
-        if (hideAtMs != C.TIME_UNSET) {
-            long delayMs = hideAtMs - SystemClock.uptimeMillis();
-            if (delayMs <= 0) {
-                hide();
-            } else {
-                postDelayed(hideAction, delayMs);
+        int windowCount = timeline.getWindowCount();
+        for (int i = 0; i < windowCount; i++) {
+            if (timeline.getWindow(i, window).durationUs == C.TIME_UNSET) {
+                return false;
             }
         }
-        updateAll();
-    }
-
-
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        isAttachedToWindow = false;
-
-        mAudioManager = null;
-
-        screenOrientationEventListener.disable();
-
-        unregisterBroadcast();
-        removeCallbacks(updateProgressAction);
-        removeCallbacks(hideAction);
-    }
-
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (player == null || event.getAction() != KeyEvent.ACTION_DOWN) {
-            return super.dispatchKeyEvent(event);
-        }
-
-        switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                fastForward();
-                break;
-            case KeyEvent.KEYCODE_MEDIA_REWIND:
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                rewind();
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                player.setPlayWhenReady(!player.getPlayWhenReady());
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PLAY:
-                player.setPlayWhenReady(true);
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                player.setPlayWhenReady(false);
-                break;
-            case KeyEvent.KEYCODE_MEDIA_NEXT:
-                next();
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                previous();
-                break;
-            default:
-                return false;
-        }
-        show();
         return true;
     }
 
-
-    private boolean isScreenOpenRotate() {
-
-        int gravity = 0;
-        try {
-
-            gravity = Settings.System.getInt(getContext().getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
-
-        } catch (Settings.SettingNotFoundException e) {
-
-            e.printStackTrace();
-
-        }
-        return 1 == gravity;
-
-    }
-
-    private final class ComponentListener implements ExoPlayer.EventListener,
-            SeekBar.OnSeekBarChangeListener, OnClickListener {
+    private final class ComponentListener extends Player.DefaultEventListener implements
+            TimeBar.OnScrubListener, OnClickListener {
 
         @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
+        public void onScrubStart(TimeBar timeBar, long position) {
             removeCallbacks(hideAction);
-            dragging = true;
+            scrubbing = true;
         }
 
         @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (fromUser) {
-//                timeCurrent.setText(stringForTime(positionValue(progress)));
-                videoProgress.setProgress(progress);
-                videoProgressLandscape.setProgress(progress);
+        public void onScrubMove(TimeBar timeBar, long position) {
+            if (positionView != null) {
+                positionView.setText(Util.getStringForTime(formatBuilder, formatter, position));
             }
         }
 
         @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            dragging = false;
-            player.seekTo(positionValue(seekBar.getProgress()));
+        public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
+            scrubbing = false;
+            if (!canceled && player != null) {
+                seekToTimeBarPosition(position);
+            }
             hideAfterTimeout();
         }
 
@@ -1309,94 +1292,77 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             updatePlayPauseButton();
             updateProgress();
-            if (playbackState == Player.STATE_IDLE || playbackState == Player.STATE_BUFFERING) {
-                showUntilHideCalled();
-                showLoading(true);
-            } else if (playbackState == Player.STATE_READY && player.getPlayWhenReady() || playbackState == Player.STATE_ENDED) {
-                showLoading(false);
-                hide();
-            }
         }
 
         @Override
         public void onRepeatModeChanged(int repeatMode) {
-
+            updateRepeatModeButton();
+            updateNavigation();
         }
 
         @Override
-        public void onPositionDiscontinuity() {
+        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+            updateShuffleButton();
+            updateNavigation();
+        }
+
+        @Override
+        public void onPositionDiscontinuity(@Player.DiscontinuityReason int reason) {
             updateNavigation();
             updateProgress();
-        }
-
-        @Override
-        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
         }
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest) {
-            isTimelineStatic = !timeline.isEmpty()
-                    && !timeline.getWindow(timeline.getWindowCount() - 1, window).isDynamic;
-
-
             if (manifest instanceof HlsManifest) {
                 HlsManifest hlsManifest = (HlsManifest) manifest;
                 isHls = !hlsManifest.mediaPlaylist.hasEndTag && hlsManifest.mediaPlaylist.playlistType == HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
-                Log.e("time->",stringForTime(hlsManifest.mediaPlaylist.startOffsetUs));
+            } else {
+                isHls = false;
             }
 
 
             updateNavigation();
+            updateTimeBarMode();
             updateProgress();
-
-        }
-
-        @Override
-        public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-        }
-
-        @Override
-        public void onLoadingChanged(boolean isLoading) {
-
-//            showLoading(isLoading);
-
-            if (isLoading && lastPlayerPosition == player.getCurrentPosition()) {
-                showUntilHideCalled();
-            } else if (isVisible()) {
-                hide();
-            }
-            // Do nothing.
-        }
-
-        @Override
-        public void onPlayerError(ExoPlaybackException error) {
-            // Do nothing.
         }
 
         @Override
         public void onClick(View view) {
-//            Timeline currentTimeline = player.getCurrentTimeline();
-
-            if (nextLandscape == view) {
-                next();
-            } else if (play == view || playLandscape == view) {
-                player.setPlayWhenReady(!player.getPlayWhenReady());
-            } else if (displayName == view && backListener != null) {
-                if (!backListener.onClick(view, portrait)) {
-                    if (!portrait) {
-                        changeOrientation(SENSOR_PORTRAIT);
+            if (player != null) {
+                if (nextButton == view) {
+                    next();
+                } else if (previousButton == view) {
+                    previous();
+                } else if (fastForwardButton == view) {
+                    fastForward();
+                } else if (rewindButton == view) {
+                    rewind();
+                } else if (playButton == view || playButtonLandScape == view) {
+                    controlDispatcher.dispatchSetPlayWhenReady(player, true);
+                } else if (pauseButton == view || pauseButtonLandScape == view) {
+                    controlDispatcher.dispatchSetPlayWhenReady(player, false);
+                } else if (repeatToggleButton == view) {
+                    controlDispatcher.dispatchSetRepeatMode(player, RepeatModeUtil.getNextRepeatMode(
+                            player.getRepeatMode(), repeatToggleModes));
+                } else if (shuffleButton == view) {
+                    controlDispatcher.dispatchSetShuffleModeEnabled(player, !player.getShuffleModeEnabled());
+                } else if (enterFullscreen == view) {
+                    changeOrientation(SENSOR_LANDSCAPE);
+                } else if (exitFullscreen == view) {
+                    changeOrientation(SENSOR_PORTRAIT);
+                } else if (exoPlayerVideoName == view) {
+                    if (backListener != null) {
+                        if (!backListener.onClick(view, portrait)) {
+                            changeOrientation(SENSOR_PORTRAIT);
+                        }
+                    }
+                } else if (exoPlayerVideoNameLandscape == view) {
+                    if (backListener != null) {
+                        backListener.onClick(view, portrait);
                     }
                 }
-
-            } else if (fullScreen == view) {
-                changeOrientation(SENSOR_LANDSCAPE);
-            } else if (fullScreenLandscape == view) {
-                changeOrientation(SENSOR_PORTRAIT);
             }
-
-
             hideAfterTimeout();
         }
 

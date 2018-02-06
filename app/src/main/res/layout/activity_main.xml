@@ -13,53 +13,78 @@
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        app:resizeMode="none"
-        app:useController="true"
-
+        android:layout_weight="1.5"
+        android:keepScreenOn="true"
         />
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/wrapper"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:gravity="center">
 
         <Button
             android:id="@+id/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:visibility="gone"
-            android:text="play" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="play"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/mode_none"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="mode_none" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="mode_fill"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/play" />
 
         <Button
             android:id="@+id/mode_fit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="mode_fit" />
+            android:layout_marginStart="8dp"
+            android:text="mode_fit"
+            app:layout_constraintBottom_toBottomOf="@+id/mode_none"
+            app:layout_constraintStart_toEndOf="@+id/mode_none"
+            app:layout_constraintTop_toTopOf="@+id/mode_none" />
 
         <Button
             android:id="@+id/mode_width"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="mode_width" />
+            android:layout_marginEnd="16dp"
+            android:text="mode_fix_width"
+            app:layout_constraintBottom_toBottomOf="@+id/mode_height"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mode_height" />
 
         <Button
             android:id="@+id/mode_height"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="mode_height" />
-    </LinearLayout>
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="mode_fix_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mode_none" />
+
+        <Button
+            android:id="@+id/mode_zoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="mode_zoom"
+            app:layout_constraintBottom_toBottomOf="@+id/mode_fit"
+            app:layout_constraintStart_toEndOf="@+id/mode_fit"
+            app:layout_constraintTop_toTopOf="@+id/mode_fit" />
+    </android.support.constraint.ConstraintLayout>
+
+
+
 </LinearLayout>

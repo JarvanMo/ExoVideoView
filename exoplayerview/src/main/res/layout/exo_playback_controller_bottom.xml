@@ -7,15 +7,23 @@
     android:orientation="horizontal">
 
     <ImageButton
-        android:id="@+id/play"
+        android:id="@id/exo_player_play"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@null"
         android:src="@drawable/ic_play_arrow_white_36dp" />
 
+    <ImageButton
+        android:id="@id/exo_player_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_pause_white_36dp" />
+
     <TextView
-        android:id="@+id/currentTime"
+        android:id="@id/exo_player_position"
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:ellipsize="end"
@@ -26,8 +34,8 @@
         android:textSize="@dimen/default_video_view_time_text_size" />
 
 
-    <SeekBar
-        android:id="@+id/videoProgress"
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@id/exo_player_progress"
         style="?android:attr/seekBarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,7 +45,7 @@
         android:maxWidth="10dp" />
 
     <TextView
-        android:id="@+id/endTime"
+        android:id="@id/exo_player_duration"
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:ellipsize="end"
@@ -48,7 +56,7 @@
         android:textSize="@dimen/default_video_view_time_text_size" />
 
     <ImageButton
-        android:id="@+id/fullScreen"
+        android:id="@id/exo_player_enter_fullscreen"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"

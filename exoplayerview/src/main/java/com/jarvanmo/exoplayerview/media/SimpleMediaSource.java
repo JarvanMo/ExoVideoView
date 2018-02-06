@@ -1,4 +1,4 @@
-package com.jarvanmo.exoplayerview.ui;
+package com.jarvanmo.exoplayerview.media;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,7 +8,7 @@ import android.os.Parcelable;
  * this package is com.jarvanmo.exoplayerview.ui
  */
 
-public class SimpleMediaSource implements Parcelable {
+public class SimpleMediaSource implements ExoMediaSource, Parcelable {
 
     private String displayName;
 
@@ -18,6 +18,7 @@ public class SimpleMediaSource implements Parcelable {
         this.url = url;
     }
 
+    @Override
     public String getDisplayName() {
         return displayName;
     }
@@ -26,6 +27,7 @@ public class SimpleMediaSource implements Parcelable {
         this.displayName = displayName;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }

@@ -6,33 +6,74 @@
     <attr name="fastForwardIncrement" format="integer" />
     <attr name="topWrapperTextSize" format="dimension" />
 
-    <attr name="resizeMode" format="enum">
-        <enum name="fit" value="0" />
-        <enum name="fixed_width" value="1" />
-        <enum name="fixed_height" value="2" />
-        <enum name="none" value="3"/>
+    <!-- Must be kept in sync with AspectRatioFrameLayout -->
+    <attr name="resize_mode" format="enum">
+        <enum name="fit" value="0"/>
+        <enum name="fixed_width" value="1"/>
+        <enum name="fixed_height" value="2"/>
+        <enum name="fill" value="3"/>
     </attr>
 
+    <!-- Must be kept in sync with SimpleExoPlayerView -->
+    <attr name="surface_type" format="enum">
+        <enum name="none" value="0"/>
+        <enum name="surface_view" value="1"/>
+        <enum name="texture_view" value="2"/>
+    </attr>
+    <attr name="show_timeout" format="integer"/>
+    <attr name="rewind_increment" format="integer"/>
+    <attr name="fastforward_increment" format="integer"/>
+    <attr name="player_layout_id" format="reference"/>
+    <attr name="controller_layout_id" format="reference"/>
+    <attr name="repeat_toggle_modes">
+        <flag name="none" value="0"/>
+        <flag name="one" value="1"/>
+        <flag name="all" value="2"/>
+    </attr>
+    <attr name="show_shuffle_button" format="boolean"/>
+
     <declare-styleable name="ExoVideoView">
-        <attr name="useController" format="boolean" />
-        <attr name="useTextureView" format="boolean" />
-        <attr name="isPortrait" format="boolean" />
-        <attr name="showTimeout" />
-        <attr name="rewindIncrement" />
-        <attr name="fastForwardIncrement" />
-        <attr name="resizeMode" />
-        <attr name="topWrapperTextSize"/>
+        <attr name="use_artwork" format="boolean"/>
+        <attr name="shutter_background_color" format="color"/>
+        <attr name="default_artwork" format="reference"/>
+        <attr name="use_controller" format="boolean"/>
+        <attr name="hide_on_touch" format="boolean"/>
+        <attr name="auto_show" format="boolean"/>
+        <attr name="resize_mode"/>
+        <attr name="surface_type"/>
+        <attr name="show_timeout"/>
+        <attr name="rewind_increment"/>
+        <attr name="fastforward_increment"/>
+        <attr name="player_layout_id"/>
+        <attr name="controller_layout_id"/>
     </declare-styleable>
 
 
     <declare-styleable name="ExoVideoPlaybackControlView">
-        <attr name="showTimeout" />
-        <attr name="rewindIncrement" />
-        <attr name="fastForwardIncrement" />
+        <attr name="show_timeout"/>
+        <attr name="rewind_increment"/>
+        <attr name="fastforward_increment"/>
+        <attr name="repeat_toggle_modes"/>
+        <attr name="show_shuffle_button"/>
+        <attr name="controller_layout_id"/>
     </declare-styleable>
 
-    <declare-styleable name="SuperAspectRatioFrameLayout">
-        <attr name="resizeMode" />
+    <declare-styleable name="DefaultTimeBar">
+        <attr name="bar_height" format="dimension"/>
+        <attr name="touch_target_height" format="dimension"/>
+        <attr name="ad_marker_width" format="dimension"/>
+        <attr name="scrubber_enabled_size" format="dimension"/>
+        <attr name="scrubber_disabled_size" format="dimension"/>
+        <attr name="scrubber_dragged_size" format="dimension"/>
+        <attr name="scrubber_drawable" format="reference"/>
+        <attr name="played_color" format="color"/>
+        <attr name="scrubber_color" format="color"/>
+        <attr name="buffered_color" format="color"/>
+        <attr name="unplayed_color" format="color"/>
+        <attr name="ad_marker_color" format="color"/>
+        <attr name="played_ad_marker_color" format="color"/>
     </declare-styleable>
+
+
 
 </resources>
