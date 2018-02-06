@@ -943,6 +943,7 @@ public class ExoVideoView extends FrameLayout {
 
     }
 
+
     private final class ComponentListener extends Player.DefaultEventListener implements TextOutput,
             SimpleExoPlayer.VideoListener {
 

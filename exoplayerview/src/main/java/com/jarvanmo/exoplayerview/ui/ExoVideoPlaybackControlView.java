@@ -78,11 +78,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         /***
          * called when buttons clicked in controller
-         * @param view The view clicked
+         * @param view  null when back pressed.
          * @param isPortrait the controller is portrait  or not
          * @return will interrupt operation in controller if return true
          * **/
-        boolean onClick(View view, boolean isPortrait);
+        boolean onClick(@Nullable View view, boolean isPortrait);
 
     }
 
@@ -1177,7 +1177,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         return portrait;
     }
 
-    public void toggleControllerOrientation() {
+    private void toggleControllerOrientation() {
         if (orientationListener == null) {
             setPortrait(!portrait);
         } else {
@@ -1231,6 +1231,18 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (backListener != null) {
+                if (!backListener.onClick(null, !portrait)) {
+                    changeOrientation(portrait ? SENSOR_LANDSCAPE : SENSOR_PORTRAIT);
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @SuppressLint("InlinedApi")
     private static boolean isHandledMediaKey(int keyCode) {
@@ -1354,12 +1366,14 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 } else if (exoPlayerVideoName == view) {
                     if (backListener != null) {
                         if (!backListener.onClick(view, portrait)) {
-                            changeOrientation(SENSOR_PORTRAIT);
+                            changeOrientation(SENSOR_LANDSCAPE);
                         }
                     }
                 } else if (exoPlayerVideoNameLandscape == view) {
                     if (backListener != null) {
-                        backListener.onClick(view, portrait);
+                        if (!backListener.onClick(view, portrait)) {
+                            changeOrientation(SENSOR_PORTRAIT);
+                        }
                     }
                 }
             }
