@@ -15,6 +15,7 @@
         android:layout_height="0dp"
         android:layout_weight="1.5"
         app:use_artwork="true"
+        app:controller_display_mode="bottom_landscape"
         />
 
     <android.support.constraint.ConstraintLayout

@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
@@ -25,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.Player;
@@ -42,6 +44,8 @@ import com.jarvanmo.exoplayerview.media.ExoMediaSource;
 import com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener;
 import com.jarvanmo.exoplayerview.orientation.SensorOrientation;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
@@ -117,6 +121,25 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public static final int MAX_WINDOWS_FOR_MULTI_WINDOW_TIME_BAR = 100;
 
     private static final long MAX_POSITION_FOR_SEEK_TO_PREVIOUS = 3000;
+
+
+    //        <!--<enum name="all" value="0b1111"/>-->
+//    <!--<enum name="top" value="0b1000"/>-->
+//    <!--<enum name="top_landscape" value="0b0100"/>-->
+//    <!--<enum name="bottom" value="0b0010"/>-->
+//    <!--<enum name="bottom_landscape" value="0b0001"/>-->
+    public static final int CONTROLLER_MODE_ALL = 0b1111;
+    public static final int CONTROLLER_MODE_TOP = 0b1000;
+    public static final int CONTROLLER_MODE_TOP_LANDSCAPE = 0b0100;
+    public static final int CONTROLLER_MODE_BOTTOM = 0b0010;
+    public static final int CONTROLLER_MODE_BOTTOM_LANDSCAPE = 0b0001;
+
+    @IntDef({CONTROLLER_MODE_ALL, CONTROLLER_MODE_TOP, CONTROLLER_MODE_TOP_LANDSCAPE, CONTROLLER_MODE_BOTTOM, CONTROLLER_MODE_BOTTOM_LANDSCAPE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ControllerModeType {
+
+    }
+
 
     private final ComponentListener componentListener;
     private final View previousButton;
@@ -213,6 +236,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public ExoVideoPlaybackControlView(Context context, AttributeSet attrs, int defStyleAttr,
                                        AttributeSet playbackAttrs) {
         super(context, attrs, defStyleAttr);
+
+        int displayMode = CONTROLLER_MODE_ALL;
+
         int controllerLayoutId = R.layout.exo_video_playback_control_view;
         rewindMs = DEFAULT_REWIND_MS;
         fastForwardMs = DEFAULT_FAST_FORWARD_MS;
@@ -232,10 +258,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 repeatToggleModes = getRepeatToggleModes(a, repeatToggleModes);
                 showShuffleButton = a.getBoolean(R.styleable.ExoVideoPlaybackControlView_show_shuffle_button,
                         showShuffleButton);
+                displayMode = a.getInt(R.styleable.ExoVideoPlaybackControlView_controller_display_mode,displayMode);
             } finally {
                 a.recycle();
             }
         }
+
+
         period = new Timeline.Period();
         window = new Timeline.Window();
         formatBuilder = new StringBuilder();
@@ -359,6 +388,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
+        setControllerDisplayMode(displayMode);
 
     }
 
@@ -478,7 +508,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private static @RepeatModeUtil.RepeatToggleModes
     int getRepeatToggleModes(TypedArray a,
                              @RepeatModeUtil.RepeatToggleModes int repeatToggleModes) {
-        return a.getInt(R.styleable.PlaybackControlView_repeat_toggle_modes, repeatToggleModes);
+        return a.getInt(R.styleable.ExoVideoPlaybackControlView_repeat_toggle_modes, repeatToggleModes);
     }
 
     /**
@@ -1200,6 +1230,36 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (exoPlayerVideoNameLandscape != null) {
             exoPlayerVideoNameLandscape.setText(exoMediaSource.getDisplayName());
         }
+    }
+
+
+    public void setControllerDisplayMode(int displayMode) {
+        showControllerByDisplayMode(displayMode);
+    }
+
+    private void showControllerByDisplayMode(int displayMode) {
+
+        if (exoPlayerControllerTop != null) {
+            int visibility = (displayMode & CONTROLLER_MODE_TOP) == CONTROLLER_MODE_TOP ? VISIBLE : INVISIBLE;
+            exoPlayerControllerTop.setVisibility(visibility);
+        }
+
+        if (exoPlayerControllerTopLandscape != null) {
+            int visibility = (displayMode & CONTROLLER_MODE_TOP_LANDSCAPE) == CONTROLLER_MODE_TOP_LANDSCAPE ? VISIBLE : INVISIBLE;
+            exoPlayerControllerTopLandscape.setVisibility(visibility);
+        }
+
+        if (exoPlayerControllerBottom != null) {
+            int visibility = (displayMode & CONTROLLER_MODE_BOTTOM) == CONTROLLER_MODE_BOTTOM ? VISIBLE : INVISIBLE;
+            exoPlayerControllerBottom.setVisibility(visibility);
+        }
+
+        if (exoPlayerControllerBottomLandscape != null) {
+            int visibility = (displayMode & CONTROLLER_MODE_BOTTOM_LANDSCAPE) == CONTROLLER_MODE_BOTTOM_LANDSCAPE ? VISIBLE : INVISIBLE;
+            exoPlayerControllerBottomLandscape.setVisibility(visibility);
+        }
+
+
     }
 
     private synchronized void changeOrientation(@OnOrientationChangedListener.SensorOrientationType int orientation) {

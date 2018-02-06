@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource;
+import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
 import com.jarvanmo.exoplayerview.ui.ExoVideoView;
 
 import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_LANDSCAPE;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         });
 //
 
+        videoView.setControllerDisplayMode(ExoVideoPlaybackControlView.CONTROLLER_MODE_ALL|ExoVideoPlaybackControlView.CONTROLLER_MODE_BOTTOM);
 //       final SimpleMediaSource mediaSource = new SimpleMediaSource("http://video19.ifeng.com/video07/2013/11/11/281708-102-007-1138.mp4");
         SimpleMediaSource mediaSource  = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_example_v2/master.m3u8");
 //        final SimpleMediaSource mediaSource = new SimpleMediaSource("http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8");

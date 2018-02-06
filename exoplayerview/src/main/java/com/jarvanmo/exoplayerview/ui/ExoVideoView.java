@@ -252,7 +252,7 @@ public class ExoVideoView extends FrameLayout {
 
 
         setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
-        if(useController && controller != null){
+        if (useController && controller != null) {
             controller.show();
         }
         setKeepScreenOn(true);
@@ -941,6 +941,12 @@ public class ExoVideoView extends FrameLayout {
             controller.setPortrait(portrait);
         }
 
+    }
+
+    public void setControllerDisplayMode(int displayMode) {
+        if (controller != null) {
+            controller.setControllerDisplayMode(displayMode);
+        }
     }
 
 
