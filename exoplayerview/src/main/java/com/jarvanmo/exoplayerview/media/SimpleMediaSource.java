@@ -1,26 +1,32 @@
 package com.jarvanmo.exoplayerview.media;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
 
 /**
  * Created by mo on 16-11-30.
  * this package is com.jarvanmo.exoplayerview.ui
  */
 
-public class SimpleMediaSource implements ExoMediaSource, Parcelable {
+public class SimpleMediaSource implements ExoMediaSource {
 
     private String displayName;
 
     private String url = "";
 
-    public SimpleMediaSource(String url){
+    private List<Quality> qualities;
+
+    public SimpleMediaSource(String url) {
         this.url = url;
     }
 
     @Override
-    public String getDisplayName() {
+    public String name() {
         return displayName;
+    }
+
+    @Override
+    public List<Quality> qualities() {
+        return null;
     }
 
     public void setDisplayName(String displayName) {
@@ -28,35 +34,12 @@ public class SimpleMediaSource implements ExoMediaSource, Parcelable {
     }
 
     @Override
-    public String getUrl() {
+    public String url() {
         return url;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setQualities(List<Quality> qualities) {
+        this.qualities = qualities;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.displayName);
-        dest.writeString(this.url);
-    }
-
-    protected SimpleMediaSource(Parcel in) {
-        this.displayName = in.readString();
-        this.url = in.readString();
-    }
-
-    public static final Parcelable.Creator<SimpleMediaSource> CREATOR = new Parcelable.Creator<SimpleMediaSource>() {
-        @Override
-        public SimpleMediaSource createFromParcel(Parcel source) {
-            return new SimpleMediaSource(source);
-        }
-
-        @Override
-        public SimpleMediaSource[] newArray(int size) {
-            return new SimpleMediaSource[size];
-        }
-    };
 }

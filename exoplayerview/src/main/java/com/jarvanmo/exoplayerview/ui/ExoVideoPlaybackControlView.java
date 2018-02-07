@@ -1222,11 +1222,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     public void setMediaSource(ExoMediaSource exoMediaSource) {
         if (exoPlayerVideoName != null) {
-            exoPlayerVideoName.setText(exoMediaSource.getDisplayName());
+            exoPlayerVideoName.setText(exoMediaSource.name());
         }
 
         if (exoPlayerVideoNameLandscape != null) {
-            exoPlayerVideoNameLandscape.setText(exoMediaSource.getDisplayName());
+            exoPlayerVideoNameLandscape.setText(exoMediaSource.name());
         }
     }
 
