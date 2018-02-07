@@ -59,6 +59,9 @@ import java.util.Locale;
     AudioRendererEventListener, VideoRendererEventListener, AdaptiveMediaSourceEventListener,
     ExtractorMediaSource.EventListener, DefaultDrmSessionManager.EventListener {
 
+  public EventLogger(MappingTrackSelector trackSelector) {
+  }
+
   @Override
   public void onTimelineChanged(Timeline timeline, Object manifest) {
 
