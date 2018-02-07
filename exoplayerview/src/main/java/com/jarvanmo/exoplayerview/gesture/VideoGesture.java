@@ -11,10 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
-import com.jarvanmo.exoplayerview.ui.PlayerAccessor;
+import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
 import com.jarvanmo.exoplayerview.util.Permissions;
 
 import static android.content.Context.AUDIO_SERVICE;
@@ -31,7 +30,7 @@ public class VideoGesture implements View.OnTouchListener {
 
     private final Context context;
     private final OnVideoGestureChangeListener onVideoGestureChangeListener;
-    private final PlayerAccessor playerAccessor;
+    private final ExoVideoPlaybackControlView.PlayerAccessor playerAccessor;
 
     private final Timeline.Window window;
 
@@ -59,7 +58,7 @@ public class VideoGesture implements View.OnTouchListener {
 
     private boolean enabled = true;
 
-    public VideoGesture(Context context, OnVideoGestureChangeListener onVideoGestureChangeListener,@NonNull PlayerAccessor playerAccessor) {
+    public VideoGesture(Context context, OnVideoGestureChangeListener onVideoGestureChangeListener,@NonNull ExoVideoPlaybackControlView.PlayerAccessor playerAccessor) {
         this.context = context;
         this.onVideoGestureChangeListener = onVideoGestureChangeListener;
         mAudioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);

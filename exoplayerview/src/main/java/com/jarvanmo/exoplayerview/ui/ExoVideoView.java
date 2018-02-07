@@ -223,6 +223,7 @@ public class ExoVideoView extends FrameLayout {
         this.useArtwork = useArtwork && artworkView != null;
         if (defaultArtworkId != 0) {
             defaultArtwork = BitmapFactory.decodeResource(context.getResources(), defaultArtworkId);
+            setArtworkFromBitmap(defaultArtwork);
         }
 
         // Subtitle view.

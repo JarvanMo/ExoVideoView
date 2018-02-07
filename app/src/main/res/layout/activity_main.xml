@@ -15,6 +15,7 @@
         android:layout_height="0dp"
         android:layout_weight="1.5"
         app:controller_display_mode="all"
+        app:default_artwork="@drawable/default_art"
         app:use_artwork="true" />
 
     <android.support.constraint.ConstraintLayout

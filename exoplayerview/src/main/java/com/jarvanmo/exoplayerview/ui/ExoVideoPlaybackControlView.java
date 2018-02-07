@@ -17,7 +17,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.Player;
@@ -1457,4 +1455,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
+    /**
+     * Created by mo on 18-2-5.
+     * 剑气纵横三万里 一剑光寒十九洲
+     */
+
+    public static interface PlayerAccessor {
+
+        Player attachPlayer();
+    }
 }
