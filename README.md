@@ -1,3 +1,4 @@
+![logo](/images/default_art.png)
 # ExoPlayerView
 ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
@@ -11,7 +12,6 @@ The new ExoPlayerView based on ExoPlayer-2.6.0 is under development.
 ![landscape](/images/landscape_new.png)
 ![portrait](/images/portrait_new.png)
 ![volume](/images/volume_new.png)
-
 
 
 **Features**
