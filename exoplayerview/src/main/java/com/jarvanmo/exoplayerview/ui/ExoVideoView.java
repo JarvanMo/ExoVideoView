@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -112,6 +113,7 @@ public class ExoVideoView extends FrameLayout {
     };
 
     private long lastPlayedPosition = 0L;
+    private long[] mHits = new long[2];
 
     public ExoVideoView(Context context) {
         this(context, null);
@@ -148,7 +150,7 @@ public class ExoVideoView extends FrameLayout {
 
         boolean shutterColorSet = false;
         int shutterColor = 0;
-        int playerLayoutId = R.layout.exo_simple_player_view;
+        int playerLayoutId = R.layout.exo_video_view;
         boolean useArtwork = true;
         int defaultArtworkId = 0;
         boolean useController = true;
@@ -190,13 +192,13 @@ public class ExoVideoView extends FrameLayout {
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
 
         // Content frame.
-        contentFrame = findViewById(R.id.exo_content_frame);
+        contentFrame = findViewById(R.id.exo_player_content_frame);
         if (contentFrame != null) {
             setResizeModeRaw(contentFrame, resizeMode);
         }
 
         // Shutter view.
-        shutterView = findViewById(R.id.exo_shutter);
+        shutterView = findViewById(R.id.exo_player_shutter);
         if (shutterView != null && shutterColorSet) {
             shutterView.setBackgroundColor(shutterColor);
         }
@@ -214,17 +216,17 @@ public class ExoVideoView extends FrameLayout {
         }
 
         // Overlay frame layout.
-        overlayFrameLayout = findViewById(R.id.exo_overlay);
+        overlayFrameLayout = findViewById(R.id.exo_player_overlay);
 
         // Artwork view.
-        artworkView = findViewById(R.id.exo_artwork);
+        artworkView = findViewById(R.id.exo_player_artwork);
         this.useArtwork = useArtwork && artworkView != null;
         if (defaultArtworkId != 0) {
             defaultArtwork = BitmapFactory.decodeResource(context.getResources(), defaultArtworkId);
         }
 
         // Subtitle view.
-        subtitleView = findViewById(R.id.exo_subtitles);
+        subtitleView = findViewById(R.id.exo_player_subtitles);
         if (subtitleView != null) {
             subtitleView.setUserDefaultStyle();
             subtitleView.setUserDefaultTextSize();
@@ -232,8 +234,8 @@ public class ExoVideoView extends FrameLayout {
 
 
         // Playback control view.
-        ExoVideoPlaybackControlView customController = findViewById(R.id.exo_controller);
-        View controllerPlaceholder = findViewById(R.id.exo_controller_placeholder);
+        ExoVideoPlaybackControlView customController = findViewById(R.id.exo_player_controller);
+        View controllerPlaceholder = findViewById(R.id.exo_player_controller_placeholder);
         if (customController != null) {
             this.controller = customController;
         } else if (controllerPlaceholder != null) {
@@ -259,7 +261,7 @@ public class ExoVideoView extends FrameLayout {
             controller.show();
         }
         setKeepScreenOn(true);
-        hideController();
+
     }
 
     /**
@@ -658,6 +660,7 @@ public class ExoVideoView extends FrameLayout {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+
         if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return false;
         }

@@ -30,6 +30,7 @@
     <item name="exo_player_overlay" type="id"/>
     <item name="exo_player_subtitles" type="id"/>
     <item name="exo_player_controller_placeholder" type="id"/>
+    <item name="exo_player_controller" type="id"/>
     <item name="exo_player_pause" type="id"/>
     <item name="exo_player_play_wrapper_landscape" type="id"/>
 

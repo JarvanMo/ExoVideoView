@@ -43,6 +43,7 @@
         <flag name="top_landscape" value="4"/>
         <flag name="bottom" value="2"/>
         <flag name="bottom_landscape" value="1"/>
+        <flag name="none" value="0"/>
     </attr>
 
     <declare-styleable name="ExoVideoView">

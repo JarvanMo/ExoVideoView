@@ -223,6 +223,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private int displayMode = CONTROLLER_MODE_ALL;
 
+
     public ExoVideoPlaybackControlView(Context context) {
         this(context, null);
     }
@@ -390,6 +391,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
         showControllerByDisplayMode();
+
 
     }
 
@@ -1432,10 +1434,25 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                             changeOrientation(SENSOR_PORTRAIT);
                         }
                     }
+                }else if(centerInfoWrapper == view){
+                    playOrPause();
                 }
             }
             hideAfterTimeout();
         }
+
+        long[] mHits =new long[2];
+        private void playOrPause() {
+
+            System.arraycopy(mHits,1,mHits,0,mHits.length-1);
+            mHits[mHits.length-1]=SystemClock.uptimeMillis();
+
+            if(500>(SystemClock.uptimeMillis()-mHits[0])){
+              controlDispatcher.dispatchSetPlayWhenReady(player,!player.getPlayWhenReady());
+            }
+
+        }
+
 
     }
 

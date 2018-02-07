@@ -67,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
 //        SimpleMediaSource mediaSource  = new SimpleMediaSource(" https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8");
 //       SimpleMediaSource mediaSource = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_fmp4_example/master.m3u8");
 //        SimpleMediaSource mediaSource = new SimpleMediaSource("http://pullhlsbb8f2e48.live.126.net/live/7de213ebb3dc4db2aa2f32f3da0b028d/playlist.m3u8");
-        SimpleMediaSource mediaSource = new SimpleMediaSource("http://rotation.vod.zlive.cc/channel/1234.m3u8");
+//        SimpleMediaSource mediaSource = new SimpleMediaSource("http://rotation.vod.zlive.cc/channel/1234.m3u8");
+//        SimpleMediaSource mediaSource = new SimpleMediaSource("https://media.w3.org/2010/05/sintel/trailer.mp4");
+        SimpleMediaSource mediaSource = new SimpleMediaSource("http://flv2.bn.netease.com/videolib3/1604/28/fVobI0704/SD/fVobI0704-mobile.mp4");
         mediaSource.setDisplayName("VideoPlaying");
 
 
@@ -142,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //you should release the player created by ExoPlayerView
         videoView.releasePlayer();
     }
 
