@@ -60,7 +60,13 @@ import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListene
 
 public class ExoVideoPlaybackControlView extends FrameLayout {
 
+    /**
+     * to get  {@link Player}
+     * */
+    public interface PlayerAccessor {
 
+        Player attachPlayer();
+    }
     /**
      * Listener to be notified about changes of the visibility of the UI control.
      */
@@ -1455,13 +1461,4 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    /**
-     * Created by mo on 18-2-5.
-     * 剑气纵横三万里 一剑光寒十九洲
-     */
-
-    public static interface PlayerAccessor {
-
-        Player attachPlayer();
-    }
 }
