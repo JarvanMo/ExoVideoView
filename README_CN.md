@@ -1,5 +1,5 @@
 ![logo](/images/default_art.png)
-# ExoPlayerView
+# ExoVideoView
 ExoPlayerView 是一个基于[ExoPlayer](https://github.com/google/ExoPlayer)的视频播放器，
 并且做了很多封装.
 

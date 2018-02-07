@@ -1,5 +1,5 @@
 ![logo](/images/default_art.png)
-# ExoPlayerView
+# ExoVideoView
 ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
 The new ExoPlayerView based on ExoPlayer-2.6.0 is under development.
