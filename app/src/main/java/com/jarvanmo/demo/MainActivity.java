@@ -61,15 +61,13 @@ public class MainActivity extends AppCompatActivity {
         });
 //
 
-        videoView.setControllerDisplayMode(ExoVideoPlaybackControlView.CONTROLLER_MODE_ALL|ExoVideoPlaybackControlView.CONTROLLER_MODE_BOTTOM);
 //       final SimpleMediaSource mediaSource = new SimpleMediaSource("http://video19.ifeng.com/video07/2013/11/11/281708-102-007-1138.mp4");
-        SimpleMediaSource mediaSource  = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_example_v2/master.m3u8");
+//        SimpleMediaSource mediaSource  = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_example_v2/master.m3u8");
 //        final SimpleMediaSource mediaSource = new SimpleMediaSource("http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8");
 //        SimpleMediaSource mediaSource  = new SimpleMediaSource(" https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear0/prog_index.m3u8");
 //       SimpleMediaSource mediaSource = new SimpleMediaSource("https://tungsten.aaplimg.com/VOD/bipbop_adv_fmp4_example/master.m3u8");
 //        SimpleMediaSource mediaSource = new SimpleMediaSource("http://pullhlsbb8f2e48.live.126.net/live/7de213ebb3dc4db2aa2f32f3da0b028d/playlist.m3u8");
-//        SimpleMediaSource mediaSource = new SimpleMediaSource("http://rotation.vod.zlive.cc/channel/1234.m3u8");
-
+        SimpleMediaSource mediaSource = new SimpleMediaSource("http://rotation.vod.zlive.cc/channel/1234.m3u8");
         mediaSource.setDisplayName("VideoPlaying");
 
 

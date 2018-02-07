@@ -305,11 +305,6 @@ public class VideoGesture implements View.OnTouchListener {
     }
 
     private void seekAndShowJump(boolean seek,long jumpSize, boolean isFastForward) {
-        Player player = playerAccessor.attachPlayer();
-        if (player != null && seek) {
-            player.seekTo(jumpSize);
-        }
-
         if (onVideoGestureChangeListener != null) {
             onVideoGestureChangeListener.onShowSeekSize(jumpSize, isFastForward);
         }

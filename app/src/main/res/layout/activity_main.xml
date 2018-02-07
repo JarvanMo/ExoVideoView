@@ -14,9 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.5"
-        app:use_artwork="true"
-        app:controller_display_mode="bottom_landscape"
-        />
+        app:controller_display_mode="all"
+        app:use_artwork="true" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/wrapper"
@@ -85,7 +84,6 @@
             app:layout_constraintStart_toEndOf="@+id/mode_fit"
             app:layout_constraintTop_toTopOf="@+id/mode_fit" />
     </android.support.constraint.ConstraintLayout>
-
 
 
 </LinearLayout>

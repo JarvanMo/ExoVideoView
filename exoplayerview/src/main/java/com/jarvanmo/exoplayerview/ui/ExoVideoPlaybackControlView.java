@@ -221,6 +221,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private boolean isHls;
 
+    private int displayMode = CONTROLLER_MODE_ALL;
+
     public ExoVideoPlaybackControlView(Context context) {
         this(context, null);
     }
@@ -237,7 +239,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                                        AttributeSet playbackAttrs) {
         super(context, attrs, defStyleAttr);
 
-        int displayMode = CONTROLLER_MODE_ALL;
 
         int controllerLayoutId = R.layout.exo_video_playback_control_view;
         rewindMs = DEFAULT_REWIND_MS;
@@ -247,7 +248,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         showShuffleButton = false;
         if (playbackAttrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(playbackAttrs,
-                    R.styleable.PlaybackControlView, 0, 0);
+                    R.styleable.ExoVideoPlaybackControlView, 0, 0);
             try {
                 rewindMs = a.getInt(R.styleable.ExoVideoPlaybackControlView_rewind_increment, rewindMs);
                 fastForwardMs = a.getInt(R.styleable.ExoVideoPlaybackControlView_fastforward_increment,
@@ -258,7 +259,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 repeatToggleModes = getRepeatToggleModes(a, repeatToggleModes);
                 showShuffleButton = a.getBoolean(R.styleable.ExoVideoPlaybackControlView_show_shuffle_button,
                         showShuffleButton);
-                displayMode = a.getInt(R.styleable.ExoVideoPlaybackControlView_controller_display_mode,displayMode);
+                displayMode = a.getInt(R.styleable.ExoVideoPlaybackControlView_controller_display_mode, CONTROLLER_MODE_ALL);
             } finally {
                 a.recycle();
             }
@@ -388,7 +389,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
-        setControllerDisplayMode(displayMode);
+        showControllerByDisplayMode();
 
     }
 
@@ -431,7 +432,12 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
             @Override
             public void onShowSeekSize(long seekSize, boolean fastForward) {
+                if(isHls){
+                    return;
+                }
+
                 show();
+                seekTo(seekSize);
                 if (centerInfo == null) {
                     return;
                 }
@@ -1178,20 +1184,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    private void showControllerByOrientation() {
-        if (portrait) {
-            exoPlayerControllerTop.setVisibility(View.VISIBLE);
-            exoPlayerControllerTopLandscape.setVisibility(View.INVISIBLE);
-            exoPlayerControllerBottom.setVisibility(View.VISIBLE);
-            exoPlayerControllerBottomLandscape.setVisibility(View.INVISIBLE);
-        } else {
-            exoPlayerControllerTop.setVisibility(View.INVISIBLE);
-            exoPlayerControllerTopLandscape.setVisibility(View.VISIBLE);
-            exoPlayerControllerBottom.setVisibility(View.INVISIBLE);
-            exoPlayerControllerBottomLandscape.setVisibility(View.VISIBLE);
-        }
-
-    }
 
     public void setBackListener(ExoClickListener backListener) {
         this.backListener = backListener;
@@ -1200,7 +1192,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     public void setPortrait(boolean portrait) {
         this.portrait = portrait;
-        showControllerByOrientation();
+        showControllerByDisplayMode();
     }
 
     public boolean isPortrait() {
@@ -1234,28 +1226,33 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     public void setControllerDisplayMode(int displayMode) {
-        showControllerByDisplayMode(displayMode);
+        this.displayMode = displayMode;
+        showControllerByDisplayMode();
     }
 
-    private void showControllerByDisplayMode(int displayMode) {
+    private void showControllerByDisplayMode() {
 
         if (exoPlayerControllerTop != null) {
-            int visibility = (displayMode & CONTROLLER_MODE_TOP) == CONTROLLER_MODE_TOP ? VISIBLE : INVISIBLE;
+            boolean showByMode = (displayMode & CONTROLLER_MODE_TOP) == CONTROLLER_MODE_TOP;
+            int visibility = showByMode && isPortrait() ? VISIBLE : INVISIBLE;
             exoPlayerControllerTop.setVisibility(visibility);
         }
 
         if (exoPlayerControllerTopLandscape != null) {
-            int visibility = (displayMode & CONTROLLER_MODE_TOP_LANDSCAPE) == CONTROLLER_MODE_TOP_LANDSCAPE ? VISIBLE : INVISIBLE;
+            boolean showByMode = (displayMode & CONTROLLER_MODE_TOP_LANDSCAPE) == CONTROLLER_MODE_TOP_LANDSCAPE;
+            int visibility = showByMode && !portrait ? VISIBLE : INVISIBLE;
             exoPlayerControllerTopLandscape.setVisibility(visibility);
         }
 
         if (exoPlayerControllerBottom != null) {
-            int visibility = (displayMode & CONTROLLER_MODE_BOTTOM) == CONTROLLER_MODE_BOTTOM ? VISIBLE : INVISIBLE;
+            boolean showByMode = (displayMode & CONTROLLER_MODE_BOTTOM) == CONTROLLER_MODE_BOTTOM;
+            int visibility = showByMode && portrait ? VISIBLE : INVISIBLE;
             exoPlayerControllerBottom.setVisibility(visibility);
         }
 
         if (exoPlayerControllerBottomLandscape != null) {
-            int visibility = (displayMode & CONTROLLER_MODE_BOTTOM_LANDSCAPE) == CONTROLLER_MODE_BOTTOM_LANDSCAPE ? VISIBLE : INVISIBLE;
+            boolean showByMode = (displayMode & CONTROLLER_MODE_BOTTOM_LANDSCAPE) == CONTROLLER_MODE_BOTTOM_LANDSCAPE;
+            int visibility = showByMode && !portrait ? VISIBLE : INVISIBLE;
             exoPlayerControllerBottomLandscape.setVisibility(visibility);
         }
 
@@ -1281,7 +1278,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 break;
             case SENSOR_LANDSCAPE:
                 setPortrait(false);
-                showControllerByOrientation();
+                showControllerByDisplayMode();
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
             case SENSOR_UNKNOWN:

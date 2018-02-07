@@ -14,6 +14,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -54,6 +55,7 @@ import com.jarvanmo.exoplayerview.media.MediaSourceCreator;
 import java.util.List;
 
 import static android.content.Context.AUDIO_SERVICE;
+import static com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView.CONTROLLER_MODE_ALL;
 
 /**
  * Created by mo on 16-11-7.
@@ -176,6 +178,7 @@ public class ExoVideoView extends FrameLayout {
                         controllerHideOnTouch);
                 controllerAutoShow = a.getBoolean(R.styleable.ExoVideoView_auto_show,
                         controllerAutoShow);
+
 
             } finally {
                 a.recycle();

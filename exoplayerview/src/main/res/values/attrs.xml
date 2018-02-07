@@ -59,6 +59,7 @@
         <attr name="fastforward_increment"/>
         <attr name="player_layout_id"/>
         <attr name="controller_layout_id"/>
+        <attr name="controller_display_mode"/>
     </declare-styleable>
 
 
