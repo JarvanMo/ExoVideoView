@@ -17,6 +17,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -735,7 +736,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
      * Shows the playback controls. If {@link #getShowTimeoutMs()} is positive then the controls will
      * be automatically hidden after this duration of time has elapsed without user input.
      */
+
     public void show() {
+
         if (!isVisible()) {
             setVisibility(VISIBLE);
             if (visibilityListener != null) {
@@ -746,6 +749,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
         // Call hideAfterTimeout even if already visible to reset the timeout.
         hideAfterTimeout();
+
     }
 
     /**
@@ -1294,6 +1298,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
 
+        if (qualityVisibilityCallback != null) {
+            qualityVisibilityCallback.shouldChangeVisibility(GONE);
+        }
     }
 
     private synchronized void changeOrientation(@OnOrientationChangedListener.SensorOrientationType int orientation) {
@@ -1483,6 +1490,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 }else if(centerInfoWrapper == view){
                     playOrPause();
                 }else if(exoPlayerCurrentQualityLandscape == view && qualityVisibilityCallback != null){
+                    hide();
                     qualityVisibilityCallback.shouldChangeVisibility(View.VISIBLE);
                 }
             }

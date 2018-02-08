@@ -667,6 +667,10 @@ public class ExoVideoView extends FrameLayout {
         if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return false;
         }
+        if(enableMultiQuality && overlayFrameLayout.getVisibility() == VISIBLE){
+            return true;
+        }
+
         if (!controller.isVisible()) {
             maybeShowController(true);
         } else if (controllerHideOnTouch) {
@@ -976,7 +980,13 @@ public class ExoVideoView extends FrameLayout {
         }
 
         if (controller != null) {
-            controller.setVisibilityCallback(overlayFrameLayout::setVisibility);
+            controller.setVisibilityCallback(visibility -> {
+                overlayFrameLayout.setVisibility(visibility);
+                if(visibility != VISIBLE){
+                    controller.show();
+                }
+
+            });
         }
 
         MultiQualitySelectorAdapter adapter = new MultiQualitySelectorAdapter(mediaSource.qualities(), quality -> {
@@ -1006,6 +1016,7 @@ public class ExoVideoView extends FrameLayout {
         RecyclerView container = view.findViewById(R.id.exo_player_quality_container);
         container.setAdapter(adapter);
         container.setLayoutManager(new LinearLayoutManager(getContext()));
+        view.setOnClickListener(v->overlayFrameLayout.setVisibility(GONE));
         overlayFrameLayout.addView(view);
     }
 
