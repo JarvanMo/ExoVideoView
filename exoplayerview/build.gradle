@@ -58,4 +58,5 @@ dependencies {
     api 'com.google.android.exoplayer:exoplayer:2.6.1'
 
 
+    implementation 'com.android.support:recyclerview-v7:27.0.2'
 }

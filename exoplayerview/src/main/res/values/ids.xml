@@ -33,6 +33,8 @@
     <item name="exo_player_controller" type="id"/>
     <item name="exo_player_pause" type="id"/>
     <item name="exo_player_play_wrapper_landscape" type="id"/>
-
+    <item name="exo_player_current_quality_landscape" type="id"/>
+    <item name="exo_player_quality_container" type="id"/>
+    <item name="exo_player_quality_selector" type="id"/>
 
 </resources>

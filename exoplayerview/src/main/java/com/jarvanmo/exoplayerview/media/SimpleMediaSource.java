@@ -26,7 +26,7 @@ public class SimpleMediaSource implements ExoMediaSource {
 
     @Override
     public List<Quality> qualities() {
-        return null;
+        return qualities;
     }
 
     public void setDisplayName(String displayName) {

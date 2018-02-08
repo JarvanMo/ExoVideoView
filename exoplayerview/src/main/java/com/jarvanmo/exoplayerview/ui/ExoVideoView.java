@@ -13,6 +13,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -45,6 +49,7 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.RepeatModeUtil;
 import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.R;
+import com.jarvanmo.exoplayerview.extension.MultiQualitySelectorAdapter;
 import com.jarvanmo.exoplayerview.media.ExoMediaSource;
 import com.jarvanmo.exoplayerview.media.MediaSourceCreator;
 
@@ -75,6 +80,7 @@ public class ExoVideoView extends FrameLayout {
     private final ComponentListener componentListener;
     private final FrameLayout overlayFrameLayout;
 
+
     private SimpleExoPlayer player;
     private boolean useController;
     private boolean useArtwork;
@@ -85,6 +91,8 @@ public class ExoVideoView extends FrameLayout {
 
 
     private boolean pausedFromPlayer = false;
+
+    private boolean enableMultiQuality = true;
 
 
     private final AudioManager audioManager;
@@ -174,7 +182,7 @@ public class ExoVideoView extends FrameLayout {
                         controllerHideOnTouch);
                 controllerAutoShow = a.getBoolean(R.styleable.ExoVideoView_auto_show,
                         controllerAutoShow);
-
+                enableMultiQuality = a.getBoolean(R.styleable.ExoVideoView_enable_multi_quality, true);
 
             } finally {
                 a.recycle();
@@ -833,6 +841,12 @@ public class ExoVideoView extends FrameLayout {
         if (controller != null) {
             controller.setMediaSource(mediaSource);
         }
+
+        if (enableMultiQuality && mediaSource.qualities() != null && !mediaSource.qualities().isEmpty()) {
+            addMultiQualitySelector(mediaSource);
+        }
+
+
         playInternal(mediaSource, playWhenReady, where, creator);
     }
 
@@ -948,6 +962,51 @@ public class ExoVideoView extends FrameLayout {
         if (controller != null) {
             controller.setControllerDisplayMode(displayMode);
         }
+    }
+
+
+    private void addMultiQualitySelector(ExoMediaSource mediaSource) {
+        for (ExoMediaSource.Quality quality : mediaSource.qualities()) {
+            if (TextUtils.equals(quality.url(), mediaSource.url())) {
+                if (controller != null) {
+                    controller.updateQualityDes(quality.name());
+                }
+                break;
+            }
+        }
+
+        if (controller != null) {
+            controller.setVisibilityCallback(overlayFrameLayout::setVisibility);
+        }
+
+        MultiQualitySelectorAdapter adapter = new MultiQualitySelectorAdapter(mediaSource.qualities(), quality -> {
+            if (player == null ) {
+                return;
+            }
+
+            long current = player.getCurrentPosition();
+            boolean playWhenReady = player.getPlayWhenReady();
+            MediaSourceCreator creator = new MediaSourceCreator(getContext().getApplicationContext());
+            MediaSource tmp = creator.buildMediaSource(Uri.parse(mediaSource.url()), null);
+            player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
+            player.prepare(tmp);
+            player.seekTo(current);
+            if (controller != null) {
+                controller.updateQualityDes(quality.name());
+            }
+
+            overlayFrameLayout.setVisibility(GONE);
+
+        });
+
+
+        overlayFrameLayout.removeAllViews();
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.exo_player_quality_selector, null,false);
+        overlayFrameLayout.setVisibility(View.GONE);
+        RecyclerView container = view.findViewById(R.id.exo_player_quality_container);
+        container.setAdapter(adapter);
+        container.setLayoutManager(new LinearLayoutManager(getContext()));
+        overlayFrameLayout.addView(view);
     }
 
 

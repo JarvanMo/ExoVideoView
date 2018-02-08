@@ -49,8 +49,8 @@
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/exo_controls_play_description"
-            android:visibility="gone"
             android:scaleType="centerInside"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_pause_white_36dp" />
     </FrameLayout>
 
@@ -79,7 +79,6 @@
         android:contentDescription="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/exo_player_custom_view"
         app:layout_constraintTop_toTopOf="@id/exo_player_play_wrapper_landscape"
         app:srcCompat="@drawable/ic_fullscreen_exit_white_36dp" />
 
@@ -89,11 +88,26 @@
         android:layout_height="60dp"
         android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/exo_player_exit_fullscreen"
+        app:layout_constraintEnd_toStartOf="@id/exo_player_current_quality_landscape"
         app:layout_constraintStart_toEndOf="@+id/exo_player_position_duration_landscape"
         app:layout_constraintTop_toBottomOf="@+id/exo_player_progress_landscape">
 
     </FrameLayout>
+
+    <TextView
+        android:id="@id/exo_player_current_quality_landscape"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/exo_player_exit_fullscreen"
+        app:layout_constraintStart_toEndOf="@id/exo_player_custom_view"
+        app:layout_constraintTop_toTopOf="@+id/exo_player_position_duration_landscape"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="1080p" />
 
     <TextView
         android:id="@id/exo_player_position_duration_landscape"

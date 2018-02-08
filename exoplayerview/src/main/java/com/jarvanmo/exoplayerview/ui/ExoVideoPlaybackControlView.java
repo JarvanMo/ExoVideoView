@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.RepeatModeUtil;
 import com.google.android.exoplayer2.util.Util;
 import com.jarvanmo.exoplayerview.R;
+import com.jarvanmo.exoplayerview.extension.MultiQualitySelectorAdapter;
 import com.jarvanmo.exoplayerview.gesture.OnVideoGestureChangeListener;
 import com.jarvanmo.exoplayerview.gesture.VideoGesture;
 import com.jarvanmo.exoplayerview.media.ExoMediaSource;
@@ -67,6 +68,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         Player attachPlayer();
     }
+
+
+
     /**
      * Listener to be notified about changes of the visibility of the UI control.
      */
@@ -214,6 +218,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final TextView exoPlayerVideoName;
     private final TextView exoPlayerVideoNameLandscape;
 
+    private final TextView exoPlayerCurrentQualityLandscape;
+
     private boolean portrait = true;
 
 
@@ -227,6 +233,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private int displayMode = CONTROLLER_MODE_ALL;
 
+    private MultiQualitySelectorAdapter.VisibilityCallback qualityVisibilityCallback;
 
     public ExoVideoPlaybackControlView(Context context) {
         this(context, null);
@@ -251,6 +258,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         showTimeoutMs = DEFAULT_SHOW_TIMEOUT_MS;
         repeatToggleModes = DEFAULT_REPEAT_TOGGLE_MODES;
         showShuffleButton = false;
+
+        int controllerBackgroundId = 0;
+
         if (playbackAttrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(playbackAttrs,
                     R.styleable.ExoVideoPlaybackControlView, 0, 0);
@@ -265,6 +275,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 showShuffleButton = a.getBoolean(R.styleable.ExoVideoPlaybackControlView_show_shuffle_button,
                         showShuffleButton);
                 displayMode = a.getInt(R.styleable.ExoVideoPlaybackControlView_controller_display_mode, CONTROLLER_MODE_ALL);
+
+                controllerBackgroundId = a.getResourceId(R.styleable.ExoVideoPlaybackControlView_controller_background,0);
             } finally {
                 a.recycle();
             }
@@ -374,9 +386,24 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
         exoPlayerControllerTop = findViewById(R.id.exo_player_controller_top);
+        if (exoPlayerControllerTop != null && controllerBackgroundId != 0) {
+            exoPlayerControllerTop.setBackgroundResource(controllerBackgroundId);
+        }
+
         exoPlayerControllerTopLandscape = findViewById(R.id.exo_player_controller_top_landscape);
+        if (exoPlayerControllerTopLandscape != null && controllerBackgroundId != 0) {
+            exoPlayerControllerTopLandscape.setBackgroundResource(controllerBackgroundId);
+        }
+
         exoPlayerControllerBottom = findViewById(R.id.exo_player_controller_bottom);
+        if (exoPlayerControllerBottom != null && controllerBackgroundId != 0) {
+            exoPlayerControllerBottom.setBackgroundResource(controllerBackgroundId);
+        }
+
         exoPlayerControllerBottomLandscape = findViewById(R.id.exo_player_controller_bottom_landscape);
+        if (exoPlayerControllerBottomLandscape != null && controllerBackgroundId != 0) {
+            exoPlayerControllerBottomLandscape.setBackgroundResource(controllerBackgroundId);
+        }
 
 
         exoPlayerVideoName = findViewById(R.id.exo_player_video_name);
@@ -393,9 +420,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             setupVideoGesture();
         }
 
+        exoPlayerCurrentQualityLandscape = findViewById(R.id.exo_player_current_quality_landscape);
+        if (exoPlayerCurrentQualityLandscape != null) {
+            exoPlayerCurrentQualityLandscape.setOnClickListener(componentListener);
+        }
+
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
         showControllerByDisplayMode();
-
 
     }
 
@@ -1294,6 +1325,17 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     }
 
+    public void setVisibilityCallback(MultiQualitySelectorAdapter.VisibilityCallback qualityVisibilityCallback) {
+        this.qualityVisibilityCallback = qualityVisibilityCallback;
+    }
+
+    public void updateQualityDes(CharSequence qualityDes){
+        if (exoPlayerCurrentQualityLandscape != null) {
+            exoPlayerCurrentQualityLandscape.setText(qualityDes);
+        }
+    }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -1440,6 +1482,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                     }
                 }else if(centerInfoWrapper == view){
                     playOrPause();
+                }else if(exoPlayerCurrentQualityLandscape == view && qualityVisibilityCallback != null){
+                    qualityVisibilityCallback.shouldChangeVisibility(View.VISIBLE);
                 }
             }
             hideAfterTimeout();

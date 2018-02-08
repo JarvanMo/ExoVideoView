@@ -1,19 +1,25 @@
 package com.jarvanmo.demo;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.jarvanmo.exoplayerview.media.ExoMediaSource;
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource;
-import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
+import com.jarvanmo.exoplayerview.media.SimpleQuality;
 import com.jarvanmo.exoplayerview.ui.ExoVideoView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_LANDSCAPE;
 import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_PORTRAIT;
@@ -36,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         videoView = findViewById(R.id.videoView);
-        modeFit =  findViewById(R.id.mode_fit);
-        modeNone =  findViewById(R.id.mode_none);
+        modeFit = findViewById(R.id.mode_fit);
+        modeNone = findViewById(R.id.mode_none);
         modeHeight = findViewById(R.id.mode_height);
         modeWidth = findViewById(R.id.mode_width);
         modeZoom = findViewById(R.id.mode_zoom);
@@ -45,20 +51,21 @@ public class MainActivity extends AppCompatActivity {
         play = findViewById(R.id.play);
 
         videoView.setBackListener((view, isPortrait) -> {
-            if(isPortrait){
+            if (isPortrait) {
                 finish();
             }
-          return false;
+            return false;
         });
 //
 //
         videoView.setOrientationListener(orientation -> {
-            if(orientation == SENSOR_PORTRAIT){
+            if (orientation == SENSOR_PORTRAIT) {
                 changeToPortrait();
-            }else if(orientation == SENSOR_LANDSCAPE){
+            } else if (orientation == SENSOR_LANDSCAPE) {
                 changeToLandscape();
             }
         });
+
 //
 
 //       final SimpleMediaSource mediaSource = new SimpleMediaSource("http://video19.ifeng.com/video07/2013/11/11/281708-102-007-1138.mp4");
@@ -71,9 +78,26 @@ public class MainActivity extends AppCompatActivity {
 //        SimpleMediaSource mediaSource = new SimpleMediaSource("https://media.w3.org/2010/05/sintel/trailer.mp4");
         SimpleMediaSource mediaSource = new SimpleMediaSource("http://flv2.bn.netease.com/videolib3/1604/28/fVobI0704/SD/fVobI0704-mobile.mp4");
         mediaSource.setDisplayName("VideoPlaying");
+        List<ExoMediaSource.Quality> qualities = new ArrayList<>();
+        ExoMediaSource.Quality quality;
 
+        for (int i = 0; i <6 ; i++) {
+            SpannableString spannableString  = new SpannableString("Quality"+i);;
+            if(i % 2 ==0){
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#0099EE"));
+                spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        play.setOnClickListener(view ->{
+            }else {
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.RED);
+                spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+
+            quality = new SimpleQuality(spannableString,"http://flv2.bn.netease.com/videolib3/1604/28/fVobI0704/SD/fVobI0704-mobile.mp4");
+            qualities.add(quality);
+        }
+        mediaSource.setQualities(qualities);
+
+        play.setOnClickListener(view -> {
             videoView.play(mediaSource);
             play.setVisibility(View.INVISIBLE);
         });

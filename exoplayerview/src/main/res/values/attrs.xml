@@ -46,6 +46,8 @@
         <flag name="none" value="0"/>
     </attr>
 
+    <attr name="controller_background" format="reference"/>
+
     <declare-styleable name="ExoVideoView">
         <attr name="use_artwork" format="boolean"/>
         <attr name="shutter_background_color" format="color"/>
@@ -60,7 +62,10 @@
         <attr name="fastforward_increment"/>
         <attr name="player_layout_id"/>
         <attr name="controller_layout_id"/>
+
         <attr name="controller_display_mode"/>
+        <attr name="controller_background" />
+        <attr name="enable_multi_quality" format="boolean"/>
     </declare-styleable>
 
 
@@ -72,6 +77,7 @@
         <attr name="show_shuffle_button"/>
         <attr name="controller_layout_id"/>
         <attr name="controller_display_mode"/>
+        <attr name="controller_background" />
     </declare-styleable>
 
     <declare-styleable name="DefaultTimeBar">
