@@ -119,21 +119,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeToPortrait() {
 
-//        WindowManager.LayoutParams attr = getWindow().getAttributes();
+        WindowManager.LayoutParams attr = getWindow().getAttributes();
 //        attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        Window window = getWindow();
-//        window.setAttributes(attr);
-//        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        Window window = getWindow();
+        window.setAttributes(attr);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         wrapper.setVisibility(View.VISIBLE);
     }
 
 
     private void changeToLandscape() {
-//        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
 //        lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-//        Window window = getWindow();
-//        window.setAttributes(lp);
-//        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        Window window = getWindow();
+        window.setAttributes(lp);
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         wrapper.setVisibility(View.GONE);
     }
 
