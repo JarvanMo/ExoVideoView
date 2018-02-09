@@ -3,7 +3,6 @@ package com.jarvanmo.exoplayerview.ui;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -262,7 +260,6 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         this.useController = useController && controller != null;
 
 
-        setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
         if (useController && controller != null) {
             controller.show();
             controller.setVideoViewAccessor(this);
