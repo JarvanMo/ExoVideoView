@@ -670,8 +670,12 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return false;
         }
-        if (enableMultiQuality && overlayFrameLayout.getVisibility() == VISIBLE) {
-            return true;
+        if (enableMultiQuality ) {
+            View v = overlayFrameLayout.findViewById(R.id.exo_player_quality_container);
+            if(v != null && overlayFrameLayout.getVisibility() == VISIBLE){
+                return true;
+            }
+
         }
 
         if (!controller.isVisible()) {
