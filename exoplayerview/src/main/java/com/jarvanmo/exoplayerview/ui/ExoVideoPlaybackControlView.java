@@ -18,7 +18,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -112,7 +111,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     public interface OrientationListener {
-        void onOrientationChange(@OnOrientationChangedListener.SensorOrientationType int orientation);
+        void onOrientationChanged(@OnOrientationChangedListener.SensorOrientationType int orientation);
     }
 
 
@@ -154,6 +153,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public static final int CONTROLLER_MODE_TOP_LANDSCAPE = 0b0100;
     public static final int CONTROLLER_MODE_BOTTOM = 0b0010;
     public static final int CONTROLLER_MODE_BOTTOM_LANDSCAPE = 0b0001;
+
     @IntDef({CONTROLLER_MODE_NONE,
             CONTROLLER_MODE_ALL,
             CONTROLLER_MODE_TOP, CONTROLLER_MODE_TOP_LANDSCAPE, CONTROLLER_MODE_BOTTOM, CONTROLLER_MODE_BOTTOM_LANDSCAPE})
@@ -1344,16 +1344,17 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
     private synchronized void changeOrientation(@OnOrientationChangedListener.SensorOrientationType int orientation) {
-        if (orientationListener == null) {
-            return;
-        }
-
-        orientationListener.onOrientationChange(orientation);
         Context context = getContext();
         Activity activity;
         if (!(context instanceof Activity)) {
             return;
         }
+
+        if (orientationListener == null) {
+            return;
+        }
+
+
         activity = (Activity) context;
         switch (orientation) {
             case SENSOR_PORTRAIT:
@@ -1371,6 +1372,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 break;
         }
 
+        orientationListener.onOrientationChanged(orientation);
     }
 
 
@@ -1421,7 +1423,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
      * @param removeViews    remove all views in target view before add  if true
      **/
     public void addCustomView(@CustomViewType int customViewType, View customView, boolean removeViews) {
-        ViewGroup viewGroup =  null;
+        ViewGroup viewGroup = null;
         if (customViewType == CUSTOM_VIEW_TOP && topCustomView != null) {
             viewGroup = topCustomView;
         } else if (customViewType == CUSTOM_VIEW_TOP_LANDSCAPE && topCustomView != null) {
@@ -1431,8 +1433,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
         if (viewGroup != null) {
-            if(removeViews){
-              viewGroup.removeAllViews();
+            if (removeViews) {
+                viewGroup.removeAllViews();
             }
             viewGroup.addView(customView);
         }
