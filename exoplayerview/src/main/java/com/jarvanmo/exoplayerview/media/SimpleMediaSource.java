@@ -29,6 +29,11 @@ public class SimpleMediaSource implements ExoMediaSource {
         return qualities;
     }
 
+    @Override
+    public String extension() {
+        return null;
+    }
+
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }

@@ -894,7 +894,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     }
 
     private void playInternal(ExoMediaSource mediaSource, boolean playWhenReady, long where, MediaSourceCreator creator) {
-        MediaSource tmp = creator.buildMediaSource(Uri.parse(mediaSource.url()), null);
+        MediaSource tmp = creator.buildMediaSource(Uri.parse(mediaSource.url()), mediaSource.extension());
         player.prepare(tmp);
         if (where == C.TIME_UNSET) {
             player.seekTo(0L);

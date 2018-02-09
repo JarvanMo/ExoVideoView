@@ -17,4 +17,5 @@ public interface ExoMediaSource {
     String url();
     String name();
     List<Quality> qualities();
+    String extension();
 }
