@@ -23,6 +23,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -159,6 +160,15 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     }
 
+    public static final int CUSTOM_VIEW_TOP = 1;
+    public static final int CUSTOM_VIEW_TOP_LANDSCAPE = CUSTOM_VIEW_TOP + 1;
+    public static final int CUSTOM_VIEW_BOTTOM_LANDSCAPE = CUSTOM_VIEW_TOP_LANDSCAPE + 1;
+
+    @IntDef({CUSTOM_VIEW_TOP, CUSTOM_VIEW_TOP_LANDSCAPE, CUSTOM_VIEW_BOTTOM_LANDSCAPE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CustomViewType {
+
+    }
 
     private final ComponentListener componentListener;
     private final View previousButton;
@@ -230,6 +240,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final TextView exoPlayerVideoNameLandscape;
 
     private final TextView exoPlayerCurrentQualityLandscape;
+
+    private final ViewGroup topCustomView;
+    private final ViewGroup topCustomViewLandscape;
+    private final ViewGroup bottomCustomViewLandscape;
 
     private boolean portrait = true;
 
@@ -437,6 +451,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (exoPlayerCurrentQualityLandscape != null) {
             exoPlayerCurrentQualityLandscape.setOnClickListener(componentListener);
         }
+
+
+        topCustomView = findViewById(R.id.exo_player_controller_top_custom_view);
+        topCustomViewLandscape = findViewById(R.id.exo_player_controller_top_custom_view_landscape);
+        bottomCustomViewLandscape = findViewById(R.id.exo_player_controller_bottom_custom_view_landscape);
 
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
         showControllerByDisplayMode();
@@ -1391,6 +1410,36 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
     }
 
+
+    /**
+     * add your view to controller
+     *
+     * @param customViewType the target view type
+     * @param customView     the view you want to add
+     * @param removeViews    remove all views in target view before add  if true
+     **/
+    public void addCustomView(@CustomViewType int customViewType, View customView, boolean removeViews) {
+        ViewGroup viewGroup =  null;
+        if (customViewType == CUSTOM_VIEW_TOP && topCustomView != null) {
+            viewGroup = topCustomView;
+        } else if (customViewType == CUSTOM_VIEW_TOP_LANDSCAPE && topCustomView != null) {
+            viewGroup = topCustomViewLandscape;
+        } else if (customViewType == CUSTOM_VIEW_BOTTOM_LANDSCAPE && topCustomView != null) {
+            viewGroup = bottomCustomViewLandscape;
+        }
+
+        if (viewGroup != null) {
+            if(removeViews){
+              viewGroup.removeAllViews();
+            }
+            viewGroup.addView(customView);
+        }
+
+    }
+
+    public void addCustomView(@CustomViewType int customViewType, View customView) {
+        addCustomView(customViewType, customView, false);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

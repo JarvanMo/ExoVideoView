@@ -11,7 +11,7 @@
     <item name="exo_player_next_landscape" type="id"/>
     <item name="exo_player_progress_landscape" type="id"/>
     <item name="exo_player_exit_fullscreen" type="id"/>
-    <item name="exo_player_custom_view" type="id"/>
+    <item name="exo_player_controller_bottom_custom_view_landscape" type="id"/>
     <item name="exo_player_position_duration_landscape" type="id"/>
     <item name="exo_player_video_name" type="id"/>
     <item name="exo_player_video_name_landscape" type="id"/>
@@ -37,4 +37,6 @@
     <item name="exo_player_quality_container" type="id"/>
     <item name="exo_player_quality_selector" type="id"/>
 
+    <item name="exo_player_controller_top_custom_view" type="id"/>
+    <item name="exo_player_controller_top_custom_view_landscape" type="id"/>
 </resources>

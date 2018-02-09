@@ -1048,6 +1048,24 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         return this;
     }
 
+    /**
+     * add your view to controller
+     *
+     * @param customViewType the target view type
+     * @param customView     the view you want to add
+     * @param removeViews    remove all views in target view before add if true
+     **/
+    public void addCustomView(@ExoVideoPlaybackControlView.CustomViewType int customViewType, View customView, boolean removeViews) {
+        if (useController && controller != null) {
+            controller.addCustomView(customViewType,customView,removeViews);
+        }
+    }
+
+    public void addCustomView(@ExoVideoPlaybackControlView.CustomViewType int customViewType, View customView) {
+        addCustomView(customViewType, customView, false);
+    }
+
+
     private final class ComponentListener extends Player.DefaultEventListener implements TextOutput,
             SimpleExoPlayer.VideoListener {
 
