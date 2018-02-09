@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:id="@+id/containerWrapper"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/default_playback_background"

@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
@@ -22,6 +23,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -63,13 +65,21 @@ import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListene
 public class ExoVideoPlaybackControlView extends FrameLayout {
 
     /**
+     * to get  {@link ExoVideoView}
+     */
+    public interface VideoViewAccessor {
+
+        View attachVideoView();
+    }
+
+
+    /**
      * to get  {@link Player}
-     * */
+     */
     public interface PlayerAccessor {
 
         Player attachPlayer();
     }
-
 
 
     /**
@@ -236,6 +246,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     private MultiQualitySelectorAdapter.VisibilityCallback qualityVisibilityCallback;
 
+    private VideoViewAccessor videoViewAccessor;
+
     public ExoVideoPlaybackControlView(Context context) {
         this(context, null);
     }
@@ -277,7 +289,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                         showShuffleButton);
                 displayMode = a.getInt(R.styleable.ExoVideoPlaybackControlView_controller_display_mode, CONTROLLER_MODE_ALL);
 
-                controllerBackgroundId = a.getResourceId(R.styleable.ExoVideoPlaybackControlView_controller_background,0);
+                controllerBackgroundId = a.getResourceId(R.styleable.ExoVideoPlaybackControlView_controller_background, 0);
             } finally {
                 a.recycle();
             }
@@ -470,7 +482,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
             @Override
             public void onShowSeekSize(long seekSize, boolean fastForward) {
-                if(isHls){
+                if (isHls) {
                     return;
                 }
 
@@ -744,6 +756,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             if (visibilityListener != null) {
                 visibilityListener.onVisibilityChange(getVisibility());
             }
+
+            changeSystemUiVisibilityPortrait();
+
+
             updateAll();
             requestPlayPauseFocus();
         }
@@ -764,6 +780,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             removeCallbacks(updateProgressAction);
             removeCallbacks(hideAction);
             hideAtMs = C.TIME_UNSET;
+
+            if (!portrait) {
+                changeSystemUiVisibilityLandscape();
+            }
         }
     }
 
@@ -1225,7 +1245,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-
     public void setBackListener(ExoClickListener backListener) {
         this.backListener = backListener;
     }
@@ -1319,11 +1338,12 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             case SENSOR_PORTRAIT:
                 setPortrait(true);
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                changeSystemUiVisibilityPortrait();
                 break;
             case SENSOR_LANDSCAPE:
                 setPortrait(false);
-                showControllerByDisplayMode();
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                changeSystemUiVisibilityLandscape();
                 break;
             case SENSOR_UNKNOWN:
             default:
@@ -1332,11 +1352,40 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
     }
 
+
+    private void changeSystemUiVisibilityPortrait() {
+        videoViewAccessor.attachVideoView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+    }
+
+    private void changeSystemUiVisibilityLandscape() {
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        if (windowManager == null) {
+            return;
+        }
+
+        int flag = View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            flag |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+
+        videoViewAccessor.attachVideoView().setSystemUiVisibility(flag);
+    }
+
+
+    public void setVideoViewAccessor(VideoViewAccessor videoViewAccessor) {
+        this.videoViewAccessor = videoViewAccessor;
+    }
+
     public void setVisibilityCallback(MultiQualitySelectorAdapter.VisibilityCallback qualityVisibilityCallback) {
         this.qualityVisibilityCallback = qualityVisibilityCallback;
     }
 
-    public void updateQualityDes(CharSequence qualityDes){
+    public void updateQualityDes(CharSequence qualityDes) {
         if (exoPlayerCurrentQualityLandscape != null) {
             exoPlayerCurrentQualityLandscape.setText(qualityDes);
         }
@@ -1348,8 +1397,14 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (backListener != null) {
-                if (!backListener.onClick(null, !portrait)) {
-                    changeOrientation(portrait ? SENSOR_LANDSCAPE : SENSOR_PORTRAIT);
+                if (!backListener.onClick(null, portrait)) {
+                    if (portrait) {
+                        return super.onKeyDown(keyCode, event);
+                    } else {
+                        changeOrientation(SENSOR_PORTRAIT);
+                        return true;
+                    }
+
                 }
             }
         }
@@ -1487,9 +1542,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                             changeOrientation(SENSOR_PORTRAIT);
                         }
                     }
-                }else if(centerInfoWrapper == view){
+                } else if (centerInfoWrapper == view) {
                     playOrPause();
-                }else if(exoPlayerCurrentQualityLandscape == view && qualityVisibilityCallback != null){
+                } else if (exoPlayerCurrentQualityLandscape == view && qualityVisibilityCallback != null) {
                     hide();
                     qualityVisibilityCallback.shouldChangeVisibility(View.VISIBLE);
                 }
@@ -1497,14 +1552,15 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             hideAfterTimeout();
         }
 
-        long[] mHits =new long[2];
+        long[] mHits = new long[2];
+
         private void playOrPause() {
 
-            System.arraycopy(mHits,1,mHits,0,mHits.length-1);
-            mHits[mHits.length-1]=SystemClock.uptimeMillis();
+            System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+            mHits[mHits.length - 1] = SystemClock.uptimeMillis();
 
-            if(500>(SystemClock.uptimeMillis()-mHits[0])){
-              controlDispatcher.dispatchSetPlayWhenReady(player,!player.getPlayWhenReady());
+            if (500 > (SystemClock.uptimeMillis() - mHits[0])) {
+                controlDispatcher.dispatchSetPlayWhenReady(player, !player.getPlayWhenReady());
             }
 
         }

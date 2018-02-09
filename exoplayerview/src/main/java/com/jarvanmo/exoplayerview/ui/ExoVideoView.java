@@ -64,7 +64,7 @@ import static android.content.Context.AUDIO_SERVICE;
  */
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-public class ExoVideoView extends FrameLayout {
+public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControlView.VideoViewAccessor {
 
 
     private static final int SURFACE_TYPE_NONE = 0;
@@ -116,6 +116,8 @@ public class ExoVideoView extends FrameLayout {
 
     private long lastPlayedPosition = 0L;
     private long[] mHits = new long[2];
+
+    private int controllerBackgroundId = 0;
 
     public ExoVideoView(Context context) {
         this(context, null);
@@ -184,6 +186,7 @@ public class ExoVideoView extends FrameLayout {
                         controllerAutoShow);
                 enableMultiQuality = a.getBoolean(R.styleable.ExoVideoView_enable_multi_quality, true);
 
+                controllerBackgroundId = a.getResourceId(R.styleable.ExoVideoView_controller_background, 0);
             } finally {
                 a.recycle();
             }
@@ -262,9 +265,9 @@ public class ExoVideoView extends FrameLayout {
         setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
         if (useController && controller != null) {
             controller.show();
+            controller.setVideoViewAccessor(this);
         }
         setKeepScreenOn(true);
-
     }
 
     /**
@@ -667,7 +670,7 @@ public class ExoVideoView extends FrameLayout {
         if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return false;
         }
-        if(enableMultiQuality && overlayFrameLayout.getVisibility() == VISIBLE){
+        if (enableMultiQuality && overlayFrameLayout.getVisibility() == VISIBLE) {
             return true;
         }
 
@@ -873,7 +876,11 @@ public class ExoVideoView extends FrameLayout {
             return;
         }
 
-        if (!player.getPlayWhenReady() && !pausedFromPlayer) {
+        if (!player.getPlayWhenReady()) {
+            return;
+        }
+
+        if (!pausedFromPlayer) {
             player.seekTo(lastPlayedPosition - 500 < 0 ? 0 : lastPlayedPosition - 500);
             player.setPlayWhenReady(true);
         }
@@ -888,7 +895,6 @@ public class ExoVideoView extends FrameLayout {
 
     private void playInternal(ExoMediaSource mediaSource, boolean playWhenReady, long where, MediaSourceCreator creator) {
         MediaSource tmp = creator.buildMediaSource(Uri.parse(mediaSource.url()), null);
-        player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
         player.prepare(tmp);
         if (where == C.TIME_UNSET) {
             player.seekTo(0L);
@@ -896,6 +902,7 @@ public class ExoVideoView extends FrameLayout {
             player.seekTo(where);
         }
 
+        player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
     }
 
     private void createExoPlayer(MediaSourceCreator creator) {
@@ -982,7 +989,7 @@ public class ExoVideoView extends FrameLayout {
         if (controller != null) {
             controller.setVisibilityCallback(visibility -> {
                 overlayFrameLayout.setVisibility(visibility);
-                if(visibility != VISIBLE){
+                if (visibility != VISIBLE) {
                     controller.show();
                 }
 
@@ -990,7 +997,7 @@ public class ExoVideoView extends FrameLayout {
         }
 
         MultiQualitySelectorAdapter adapter = new MultiQualitySelectorAdapter(mediaSource.qualities(), quality -> {
-            if (player == null ) {
+            if (player == null) {
                 return;
             }
 
@@ -1011,15 +1018,35 @@ public class ExoVideoView extends FrameLayout {
 
 
         overlayFrameLayout.removeAllViews();
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.exo_player_quality_selector, null,false);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.exo_player_quality_selector, null, false);
         overlayFrameLayout.setVisibility(View.GONE);
+
         RecyclerView container = view.findViewById(R.id.exo_player_quality_container);
         container.setAdapter(adapter);
         container.setLayoutManager(new LinearLayoutManager(getContext()));
-        view.setOnClickListener(v->overlayFrameLayout.setVisibility(GONE));
+
+        view.setOnClickListener(v -> overlayFrameLayout.setVisibility(GONE));
+
+        View containerWrapper = view.findViewById(R.id.containerWrapper);
+        if (controllerBackgroundId != 0) {
+            containerWrapper.setBackgroundResource(controllerBackgroundId);
+        }
+
         overlayFrameLayout.addView(view);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (controller != null) {
+            return controller.onKeyDown(keyCode, event);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public View attachVideoView() {
+        return this;
+    }
 
     private final class ComponentListener extends Player.DefaultEventListener implements TextOutput,
             SimpleExoPlayer.VideoListener {
