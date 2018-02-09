@@ -1315,26 +1315,44 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         if (exoPlayerControllerTop != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_TOP) == CONTROLLER_MODE_TOP;
-            int visibility = showByMode && isPortrait() ? VISIBLE : INVISIBLE;
-            exoPlayerControllerTop.setVisibility(visibility);
+            if(portrait){
+                int visibility = showByMode ? VISIBLE : INVISIBLE;
+                exoPlayerControllerTop.setVisibility(visibility);
+            }else {
+                exoPlayerControllerTop.setVisibility(INVISIBLE);
+            }
+
         }
 
         if (exoPlayerControllerTopLandscape != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_TOP_LANDSCAPE) == CONTROLLER_MODE_TOP_LANDSCAPE;
-            int visibility = showByMode && !portrait ? VISIBLE : INVISIBLE;
-            exoPlayerControllerTopLandscape.setVisibility(visibility);
+            if(portrait){
+                exoPlayerControllerTopLandscape.setVisibility(INVISIBLE);
+            }else {
+                int visibility = showByMode ? VISIBLE : INVISIBLE;
+                exoPlayerControllerTopLandscape.setVisibility(visibility);
+            }
         }
 
         if (exoPlayerControllerBottom != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_BOTTOM) == CONTROLLER_MODE_BOTTOM;
-            int visibility = showByMode && portrait ? VISIBLE : INVISIBLE;
-            exoPlayerControllerBottom.setVisibility(visibility);
+            if(portrait){
+                int visibility = showByMode ? VISIBLE : INVISIBLE;
+                exoPlayerControllerBottom.setVisibility(visibility);
+            }else {
+
+                exoPlayerControllerBottom.setVisibility(INVISIBLE);
+            }
         }
 
         if (exoPlayerControllerBottomLandscape != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_BOTTOM_LANDSCAPE) == CONTROLLER_MODE_BOTTOM_LANDSCAPE;
-            int visibility = showByMode && !portrait ? VISIBLE : INVISIBLE;
-            exoPlayerControllerBottomLandscape.setVisibility(visibility);
+            if(portrait){
+                exoPlayerControllerBottomLandscape.setVisibility(INVISIBLE);
+            }else {
+                int visibility = showByMode ? VISIBLE : INVISIBLE;
+                exoPlayerControllerBottomLandscape.setVisibility(visibility);
+            }
         }
 
 
