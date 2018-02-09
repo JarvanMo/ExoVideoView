@@ -148,13 +148,15 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 //    <!--<enum name="top_landscape" value="0b0100"/>-->
 //    <!--<enum name="bottom" value="0b0010"/>-->
 //    <!--<enum name="bottom_landscape" value="0b0001"/>-->
+    public static final int CONTROLLER_MODE_NONE = 0b0000;
     public static final int CONTROLLER_MODE_ALL = 0b1111;
     public static final int CONTROLLER_MODE_TOP = 0b1000;
     public static final int CONTROLLER_MODE_TOP_LANDSCAPE = 0b0100;
     public static final int CONTROLLER_MODE_BOTTOM = 0b0010;
     public static final int CONTROLLER_MODE_BOTTOM_LANDSCAPE = 0b0001;
-
-    @IntDef({CONTROLLER_MODE_ALL, CONTROLLER_MODE_TOP, CONTROLLER_MODE_TOP_LANDSCAPE, CONTROLLER_MODE_BOTTOM, CONTROLLER_MODE_BOTTOM_LANDSCAPE})
+    @IntDef({CONTROLLER_MODE_NONE,
+            CONTROLLER_MODE_ALL,
+            CONTROLLER_MODE_TOP, CONTROLLER_MODE_TOP_LANDSCAPE, CONTROLLER_MODE_BOTTOM, CONTROLLER_MODE_BOTTOM_LANDSCAPE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ControllerModeType {
 

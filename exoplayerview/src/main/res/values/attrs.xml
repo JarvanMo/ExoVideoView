@@ -38,6 +38,7 @@
     <!--<enum name="bottom" value="0b0010"/>-->
     <!--<enum name="bottom_landscape" value="0b0001"/>-->
     <attr name="controller_display_mode">
+        <flag name="none" value="0"/>
         <flag name="all" value="15"/>
         <flag name="top" value="8"/>
         <flag name="top_landscape" value="4"/>
