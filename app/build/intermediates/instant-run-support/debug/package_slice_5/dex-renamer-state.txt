@@ -1,4 +1,0 @@
-#Thu Feb 08 16:52:55 CST 2018
-base.0=/home/mo/Source/github/ExoPlayerVideoView/app/build/intermediates/transforms/dexMerger/debug/214
-path.0=classes.dex
-renamed.0=classes.dex
