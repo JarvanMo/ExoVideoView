@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/mo/Source/github/ExoPlayerVideoView/app/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-az-rAZ/values-az-rAZ.xml",
+            "map": [
+                {
+                    "source": "/home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-2.6.1.aar/4103b1ba0179988a53ff346b794c68ed/res/values-az-rAZ/values-az-rAZ.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,136,209,276,341,417,501,582,659,733,805",
+                        "endColumns": "80,72,66,64,75,83,80,76,73,71,68",
+                        "endOffsets": "131,204,271,336,412,496,577,654,728,800,869"
+                    }
+                }
+            ]
+        }
+    ]
+}

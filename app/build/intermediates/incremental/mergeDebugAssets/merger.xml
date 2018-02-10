@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config=":exoplayerview"><source path="/home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/bundles/debug/assets"/></dataSet><dataSet config="main"><source path="/home/mo/Source/github/ExoPlayerVideoView/app/src/main/assets"/><source path="/home/mo/Source/github/ExoPlayerVideoView/app/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/home/mo/Source/github/ExoPlayerVideoView/app/src/debug/assets"/></dataSet></merger>

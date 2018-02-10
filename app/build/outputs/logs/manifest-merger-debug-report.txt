@@ -1,0 +1,138 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+MERGED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-22:12
+MERGED from [com.android.support:appcompat-v7:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/58e7f31ce8655ac3f76358843dd9eb90/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/b4619f973de98b02456a08e408ff40f7/AndroidManifest.xml:2:1-11:12
+MERGED from [com.google.android.exoplayer:exoplayer:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-2.6.1.aar/b154747b7d8a386bce43df82d5b7eb4d/AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:recyclerview-v7:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.0.2.aar/619a94564b0d73baca59e9ac4e0240b7/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/ef24c09872ce2e15df3c83f58b8b085d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/937437f76e09cd4e8fb0fe6a36cf4886/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.0.2.aar/905f0ca9b6ca81890b8f6bd944a1b859/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.0.2.aar/888f076517268a68580dc0ba592cb498/AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.exoplayer:exoplayer-dash:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-dash-2.6.1.aar/3588aa31872e5c484e0f2b796a531ca3/AndroidManifest.xml:17:1-25:12
+MERGED from [com.google.android.exoplayer:exoplayer-hls:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-hls-2.6.1.aar/b7dae04c9aba1e959ecd3808592825ce/AndroidManifest.xml:17:1-25:12
+MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-smoothstreaming-2.6.1.aar/1cbdae12ebd04f0ac8ec8a6f6263fcc9/AndroidManifest.xml:17:1-25:12
+MERGED from [com.google.android.exoplayer:exoplayer-ui:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-2.6.1.aar/4103b1ba0179988a53ff346b794c68ed/AndroidManifest.xml:17:1-25:12
+MERGED from [com.google.android.exoplayer:exoplayer-core:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-core-2.6.1.aar/ac437e33de8d777c749fb55d55668b91/AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:support-core-ui:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/2c52ed0dc91e143a3abf070643e3c127/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/a68650e1ea3359869ce7ae38a3cd616b/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /home/mo/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/2cec7c943eca0cf2126c3f2032b50f54/AndroidManifest.xml:17:1-24:12
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+	package
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:3:5-32
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:1-23:12
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:2:11-69
+application
+ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:5:5-21:19
+MERGED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:16:5-20:19
+MERGED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:16:5-20:19
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/b4619f973de98b02456a08e408ff40f7/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/b4619f973de98b02456a08e408ff40f7/AndroidManifest.xml:9:5-20
+	android:supportsRtl
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:10:9-35
+	android:label
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:8:9-41
+	android:roundIcon
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:9:9-54
+	android:icon
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:7:9-43
+	android:allowBackup
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:6:9-35
+	android:theme
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:11:9-40
+activity#com.jarvanmo.demo.MainActivity
+ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:12:9-20:20
+	android:configChanges
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:13:13-74
+	android:name
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:12:19-47
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:15:13-19:29
+action#android.intent.action.MAIN
+ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:16:17-69
+	android:name
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:16:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:18:17-77
+	android:name
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml:18:27-74
+uses-sdk
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+MERGED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:appcompat-v7:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/58e7f31ce8655ac3f76358843dd9eb90/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/58e7f31ce8655ac3f76358843dd9eb90/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/b4619f973de98b02456a08e408ff40f7/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/b4619f973de98b02456a08e408ff40f7/AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.android.exoplayer:exoplayer:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-2.6.1.aar/b154747b7d8a386bce43df82d5b7eb4d/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-2.6.1.aar/b154747b7d8a386bce43df82d5b7eb4d/AndroidManifest.xml:21:5-23:41
+MERGED from [com.android.support:recyclerview-v7:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.0.2.aar/619a94564b0d73baca59e9ac4e0240b7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.0.2.aar/619a94564b0d73baca59e9ac4e0240b7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/ef24c09872ce2e15df3c83f58b8b085d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/ef24c09872ce2e15df3c83f58b8b085d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/937437f76e09cd4e8fb0fe6a36cf4886/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/937437f76e09cd4e8fb0fe6a36cf4886/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.0.2.aar/905f0ca9b6ca81890b8f6bd944a1b859/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.0.2.aar/905f0ca9b6ca81890b8f6bd944a1b859/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.0.2.aar/888f076517268a68580dc0ba592cb498/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.0.2.aar/888f076517268a68580dc0ba592cb498/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.exoplayer:exoplayer-dash:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-dash-2.6.1.aar/3588aa31872e5c484e0f2b796a531ca3/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-dash:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-dash-2.6.1.aar/3588aa31872e5c484e0f2b796a531ca3/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-hls:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-hls-2.6.1.aar/b7dae04c9aba1e959ecd3808592825ce/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-hls:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-hls-2.6.1.aar/b7dae04c9aba1e959ecd3808592825ce/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-smoothstreaming-2.6.1.aar/1cbdae12ebd04f0ac8ec8a6f6263fcc9/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-smoothstreaming:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-smoothstreaming-2.6.1.aar/1cbdae12ebd04f0ac8ec8a6f6263fcc9/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-ui:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-2.6.1.aar/4103b1ba0179988a53ff346b794c68ed/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-ui:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-2.6.1.aar/4103b1ba0179988a53ff346b794c68ed/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-core:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-core-2.6.1.aar/ac437e33de8d777c749fb55d55668b91/AndroidManifest.xml:21:5-23:41
+MERGED from [com.google.android.exoplayer:exoplayer-core:2.6.1] /home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-core-2.6.1.aar/ac437e33de8d777c749fb55d55668b91/AndroidManifest.xml:21:5-23:41
+MERGED from [com.android.support:support-core-ui:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/2c52ed0dc91e143a3abf070643e3c127/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/2c52ed0dc91e143a3abf070643e3c127/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/a68650e1ea3359869ce7ae38a3cd616b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] /home/mo/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/a68650e1ea3359869ce7ae38a3cd616b/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /home/mo/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/2cec7c943eca0cf2126c3f2032b50f54/AndroidManifest.xml:20:5-22:41
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /home/mo/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/2cec7c943eca0cf2126c3f2032b50f54/AndroidManifest.xml:20:5-22:41
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+		ADDED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+		INJECTED from /home/mo/Source/github/ExoPlayerVideoView/app/src/main/AndroidManifest.xml
+uses-permission#android.permission.INTERNET
+ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-67
+	android:name
+		ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:22-64
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:12:5-73
+	android:name
+		ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:12:22-70
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:13:5-81
+	android:name
+		ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:13:22-78
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:14:5-80
+	android:name
+		ADDED from [:exoplayerview] /home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/manifests/full/debug/AndroidManifest.xml:14:22-77

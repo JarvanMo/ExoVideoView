@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/mo/Source/github/ExoPlayerVideoView/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-ka-rGE/values-ka-rGE.xml",
+            "map": [
+                {
+                    "source": "/home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-2.6.1.aar/4103b1ba0179988a53ff346b794c68ed/res/values-ka-rGE/values-ka-rGE.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,136,213,280,347,425,507,591,672,749,827",
+                        "endColumns": "80,76,66,66,77,81,83,80,76,77,68",
+                        "endOffsets": "131,208,275,342,420,502,586,667,744,822,891"
+                    }
+                }
+            ]
+        }
+    ]
+}

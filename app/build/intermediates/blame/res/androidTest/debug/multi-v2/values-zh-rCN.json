@@ -1,0 +1,77 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/mo/Source/github/ExoPlayerVideoView/app/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-zh-rCN/values-zh-rCN.xml",
+            "map": [
+                {
+                    "source": "/home/mo/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/58e7f31ce8655ac3f76358843dd9eb90/res/values-zh-rCN/values-zh-rCN.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,201,296,396,478,575,681,757,833,911,1007,1103,1198,1295,1390,1488,1637,1731",
+                        "endColumns": "95,94,99,81,96,105,75,75,77,95,95,94,96,94,97,148,93,77",
+                        "endOffsets": "196,291,391,473,570,676,752,828,906,1002,1098,1193,1290,1385,1483,1632,1726,1804"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,33",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,201,296,396,478,575,681,757,833,911,1007,1103,1198,1295,1390,1488,1637,2639",
+                        "endColumns": "95,94,99,81,96,105,75,75,77,95,95,94,96,94,97,148,93,77",
+                        "endOffsets": "196,291,391,473,570,676,752,828,906,1002,1098,1193,1290,1385,1483,1632,1726,2712"
+                    }
+                },
+                {
+                    "source": "/home/mo/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-2.6.1.aar/4103b1ba0179988a53ff346b794c68ed/res/values-zh-rCN/values-zh-rCN.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,125,189,253,316,384,457,529,604,669,737",
+                        "endColumns": "69,63,63,62,67,72,71,74,64,67,62",
+                        "endOffsets": "120,184,248,311,379,452,524,599,664,732,795"
+                    },
+                    "to": {
+                        "startLines": "22,23,24,25,26,27,28,29,30,31,32",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "1894,1964,2028,2092,2155,2223,2296,2368,2443,2508,2576",
+                        "endColumns": "69,63,63,62,67,72,71,74,64,67,62",
+                        "endOffsets": "1959,2023,2087,2150,2218,2291,2363,2438,2503,2571,2634"
+                    }
+                },
+                {
+                    "source": "/home/mo/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/a68650e1ea3359869ce7ae38a3cd616b/res/values-zh-rCN/values-zh-rCN.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "34",
+                        "startColumns": "4",
+                        "startOffsets": "2717",
+                        "endColumns": "100",
+                        "endOffsets": "2813"
+                    }
+                },
+                {
+                    "source": "/home/mo/Source/github/ExoPlayerVideoView/exoplayerview/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,106,160,218,257,296",
+                        "endColumns": "50,53,57,38,38,53",
+                        "endOffsets": "101,155,213,252,291,345"
+                    },
+                    "to": {
+                        "startLines": "19,20,21,35,36,37",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "1731,1782,1836,2818,2857,2896",
+                        "endColumns": "50,53,57,38,38,53",
+                        "endOffsets": "1777,1831,1889,2852,2891,2945"
+                    }
+                }
+            ]
+        }
+    ]
+}
