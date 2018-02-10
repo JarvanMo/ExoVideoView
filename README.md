@@ -2,7 +2,6 @@
 # ExoVideoView
 ExoVideoView is based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
-
 [中文移步至此](/README_CN.md).
 
 ![demo](/images/demo.gif)

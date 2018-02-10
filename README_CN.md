@@ -2,7 +2,6 @@
 # ExoVideoView
 ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开发的视频播放器.
 
-
 ![happy new year](/images/demo.gif)
 祝各位狗年大吉，财源滚滚～
 
