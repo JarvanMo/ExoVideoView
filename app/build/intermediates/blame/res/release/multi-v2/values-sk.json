@@ -1,0 +1,60 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/nelson/StudioProjects/ExoPlayerVideoView/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-sk/values-sk.xml",
+            "map": [
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/56d9d33fe923bd80edcb025c33572864/res/values-sk/values-sk.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,212,312,423,509,617,735,816,897,981,1086,1195,1294,1400,1511,1620,1786,1884",
+                        "endColumns": "106,99,110,85,107,117,80,80,83,104,108,98,105,110,108,165,97,87",
+                        "endOffsets": "207,307,418,504,612,730,811,892,976,1081,1190,1289,1395,1506,1615,1781,1879,1967"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,212,312,423,509,617,735,816,897,981,1086,1195,1294,1400,1511,1620,1786,2659",
+                        "endColumns": "106,99,110,85,107,117,80,80,83,104,108,98,105,110,108,165,97,87",
+                        "endOffsets": "207,307,418,504,612,730,811,892,976,1081,1190,1289,1395,1506,1615,1781,1879,2742"
+                    }
+                },
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-r2.5.4.aar/5fbc05d21e3c1f9db956cbc3eaf18add/res/values-sk/values-sk.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,139,212,284,352,437,519,596,685,761",
+                        "endColumns": "83,72,71,67,84,81,76,88,75,68",
+                        "endOffsets": "134,207,279,347,432,514,591,680,756,825"
+                    },
+                    "to": {
+                        "startLines": "19,20,21,22,23,24,25,26,27,28",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "1884,1968,2041,2113,2181,2266,2348,2425,2514,2590",
+                        "endColumns": "83,72,71,67,84,81,76,88,75,68",
+                        "endOffsets": "1963,2036,2108,2176,2261,2343,2420,2509,2585,2654"
+                    }
+                },
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/fb748e520e83844bc44eeb1b3941ac1e/res/values-sk/values-sk.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "30",
+                        "startColumns": "4",
+                        "startOffsets": "2747",
+                        "endColumns": "100",
+                        "endOffsets": "2843"
+                    }
+                }
+            ]
+        }
+    ]
+}

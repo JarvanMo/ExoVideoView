@@ -1,0 +1,60 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/nelson/StudioProjects/ExoPlayerVideoView/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-pt-rPT/values-pt-rPT.xml",
+            "map": [
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/fb748e520e83844bc44eeb1b3941ac1e/res/values-pt-rPT/values-pt-rPT.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "30",
+                        "startColumns": "4",
+                        "startOffsets": "2747",
+                        "endColumns": "100",
+                        "endOffsets": "2843"
+                    }
+                },
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/56d9d33fe923bd80edcb025c33572864/res/values-pt-rPT/values-pt-rPT.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,225,331,438,527,628,752,836,917,1004,1111,1223,1325,1433,1540,1647,1818,1917",
+                        "endColumns": "119,105,106,88,100,123,83,80,86,106,111,101,107,106,106,170,98,84",
+                        "endOffsets": "220,326,433,522,623,747,831,912,999,1106,1218,1320,1428,1535,1642,1813,1912,1997"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,225,331,438,527,628,752,836,917,1004,1111,1223,1325,1433,1540,1647,1818,2662",
+                        "endColumns": "119,105,106,88,100,123,83,80,86,106,111,101,107,106,106,170,98,84",
+                        "endOffsets": "220,326,433,522,623,747,831,912,999,1106,1218,1320,1428,1535,1642,1813,1912,2742"
+                    }
+                },
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-r2.5.4.aar/5fbc05d21e3c1f9db956cbc3eaf18add/res/values-pt-rPT/values-pt-rPT.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,130,205,278,349,428,507,585,662,734",
+                        "endColumns": "74,74,72,70,78,78,77,76,71,65",
+                        "endOffsets": "125,200,273,344,423,502,580,657,729,795"
+                    },
+                    "to": {
+                        "startLines": "19,20,21,22,23,24,25,26,27,28",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "1917,1992,2067,2140,2211,2290,2369,2447,2524,2596",
+                        "endColumns": "74,74,72,70,78,78,77,76,71,65",
+                        "endOffsets": "1987,2062,2135,2206,2285,2364,2442,2519,2591,2657"
+                    }
+                }
+            ]
+        }
+    ]
+}

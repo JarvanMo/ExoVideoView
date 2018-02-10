@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/nelson/StudioProjects/ExoPlayerVideoView/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-mk-rMK/values-mk-rMK.xml",
+            "map": [
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-r2.5.4.aar/5fbc05d21e3c1f9db956cbc3eaf18add/res/values-mk-rMK/values-mk-rMK.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,143,216,283,349,429,511,601,680,757",
+                        "endColumns": "87,72,66,65,79,81,89,78,76,65",
+                        "endOffsets": "138,211,278,344,424,506,596,675,752,818"
+                    }
+                }
+            ]
+        }
+    ]
+}

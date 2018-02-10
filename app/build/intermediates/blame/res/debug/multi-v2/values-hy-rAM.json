@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/nelson/StudioProjects/ExoPlayerVideoView/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hy-rAM/values-hy-rAM.xml",
+            "map": [
+                {
+                    "source": "/home/nelson/.gradle/caches/transforms-1/files-1.1/exoplayer-ui-r2.5.4.aar/5fbc05d21e3c1f9db956cbc3eaf18add/res/values-hy-rAM/values-hy-rAM.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,139,207,279,349,421,504,578,656,730",
+                        "endColumns": "83,67,71,69,71,82,73,77,73,70",
+                        "endOffsets": "134,202,274,344,416,499,573,651,725,796"
+                    }
+                }
+            ]
+        }
+    ]
+}

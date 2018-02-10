@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config=":exoplayerview"><source path="/home/nelson/StudioProjects/ExoPlayerVideoView/exoplayerview/build/intermediates/bundles/release/assets"/></dataSet><dataSet config="main"><source path="/home/nelson/StudioProjects/ExoPlayerVideoView/app/src/main/assets"/><source path="/home/nelson/StudioProjects/ExoPlayerVideoView/app/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/home/nelson/StudioProjects/ExoPlayerVideoView/app/src/release/assets"/></dataSet></merger>
