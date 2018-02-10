@@ -13,13 +13,17 @@
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/FullscreenTheme">
+
+        </activity>
+        <activity android:name=".SimpleVideoViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SimpleVideoViewActivity"></activity>
     </application>
 
 </manifest>

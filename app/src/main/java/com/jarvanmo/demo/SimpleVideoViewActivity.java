@@ -1,18 +1,31 @@
 package com.jarvanmo.demo;
 
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.jarvanmo.exoplayerview.media.ExoMediaSource;
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource;
+import com.jarvanmo.exoplayerview.media.SimpleQuality;
+import com.jarvanmo.exoplayerview.ui.ExoVideoPlaybackControlView;
 import com.jarvanmo.exoplayerview.ui.ExoVideoView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_LANDSCAPE;
 import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListener.SENSOR_PORTRAIT;
@@ -21,27 +34,34 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
 
     private ExoVideoView videoView;
     private View wrapper;
+    private final String[] modes = new String[]{"RESIZE_MODE_FIT", "RESIZE_MODE_FIXED_WIDTH"
+            , "RESIZE_MODE_FIXED_HEIGHT", "RESIZE_MODE_FILL", "RESIZE_MODE_ZOOM"};
+    private Spinner modeSpinner;
+    private ArrayAdapter<String> adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_video_view);
-        videoView = findViewById(R.id.videoView);
-        Button modeFit = findViewById(R.id.mode_fit);
-        Button modeNone = findViewById(R.id.mode_none);
-        Button modeHeight = findViewById(R.id.mode_height);
-        Button modeWidth = findViewById(R.id.mode_width);
-        Button modeZoom = findViewById(R.id.mode_zoom);
         wrapper = findViewById(R.id.wrapper);
 
+        initSpinner();
+        initControllerMode();
+        initVideoView();
+        initCustomViews();
+    }
+
+    private void initVideoView() {
+        videoView = findViewById(R.id.videoView);
+        videoView.setPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
         videoView.setBackListener((view, isPortrait) -> {
             if (isPortrait) {
                 finish();
             }
             return false;
         });
-//
-//
+
         videoView.setOrientationListener(orientation -> {
             if (orientation == SENSOR_PORTRAIT) {
                 changeToPortrait();
@@ -52,18 +72,101 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
 
 //
 
-        SimpleMediaSource mediaSource  = new SimpleMediaSource(" http://playready.directtaps.net/smoothstreaming/SSWSS720H264PR/SuperSpeedway_720.ism");
+        SimpleMediaSource mediaSource = new SimpleMediaSource("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8");
+        mediaSource.setDisplayName("Apple HLS");
 
-        mediaSource.setDisplayName("Super speed");
+        //demo only,not real multi quality, urls are the same actually
+        List<ExoMediaSource.Quality> qualities = new ArrayList<>();
+        ExoMediaSource.Quality quality;
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.YELLOW);
+        SpannableString spannableString = new SpannableString("1080p");
+        spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        quality = new SimpleQuality(spannableString, mediaSource.url());
+        qualities.add(quality);
 
-        videoView.play(mediaSource,false);
+        spannableString = new SpannableString("720p");
+        colorSpan = new ForegroundColorSpan(Color.LTGRAY);
+        spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        quality = new SimpleQuality(spannableString, mediaSource.url());
+        qualities.add(quality);
+
+        mediaSource.setQualities(qualities);
+
+        videoView.play(mediaSource, false);
+
+    }
+
+    private void initSpinner() {
+        modeSpinner = findViewById(R.id.spinner);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        modeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                videoView.setResizeMode(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        adapter.addAll(modes);
+        modeSpinner.setAdapter(adapter);
+    }
+
+    private void initControllerMode() {
+        CheckBox all = findViewById(R.id.all);
+        CheckBox top = findViewById(R.id.top);
+        CheckBox topLandscape = findViewById(R.id.topLandscape);
+        CheckBox bottom = findViewById(R.id.bottom);
+        CheckBox bottomLandscape = findViewById(R.id.bottomLandscape);
+        CheckBox none = findViewById(R.id.none);
+        findViewById(R.id.applyControllerMode).setOnClickListener(v -> {
+            int mode = ExoVideoPlaybackControlView.CONTROLLER_MODE_NONE;
+            if (all.isChecked()) {
+                mode |= ExoVideoPlaybackControlView.CONTROLLER_MODE_ALL;
+            }
+            if (top.isChecked()) {
+                mode |= ExoVideoPlaybackControlView.CONTROLLER_MODE_TOP;
+            }
+
+            if (topLandscape.isChecked()) {
+                mode |= ExoVideoPlaybackControlView.CONTROLLER_MODE_TOP_LANDSCAPE;
+            }
+            if (bottom.isChecked()) {
+                mode |= ExoVideoPlaybackControlView.CONTROLLER_MODE_BOTTOM;
+            }
+            if (bottomLandscape.isChecked()) {
+                mode |= ExoVideoPlaybackControlView.CONTROLLER_MODE_BOTTOM_LANDSCAPE;
+            }
+            if (none.isChecked()) {
+                mode |= ExoVideoPlaybackControlView.CONTROLLER_MODE_NONE;
+            }
+
+            videoView.setControllerDisplayMode(mode);
+            Toast.makeText(SimpleVideoViewActivity.this, "change controller display mode", Toast.LENGTH_SHORT).show();
+        });
 
 
-        modeFit.setOnClickListener(v -> videoView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT));
-        modeWidth.setOnClickListener(v -> videoView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH));
-        modeHeight.setOnClickListener(v -> videoView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT));
-        modeNone.setOnClickListener(v -> videoView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL));
-        modeZoom.setOnClickListener(v -> videoView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM));
+    }
+
+    private void initCustomViews() {
+        findViewById(R.id.addToTop).setOnClickListener(v -> {
+            View view = getLayoutInflater().inflate(R.layout.cutom_view_top, null, false);
+            videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_TOP, view);
+        });
+
+        findViewById(R.id.addToTopLandscape).setOnClickListener(v -> {
+            View view = getLayoutInflater().inflate(R.layout.cutom_view_top_landscape, null, false);
+            videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_TOP_LANDSCAPE, view);
+        });
+
+
+        findViewById(R.id.addToBottomLandscape).setOnClickListener(v -> {
+            View view = getLayoutInflater().inflate(R.layout.cutom_view_bottom_landscape, null, false);
+            videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_BOTTOM_LANDSCAPE, view);
+        });
     }
 
     private void changeToPortrait() {
@@ -74,7 +177,6 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setAttributes(attr);
         window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
 
 
         wrapper.setVisibility(View.VISIBLE);
@@ -136,8 +238,8 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            return videoView.onKeyDown(keyCode,event);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return videoView.onKeyDown(keyCode, event);
         }
         return super.onKeyDown(keyCode, event);
     }

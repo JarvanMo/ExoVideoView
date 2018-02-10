@@ -8,82 +8,174 @@
     android:orientation="vertical"
     tools:context="com.jarvanmo.demo.MainActivity">
 
-
     <com.jarvanmo.exoplayerview.ui.ExoVideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:controller_display_mode="all"
-        app:resize_mode="fill"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         app:default_artwork="@drawable/default_art"
         app:use_artwork="true" />
 
-    <android.support.constraint.ConstraintLayout
+    <ScrollView
         android:id="@+id/wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="0dp"
+        android:layout_weight="2">
 
-        <TextView
-            android:id="@+id/changeMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="change resize mode"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/mode_none"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="mode_fill"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/changeMode" />
+            <TextView
+                android:id="@+id/changeMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="change resize mode"
+                android:textColor="@android:color/holo_orange_dark"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/mode_fit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="mode_fit"
-            app:layout_constraintBottom_toBottomOf="@+id/mode_none"
-            app:layout_constraintStart_toEndOf="@+id/mode_none"
-            app:layout_constraintTop_toTopOf="@+id/mode_none" />
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:spinnerMode="dialog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changeMode" />
 
-        <Button
-            android:id="@+id/mode_width"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="mode_fix_width"
-            app:layout_constraintBottom_toBottomOf="@+id/mode_height"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/mode_height" />
+            <CheckBox
+                android:id="@+id/all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:text="All"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/controllerMode" />
 
-        <Button
-            android:id="@+id/mode_height"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="mode_fix_height"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mode_none" />
+            <TextView
+                android:id="@+id/controllerMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Controller Display Mode"
+                android:textColor="@android:color/holo_orange_dark"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
-        <Button
-            android:id="@+id/mode_zoom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="mode_zoom"
-            app:layout_constraintBottom_toBottomOf="@+id/mode_fit"
-            app:layout_constraintStart_toEndOf="@+id/mode_fit"
-            app:layout_constraintTop_toTopOf="@+id/mode_fit" />
-    </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/applyControllerMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="apply"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/controllerMode" />
 
+            <CheckBox
+                android:id="@+id/top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Top"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/all" />
 
+            <CheckBox
+                android:id="@+id/topLandscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Top Landscape"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top" />
+
+            <CheckBox
+                android:id="@+id/bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Bottom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/topLandscape" />
+
+            <CheckBox
+                android:id="@+id/bottomLandscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Bottom Lanscape"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottom" />
+
+            <CheckBox
+                android:id="@+id/none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="None"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottomLandscape" />
+
+            <TextView
+                android:id="@+id/customViews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="add custom view to controller"
+                android:textColor="@android:color/holo_orange_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/none" />
+
+            <TextView
+                android:id="@+id/addToTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:drawableEnd="@drawable/ic_playlist_add_green_a700_24dp"
+                android:drawablePadding="5dp"
+                android:text="add view in to top controller"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customViews" />
+
+            <TextView
+                android:id="@+id/addToTopLandscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:drawableEnd="@drawable/ic_playlist_add_green_a700_24dp"
+                android:drawablePadding="5dp"
+                android:text="add view in to top(landscape) controller"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addToTop" />
+
+            <TextView
+                android:id="@+id/addToBottomLandscape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:drawableEnd="@drawable/ic_playlist_add_green_a700_24dp"
+                android:drawablePadding="5dp"
+                android:text="add view in to bottom(landscape) controller"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addToTopLandscape" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 </LinearLayout>
