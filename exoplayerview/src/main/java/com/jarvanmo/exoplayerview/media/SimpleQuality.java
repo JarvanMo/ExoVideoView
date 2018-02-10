@@ -1,8 +1,5 @@
 package com.jarvanmo.exoplayerview.media;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by mo on 18-2-7.
  *

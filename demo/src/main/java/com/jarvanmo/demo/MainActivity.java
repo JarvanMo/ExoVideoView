@@ -87,23 +87,23 @@ public class MainActivity extends AppCompatActivity {
         List<ExoMediaSource.Quality> qualities = new ArrayList<>();
         ExoMediaSource.Quality quality;
 
-        for (int i = 0; i <6 ; i++) {
-            SpannableString spannableString  = new SpannableString("Quality"+i);
-            if(i % 2 ==0){
+        for (int i = 0; i < 6; i++) {
+            SpannableString spannableString = new SpannableString("Quality" + i);
+            if (i % 2 == 0) {
                 ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.YELLOW);
                 spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-            }else {
+            } else {
                 ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.RED);
                 spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
 
-            quality = new SimpleQuality(spannableString,mediaSource.url());
+            quality = new SimpleQuality(spannableString, mediaSource.url());
             qualities.add(quality);
         }
         mediaSource.setQualities(qualities);
 
-        videoView.play(mediaSource,false);
+        videoView.play(mediaSource, false);
         play.setOnClickListener(view -> {
             videoView.play(mediaSource);
             play.setVisibility(View.INVISIBLE);
@@ -180,8 +180,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            return videoView.onKeyDown(keyCode,event);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return videoView.onKeyDown(keyCode, event);
         }
         return super.onKeyDown(keyCode, event);
     }

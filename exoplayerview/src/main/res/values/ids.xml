@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="exo_player_play" type="id"/>
-    <item name="exo_player_position" type="id"/>
-    <item name="exo_player_progress" type="id"/>
-    <item name="exo_player_duration" type="id"/>
-    <item name="exo_player_enter_fullscreen" type="id"/>
-    <item name="exo_player_play_landscape" type="id"/>
-    <item name="exo_player_pause_landscape" type="id"/>
-    <item name="exo_player_time_landscape" type="id"/>
-    <item name="exo_player_next_landscape" type="id"/>
-    <item name="exo_player_progress_landscape" type="id"/>
-    <item name="exo_player_exit_fullscreen" type="id"/>
-    <item name="exo_player_controller_bottom_custom_view_landscape" type="id"/>
-    <item name="exo_player_position_duration_landscape" type="id"/>
-    <item name="exo_player_video_name" type="id"/>
-    <item name="exo_player_video_name_landscape" type="id"/>
-    <item name="exo_player_battery_landscape" type="id"/>
-    <item name="exo_player_controller_top" type="id"/>
-    <item name="exo_player_controller_top_landscape" type="id"/>
-    <item name="exo_player_loading" type="id"/>
+    <item name="exo_player_play" type="id" />
+    <item name="exo_player_position" type="id" />
+    <item name="exo_player_progress" type="id" />
+    <item name="exo_player_duration" type="id" />
+    <item name="exo_player_enter_fullscreen" type="id" />
+    <item name="exo_player_play_landscape" type="id" />
+    <item name="exo_player_pause_landscape" type="id" />
+    <item name="exo_player_time_landscape" type="id" />
+    <item name="exo_player_next_landscape" type="id" />
+    <item name="exo_player_progress_landscape" type="id" />
+    <item name="exo_player_exit_fullscreen" type="id" />
+    <item name="exo_player_controller_bottom_custom_view_landscape" type="id" />
+    <item name="exo_player_position_duration_landscape" type="id" />
+    <item name="exo_player_video_name" type="id" />
+    <item name="exo_player_video_name_landscape" type="id" />
+    <item name="exo_player_battery_landscape" type="id" />
+    <item name="exo_player_controller_top" type="id" />
+    <item name="exo_player_controller_top_landscape" type="id" />
+    <item name="exo_player_loading" type="id" />
 
-    <item name="exo_player_center_info_wrapper" type="id"/>
-    <item name="exo_player_center_text" type="id"/>
-    <item name="exo_player_controller_bottom_landscape" type="id"/>
-    <item name="exo_player_controller_bottom" type="id"/>
-    <item name="exo_player_content_frame" type="id"/>
-    <item name="exo_player_shutter" type="id"/>
-    <item name="exo_player_artwork" type="id"/>
-    <item name="exo_player_overlay" type="id"/>
-    <item name="exo_player_subtitles" type="id"/>
-    <item name="exo_player_controller_placeholder" type="id"/>
-    <item name="exo_player_controller" type="id"/>
-    <item name="exo_player_pause" type="id"/>
-    <item name="exo_player_play_wrapper_landscape" type="id"/>
-    <item name="exo_player_current_quality_landscape" type="id"/>
-    <item name="exo_player_quality_container" type="id"/>
-    <item name="exo_player_quality_selector" type="id"/>
+    <item name="exo_player_center_info_wrapper" type="id" />
+    <item name="exo_player_center_text" type="id" />
+    <item name="exo_player_controller_bottom_landscape" type="id" />
+    <item name="exo_player_controller_bottom" type="id" />
+    <item name="exo_player_content_frame" type="id" />
+    <item name="exo_player_shutter" type="id" />
+    <item name="exo_player_artwork" type="id" />
+    <item name="exo_player_overlay" type="id" />
+    <item name="exo_player_subtitles" type="id" />
+    <item name="exo_player_controller_placeholder" type="id" />
+    <item name="exo_player_controller" type="id" />
+    <item name="exo_player_pause" type="id" />
+    <item name="exo_player_play_wrapper_landscape" type="id" />
+    <item name="exo_player_current_quality_landscape" type="id" />
+    <item name="exo_player_quality_container" type="id" />
+    <item name="exo_player_quality_selector" type="id" />
 
-    <item name="exo_player_controller_top_custom_view" type="id"/>
-    <item name="exo_player_controller_top_custom_view_landscape" type="id"/>
-    <item name="exo_player_center_error" type="id"/>
+    <item name="exo_player_controller_top_custom_view" type="id" />
+    <item name="exo_player_controller_top_custom_view_landscape" type="id" />
+    <item name="exo_player_center_error" type="id" />
 </resources>

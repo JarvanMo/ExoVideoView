@@ -38,7 +38,7 @@ public class MultiQualitySelectorAdapter extends RecyclerView.Adapter<MultiQuali
 
     @Override
     public MultiQualitySelectorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_quality, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_quality, parent, false);
         return new MultiQualitySelectorViewHolder(view);
     }
 

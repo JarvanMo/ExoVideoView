@@ -15,9 +15,9 @@
             android:theme="@style/FullscreenTheme">
 
         </activity>
-        <activity android:name=".SimpleVideoViewActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            >
+        <activity
+            android:name=".SimpleVideoViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

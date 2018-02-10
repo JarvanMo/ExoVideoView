@@ -58,12 +58,12 @@ public class Permissions {
     }
 
     public static boolean canReadStorage(Context context) {
-        return !AndroidUtil.isMarshMallowOrLater() ||ContextCompat.checkSelfPermission(context,
+        return !AndroidUtil.isMarshMallowOrLater() || ContextCompat.checkSelfPermission(context,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
 
-    private static void requestStoragePermission(Activity activity){
+    private static void requestStoragePermission(Activity activity) {
         ActivityCompat.requestPermissions(activity,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 PERMISSION_STORAGE_TAG);

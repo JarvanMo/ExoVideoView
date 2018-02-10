@@ -8,29 +8,29 @@
 
     <!-- Must be kept in sync with AspectRatioFrameLayout -->
     <attr name="resize_mode" format="enum">
-        <enum name="fit" value="0"/>
-        <enum name="fixed_width" value="1"/>
-        <enum name="fixed_height" value="2"/>
-        <enum name="fill" value="3"/>
+        <enum name="fit" value="0" />
+        <enum name="fixed_width" value="1" />
+        <enum name="fixed_height" value="2" />
+        <enum name="fill" value="3" />
     </attr>
 
     <!-- Must be kept in sync with SimpleExoPlayerView -->
     <attr name="surface_type" format="enum">
-        <enum name="none" value="0"/>
-        <enum name="surface_view" value="1"/>
-        <enum name="texture_view" value="2"/>
+        <enum name="none" value="0" />
+        <enum name="surface_view" value="1" />
+        <enum name="texture_view" value="2" />
     </attr>
-    <attr name="show_timeout" format="integer"/>
-    <attr name="rewind_increment" format="integer"/>
-    <attr name="fastforward_increment" format="integer"/>
-    <attr name="player_layout_id" format="reference"/>
-    <attr name="controller_layout_id" format="reference"/>
+    <attr name="show_timeout" format="integer" />
+    <attr name="rewind_increment" format="integer" />
+    <attr name="fastforward_increment" format="integer" />
+    <attr name="player_layout_id" format="reference" />
+    <attr name="controller_layout_id" format="reference" />
     <attr name="repeat_toggle_modes">
-        <flag name="none" value="0"/>
-        <flag name="one" value="1"/>
-        <flag name="all" value="2"/>
+        <flag name="none" value="0" />
+        <flag name="one" value="1" />
+        <flag name="all" value="2" />
     </attr>
-    <attr name="show_shuffle_button" format="boolean"/>
+    <attr name="show_shuffle_button" format="boolean" />
 
     <!--<enum name="all" value="0b1111"/>-->
     <!--<enum name="top" value="0b1000"/>-->
@@ -38,64 +38,63 @@
     <!--<enum name="bottom" value="0b0010"/>-->
     <!--<enum name="bottom_landscape" value="0b0001"/>-->
     <attr name="controller_display_mode">
-        <flag name="all" value="15"/>
-        <flag name="top" value="8"/>
-        <flag name="top_landscape" value="4"/>
-        <flag name="bottom" value="2"/>
-        <flag name="bottom_landscape" value="1"/>
-        <flag name="none" value="0"/>
+        <flag name="all" value="15" />
+        <flag name="top" value="8" />
+        <flag name="top_landscape" value="4" />
+        <flag name="bottom" value="2" />
+        <flag name="bottom_landscape" value="1" />
+        <flag name="none" value="0" />
     </attr>
 
-    <attr name="controller_background" format="reference"/>
+    <attr name="controller_background" format="reference" />
 
     <declare-styleable name="ExoVideoView">
-        <attr name="use_artwork" format="boolean"/>
-        <attr name="shutter_background_color" format="color"/>
-        <attr name="default_artwork" format="reference"/>
-        <attr name="use_controller" format="boolean"/>
-        <attr name="hide_on_touch" format="boolean"/>
-        <attr name="auto_show" format="boolean"/>
-        <attr name="resize_mode"/>
-        <attr name="surface_type"/>
-        <attr name="show_timeout"/>
-        <attr name="rewind_increment"/>
-        <attr name="fastforward_increment"/>
-        <attr name="player_layout_id"/>
-        <attr name="controller_layout_id"/>
+        <attr name="use_artwork" format="boolean" />
+        <attr name="shutter_background_color" format="color" />
+        <attr name="default_artwork" format="reference" />
+        <attr name="use_controller" format="boolean" />
+        <attr name="hide_on_touch" format="boolean" />
+        <attr name="auto_show" format="boolean" />
+        <attr name="resize_mode" />
+        <attr name="surface_type" />
+        <attr name="show_timeout" />
+        <attr name="rewind_increment" />
+        <attr name="fastforward_increment" />
+        <attr name="player_layout_id" />
+        <attr name="controller_layout_id" />
 
-        <attr name="controller_display_mode"/>
+        <attr name="controller_display_mode" />
         <attr name="controller_background" />
-        <attr name="enable_multi_quality" format="boolean"/>
+        <attr name="enable_multi_quality" format="boolean" />
     </declare-styleable>
 
 
     <declare-styleable name="ExoVideoPlaybackControlView">
-        <attr name="show_timeout"/>
-        <attr name="rewind_increment"/>
-        <attr name="fastforward_increment"/>
-        <attr name="repeat_toggle_modes"/>
-        <attr name="show_shuffle_button"/>
-        <attr name="controller_layout_id"/>
-        <attr name="controller_display_mode"/>
+        <attr name="show_timeout" />
+        <attr name="rewind_increment" />
+        <attr name="fastforward_increment" />
+        <attr name="repeat_toggle_modes" />
+        <attr name="show_shuffle_button" />
+        <attr name="controller_layout_id" />
+        <attr name="controller_display_mode" />
         <attr name="controller_background" />
     </declare-styleable>
 
     <declare-styleable name="DefaultTimeBar">
-        <attr name="bar_height" format="dimension"/>
-        <attr name="touch_target_height" format="dimension"/>
-        <attr name="ad_marker_width" format="dimension"/>
-        <attr name="scrubber_enabled_size" format="dimension"/>
-        <attr name="scrubber_disabled_size" format="dimension"/>
-        <attr name="scrubber_dragged_size" format="dimension"/>
-        <attr name="scrubber_drawable" format="reference"/>
-        <attr name="played_color" format="color"/>
-        <attr name="scrubber_color" format="color"/>
-        <attr name="buffered_color" format="color"/>
-        <attr name="unplayed_color" format="color"/>
-        <attr name="ad_marker_color" format="color"/>
-        <attr name="played_ad_marker_color" format="color"/>
+        <attr name="bar_height" format="dimension" />
+        <attr name="touch_target_height" format="dimension" />
+        <attr name="ad_marker_width" format="dimension" />
+        <attr name="scrubber_enabled_size" format="dimension" />
+        <attr name="scrubber_disabled_size" format="dimension" />
+        <attr name="scrubber_dragged_size" format="dimension" />
+        <attr name="scrubber_drawable" format="reference" />
+        <attr name="played_color" format="color" />
+        <attr name="scrubber_color" format="color" />
+        <attr name="buffered_color" format="color" />
+        <attr name="unplayed_color" format="color" />
+        <attr name="ad_marker_color" format="color" />
+        <attr name="played_ad_marker_color" format="color" />
     </declare-styleable>
-
 
 
 </resources>
