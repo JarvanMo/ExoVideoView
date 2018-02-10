@@ -18,6 +18,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
@@ -247,6 +249,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final ViewGroup topCustomViewLandscape;
     private final ViewGroup bottomCustomViewLandscape;
 
+
+    private final TextView centerError;
+
     private boolean portrait = true;
 
 
@@ -459,6 +464,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         topCustomViewLandscape = findViewById(R.id.exo_player_controller_top_custom_view_landscape);
         bottomCustomViewLandscape = findViewById(R.id.exo_player_controller_bottom_custom_view_landscape);
 
+        centerError = findViewById(R.id.exo_player_center_error);
+
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
         showControllerByDisplayMode();
 
@@ -513,6 +520,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                     return;
                 }
 
+                if(centerError !=null && centerError.getVisibility() == VISIBLE){
+                    centerError.setVisibility(GONE);
+                }
                 centerInfo.setVisibility(VISIBLE);
                 centerInfo.setText(generateFastForwardOrRewindTxt(seekSize));
                 int drawableId = fastForward ? R.drawable.ic_fast_forward_white_36dp : R.drawable.ic_fast_rewind_white_36dp;
@@ -574,6 +584,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (centerInfo == null) {
             return;
         }
+
+        if(centerError !=null && centerError.getVisibility() == VISIBLE){
+            centerError.setVisibility(GONE);
+        }
+
         centerInfo.setVisibility(VISIBLE);
         centerInfo.setText(txt);
         centerInfo.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
@@ -1303,6 +1318,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         if (exoPlayerVideoNameLandscape != null) {
             exoPlayerVideoNameLandscape.setText(exoMediaSource.name());
         }
+
+        if (centerError != null) {
+            centerError.setText(null);
+            centerError.setVisibility(GONE);
+        }
     }
 
 
@@ -1542,6 +1562,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             updatePlayPauseButton();
             updateProgress();
+            if(playbackState != Player.STATE_IDLE &&centerError !=null && centerError.getVisibility() == VISIBLE){
+                centerError.setVisibility(GONE);
+            }
         }
 
         @Override
@@ -1575,6 +1598,16 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             updateNavigation();
             updateTimeBarMode();
             updateProgress();
+        }
+
+        @Override
+        public void onPlayerError(ExoPlaybackException error) {
+            super.onPlayerError(error);
+            if(centerError !=null ){
+                String errorText = getResources().getString(R.string.player_error,error.type);
+                centerError.setText(errorText);
+                centerError.setVisibility(VISIBLE);
+            }
         }
 
         @Override

@@ -39,4 +39,5 @@
 
     <item name="exo_player_controller_top_custom_view" type="id"/>
     <item name="exo_player_controller_top_custom_view_landscape" type="id"/>
+    <item name="exo_player_center_error" type="id"/>
 </resources>

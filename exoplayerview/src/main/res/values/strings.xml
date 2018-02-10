@@ -7,4 +7,5 @@
     <string name="battery_percent">battery:%1$d%%</string>
     <string name="volume_changing">volume:%1$d%%</string>
     <string name="brightness_changing">brightness:%1$d%%</string>
+    <string name="player_error">player error:%1$d</string>
 </resources>
