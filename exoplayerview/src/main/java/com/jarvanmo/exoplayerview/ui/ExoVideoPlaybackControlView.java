@@ -67,7 +67,7 @@ import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListene
  * Defining your own {@code exo_video_playback_control_view.xml} is useful to customize the layout of
  * ExoVideoPlaybackControlView throughout your application. It's also possible to customize the layout for a
  * single instance in a layout file. This is achieved by setting the {@code controller_layout_id}
- * attribute on a PlaybackControlView. This will cause the specified layout to be inflated instead
+ * attribute on a ExoVideoPlaybackControlView. This will cause the specified layout to be inflated instead
  * of {@code exo_video_playback_control_view.xml} for only the instance on which the attribute is set.
  */
 
