@@ -41,7 +41,6 @@ ExoVideoView provides built-in ```Player``` for convenience,so we can play a vid
 ```java
 SimpleMediaSource mediaSource = new SimpleMediaSource(url);
 videoView.play(mediaSource);
-videoView.play(mediaSource,where);
 videoView.play(mediaSource,where);//play from a particular position
 ```
 Passing a player outside to ExoVideoView:
@@ -52,7 +51,7 @@ Note:never forget to release ExoPlayer:
 ```java
 videoView.releasePlayer();
 ```
-see details in [demo][].
+see details in [demo]().
 
 ### 3.Orientation Management
 The ExoVideoView can handle its orientation by sensor automatically only when ExoVideoVIew has a not-null OrientationListener  :

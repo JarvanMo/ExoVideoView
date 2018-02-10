@@ -45,7 +45,6 @@ ExoVideoView 提供了内建```Player```：
 ```java
 SimpleMediaSource mediaSource = new SimpleMediaSource(url);
 videoView.play(mediaSource);
-videoView.play(mediaSource,where);
 videoView.play(mediaSource,where);//play from a particular position
 ```
 也可以使用自义的Player:
@@ -56,7 +55,7 @@ videoView.setPlayer(player);
 ```java
 videoView.releasePlayer();
 ```
-详情请移步[demo][].
+详情请移步[demo]().
 
 ### 3.方向管理
 ExoVideoView 可以自动处理方向问题，前提是为ExoVideoView设置一个OrientationListener:
