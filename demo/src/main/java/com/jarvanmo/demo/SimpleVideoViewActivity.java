@@ -72,7 +72,7 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
 
 //
 
-        SimpleMediaSource mediaSource = new SimpleMediaSource("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8");
+        SimpleMediaSource mediaSource = new SimpleMediaSource("http://flv2.bn.netease.com/videolib3/1604/28/fVobI0704/SD/fVobI0704-mobile.mp4");
         mediaSource.setDisplayName("Apple HLS");
 
         //demo only,not real multi quality, urls are the same actually

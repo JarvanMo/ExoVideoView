@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.5"
-        app:default_artwork="@drawable/default_art"
-        app:use_artwork="true" />
+       />
 
     <ScrollView
         android:id="@+id/wrapper"

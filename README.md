@@ -1,10 +1,9 @@
 ![logo](/images/default_art.png)
 # ExoVideoView
-ExoPlayerView is a simple video view based on [ExoPlayer](https://github.com/google/ExoPlayer).
+ExoVideoView is based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
-The new ExoPlayerView based on ExoPlayer-2.6.0 is under development.
 
-[中文](/README_CN.md).
+[中文移步至此](/README_CN.md).
 
 ![brightness](/images/brightness_new.png)
 ![controller_1](/images/controller_1_new.png)
