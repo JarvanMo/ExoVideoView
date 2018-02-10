@@ -131,7 +131,7 @@ ExoVideoView 内置清晰度选择器.如果开启发多清晰度并添加了多
 ```xml
 app:controller_layout_id="@layout/my_controller"
 ```
-## Others
+## 其他
 
 ```
   app:controller_background="@android:color/holo_orange_dark"
