@@ -1,156 +1,141 @@
 ![logo](/images/default_art.png)
 # ExoVideoView
-ExoPlayerView 是一个基于[ExoPlayer](https://github.com/google/ExoPlayer)的视频播放器，
-并且做了很多封装.
+ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开发的视频播放器.
 
 
-![brightness](/images/brightness_new.png)
-![controller_1](/images/controller_1_new.png)
-![fast_forward_rewind](/images/fastforward_rewind_new.png)
-![landscape](/images/landscape_new.png)
-![portrait](/images/portrait_new.png)
-![volume](/images/volume_new.png)
+![happy new year](/images/demo.gif)
+祝各位狗年大吉，财源滚滚～
 
+![demo](/images/demo.gif)
 
-**特性**
+**ExoVideoView可以做什么**
 
-    1.提供了4种视频适应模式: 
-      fit ,  fit_width , fit_height and none。
-    2.自动处理音频焦点问题。
-    3.可以根据传感器自动处理视频方向问题。
-    4.支持简单的手势操作
-**用法**
-
-***导入***
-
-在 `build.gradle` 中加入
-
-    compile 'com.jarvanmo:exoplayerview:1.1.4'
-
-ExoPlayerView 可以直接播放如mp4,m3u8 等简单视频，可以用于直播.
-在布局文件中引入 ExoVideoView:
+    1.自动处理音频焦点。
+    2.根据传感器自动处理方向。
+    3.手势支持。
+    4.多清晰度选择支持。
+    5.为控制器添加自定义布局.
+    6.调整显示大小。
+    7.自定义controller。
+## 使用 ExoVideoView
+### 1.依赖
+最简单的方式是加入gradle依赖。请确认在工程的build.gradle中添加了JCenter和google()。
+```
+repositories {
+    jcenter()
+    google()
+}
+```
+然后在你的项目中添加如下代码：
+```
+implementation 'com.jarvanmo:exoplayerview:2.0.0'
+```
+### 2.在xml中定义
+在xml中使用 ExoVideoView:
 ```xml
+<com.jarvanmo.exoplayerview.ui.ExoVideoView
+     android:id="@+id/videoView"
+     android:layout_width="match_parent"
+     android:layout_height="300dp"/>
+```
+### 2.在java代码中
+ExoVideoView 提供了内建```Player```：
+```java
+SimpleMediaSource mediaSource = new SimpleMediaSource(url);
+videoView.play(mediaSource);
+videoView.play(mediaSource,where);
+videoView.play(mediaSource,where);//play from a particular position
+```
+也可以使用自义的Player:
+```java
+videoView.setPlayer(player);
+```
+提示:不要忘记释放ExoPlayer:
+```java
+videoView.releasePlayer();
+```
+详情请移步[demo][].
 
-    <com.jarvanmo.exoplayerview.ui.ExoVideoView
-        android:id="@+id/videoView"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:useController="true"
-        app:resizeMode="none"
-        app:orientationAuto="true"
-        />
-        
-```
-***Play***    
-播放一个视频:
+### 3.方向管理
+ExoVideoView 可以自动处理方向问题，前提是为ExoVideoView设置一个OrientationListener:
 ```java
-   videoView.play(mediaSource);
-```
-如果你直接调用了上面的方法，ExoVideoView可以自动创建ExoPlayer.
-当然了, 你也可以自己创建ExoPlayer;
-```java
-    videoView.setPlayer(player);
-```
-
-也可以从指定位置播放:
-```java
-   videoView.play(mediaSource,where);
-```
-注意:不要忘记释放ExoPlayer:
-```java
-videoView.releaseSelfPlayer();
-```
-可以通过如下方式为视频设置一个显示名称:
-```java
- mediaSource.setDisplayName("LuYu YouYue");
-```
-或者
-```java
- videoView.setDisplayName("LuYu YouYue");
-```
-
-***管理ExoVideoView方向***
-
-如果你为ExoVideoView设置了一个非空```OrientationListener```,ExoVideoView可以通过感器自动
-变换方向。
-```java
-      videoView.setOrientationListener(new ExoVideoPlaybackControlView.OrientationListener() {
-            @Override
-            public void onOrientationChange(@ExoVideoPlaybackControlView.SensorOrientationType int orientation) {
-                if(orientation == SENSOR_PORTRAIT){
-                    changeToPortrait();
-                }else if(orientation == SENSOR_LANDSCAPE){
-                    changeToLandscape();
-                }
+    videoView.setOrientationListener(orientation -> {
+            if (orientation == SENSOR_PORTRAIT) {
+                //do something
+            } else if (orientation == SENSOR_LANDSCAPE) {
+                //do something
             }
         });
 ```
-只有当在controller中的context是Activity的时候，ExoVideoView才会调用：
-```activity.setRequestedOrientation()```
-全屏按钮也是如此。
-也可以通过如下方式更改ExoVideoView方向:
+提示：当ExoVideoView自动处理方向问题时，如果在Controller中的context是Activity,那么系统会调用
+```activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)``` or ```activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);```
+全屏事件处理也是如此。
+### 4返回管理
+首先,重写onKeyDown:
 ```java
-videoView.toggleControllerOrientation();
-```
-或者
-```java
-videoView.setPortrait(true);
-```
-***处理返回事件***
-
-在activity:
-```java
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK){
 
-            if(videoView.isPortrait()){
-               finish();
-                return false;
-            }else {
-                videoView.toggleControllerOrientation();
-                return true;
-            }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return videoView.onKeyDown(keyCode, event);
         }
         return super.onKeyDown(keyCode, event);
     }
 
 ```
-当 controller 中的返回键钮被点击了:
+为ExoVideoView设置监听:
 ```java
-        videoView.setBackListener(new ExoVideoPlaybackControlView.ExoClickListener() {
-            @Override
-            public boolean onClick(View view, boolean isPortrait) {
-                if(isPortrait){
-                    finish();
-                }
-              return false;
+    videoView.setBackListener((view, isPortrait) -> {
+            if (isPortrait) {
+              //do something
             }
+            return false;
         });
-
 ```
-如果 ```onClick()``` 返回了true,它会拦截controller中的事件.如果返回的是false 并且你设置了一个非空的OrientationListener，
-
-
-***Others***
-
-你也可以在横屏的时候加入一个自定义布局：
-
+如果返回值是 ```true```, 系统后续动作会被中断.否则，ExoVideoView会自动处理方向，并且会回调```OrientationLister.onOrientationChange()``` .
+## 高级
+### 1.多清清晰度
+ExoVideoView 内置清晰度选择器.如果开启发多清晰度并添加了多清晰度，内置清晰度选择器将被加入```overlayFrameLayout```.
 ```java
-       videoView.addViewToControllerWhenLandscape(view);
-```
-你添加的布局将被加入FrameLayout中．
-
-***提示***
-
-永远不要忘记去释放ExoPlayer.
-```
- videoView.releaseSelfPlayer();
-```
-or
-```
-player.release();
+        List<ExoMediaSource.Quality> qualities = new ArrayList<>();
+        ExoMediaSource.Quality quality =new SimpleQuality(quality,mediaSource.url());
+        qualities.add(quality);
+        mediaSource.setQualities(qualities);
 ```
 
-ExoVideoView 也支持手势操作, 比如说左滑调亮度，右滑调音量,也可以快近或后退.
+### 2.Controller显示模式
+```ExoVideoPlaybackController``` 被分为四个部分:
+```
+1.Top
+2.Top Landscape
+3.Bottom
+4.Bottom Landscape
+```
+每一部分都可以被显示或隐藏:
+```xml
+ app:controller_display_mode="all|none|top|top_landscape|bottom|bottom_landscape"
+```
+在java中:
+```java
+  videoView.setControllerDisplayMode(mode);
+```
+
+### 3.为controller添加控件
+```ExoVideoPlaybackController``` 允许在java代码中添加控件.
+```java
+  videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_TOP, view);
+  videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_TOP_LANDSCAPE, view);
+  videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_BOTTOM_LANDSCAPE, view);
+```
+### 3.使用自定义controller布局
+```exo_video_playback_control_view.xml```是允许自定义的。其中一些属性在```ExoVideoPlaybackControlView```有定义。具体可看源码。
+```xml
+app:controller_layout_id="@layout/my_controller"
+```
+## Others
+
+```
+  app:controller_background="@android:color/holo_orange_dark"
+  app:use_artwork="true"
+  app:default_artwork="@drawable/default_art"
+```
