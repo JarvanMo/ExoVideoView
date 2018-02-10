@@ -1,7 +1,0 @@
-#Internal package file, do not edit.
-#Wed Dec 13 16:17:00 CST 2017
-0.baseType=DIRECTORY
-0.base=/home/nelson/StudioProjects/ExoPlayerVideoView/app/build/intermediates/transforms/dexMerger/debug/0
-0.path=classes.dex
-0.set=DEX
-count=1

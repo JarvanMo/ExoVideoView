@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.jarvanmo.demo.ExampleUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-12-13T08:17:23" hostname="nelson-ThinkPad-T450" time="0.001">
-  <properties/>
-  <testcase name="addition_isCorrect" classname="com.jarvanmo.demo.ExampleUnitTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
