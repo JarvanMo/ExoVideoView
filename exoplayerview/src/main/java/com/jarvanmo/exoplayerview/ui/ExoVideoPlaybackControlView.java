@@ -18,7 +18,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -62,13 +61,13 @@ import static com.jarvanmo.exoplayerview.orientation.OnOrientationChangedListene
  * Created by mo on 16-11-7.
  *
  * @author mo
- *
- * * <h3>Specifying a custom layout file</h3>
- * Defining your own {@code exo_video_playback_control_view.xml} is useful to customize the layout of
- * ExoVideoPlaybackControlView throughout your application. It's also possible to customize the layout for a
- * single instance in a layout file. This is achieved by setting the {@code controller_layout_id}
- * attribute on a ExoVideoPlaybackControlView. This will cause the specified layout to be inflated instead
- * of {@code exo_video_playback_control_view.xml} for only the instance on which the attribute is set.
+ *         <p>
+ *         * <h3>Specifying a custom layout file</h3>
+ *         Defining your own {@code exo_video_playback_control_view.xml} is useful to customize the layout of
+ *         ExoVideoPlaybackControlView throughout your application. It's also possible to customize the layout for a
+ *         single instance in a layout file. This is achieved by setting the {@code controller_layout_id}
+ *         attribute on a ExoVideoPlaybackControlView. This will cause the specified layout to be inflated instead
+ *         of {@code exo_video_playback_control_view.xml} for only the instance on which the attribute is set.
  */
 
 public class ExoVideoPlaybackControlView extends FrameLayout {
@@ -527,7 +526,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                     return;
                 }
 
-                if(centerError !=null && centerError.getVisibility() == VISIBLE){
+                if (centerError != null && centerError.getVisibility() == VISIBLE) {
                     centerError.setVisibility(GONE);
                 }
                 centerInfo.setVisibility(VISIBLE);
@@ -592,7 +591,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             return;
         }
 
-        if(centerError !=null && centerError.getVisibility() == VISIBLE){
+        if (centerError != null && centerError.getVisibility() == VISIBLE) {
             centerError.setVisibility(GONE);
         }
 
@@ -1342,10 +1341,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         if (exoPlayerControllerTop != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_TOP) == CONTROLLER_MODE_TOP;
-            if(portrait){
+            if (portrait) {
                 int visibility = showByMode ? VISIBLE : INVISIBLE;
                 exoPlayerControllerTop.setVisibility(visibility);
-            }else {
+            } else {
                 exoPlayerControllerTop.setVisibility(INVISIBLE);
             }
 
@@ -1353,9 +1352,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         if (exoPlayerControllerTopLandscape != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_TOP_LANDSCAPE) == CONTROLLER_MODE_TOP_LANDSCAPE;
-            if(portrait){
+            if (portrait) {
                 exoPlayerControllerTopLandscape.setVisibility(INVISIBLE);
-            }else {
+            } else {
                 int visibility = showByMode ? VISIBLE : INVISIBLE;
                 exoPlayerControllerTopLandscape.setVisibility(visibility);
             }
@@ -1363,10 +1362,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         if (exoPlayerControllerBottom != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_BOTTOM) == CONTROLLER_MODE_BOTTOM;
-            if(portrait){
+            if (portrait) {
                 int visibility = showByMode ? VISIBLE : INVISIBLE;
                 exoPlayerControllerBottom.setVisibility(visibility);
-            }else {
+            } else {
 
                 exoPlayerControllerBottom.setVisibility(INVISIBLE);
             }
@@ -1374,9 +1373,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         if (exoPlayerControllerBottomLandscape != null) {
             boolean showByMode = (displayMode & CONTROLLER_MODE_BOTTOM_LANDSCAPE) == CONTROLLER_MODE_BOTTOM_LANDSCAPE;
-            if(portrait){
+            if (portrait) {
                 exoPlayerControllerBottomLandscape.setVisibility(INVISIBLE);
-            }else {
+            } else {
                 int visibility = showByMode ? VISIBLE : INVISIBLE;
                 exoPlayerControllerBottomLandscape.setVisibility(visibility);
             }
@@ -1569,7 +1568,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             updatePlayPauseButton();
             updateProgress();
-            if(playbackState != Player.STATE_IDLE &&centerError !=null && centerError.getVisibility() == VISIBLE){
+            if (playbackState != Player.STATE_IDLE && centerError != null && centerError.getVisibility() == VISIBLE) {
                 centerError.setVisibility(GONE);
             }
         }
@@ -1610,8 +1609,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         @Override
         public void onPlayerError(ExoPlaybackException error) {
             super.onPlayerError(error);
-            if(centerError !=null ){
-                String errorText = getResources().getString(R.string.player_error,error.type);
+            if (centerError != null) {
+                String errorText = getResources().getString(R.string.player_error, error.type);
                 centerError.setText(errorText);
                 centerError.setVisibility(VISIBLE);
             }

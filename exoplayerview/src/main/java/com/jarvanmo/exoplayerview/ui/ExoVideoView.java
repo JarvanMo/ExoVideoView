@@ -667,9 +667,9 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return false;
         }
-        if (enableMultiQuality ) {
+        if (enableMultiQuality) {
             View v = overlayFrameLayout.findViewById(R.id.exo_player_quality_container);
-            if(v != null && overlayFrameLayout.getVisibility() == VISIBLE){
+            if (v != null && overlayFrameLayout.getVisibility() == VISIBLE) {
                 return true;
             }
 
@@ -1058,7 +1058,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
      **/
     public void addCustomView(@ExoVideoPlaybackControlView.CustomViewType int customViewType, View customView, boolean removeViews) {
         if (useController && controller != null) {
-            controller.addCustomView(customViewType,customView,removeViews);
+            controller.addCustomView(customViewType, customView, removeViews);
         }
     }
 

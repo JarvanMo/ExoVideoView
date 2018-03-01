@@ -9,13 +9,17 @@ import java.util.List;
 
 public interface ExoMediaSource {
 
-    interface Quality{
+    interface Quality {
         CharSequence name();
+
         String url();
     }
 
     String url();
+
     String name();
+
     List<Quality> qualities();
+
     String extension();
 }

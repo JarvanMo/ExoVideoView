@@ -42,184 +42,184 @@ import java.io.IOException;
  * Logs player events using {@link Log}.
  */
 /* package */ final class EventLogger implements Player.EventListener, MetadataOutput,
-    AudioRendererEventListener, VideoRendererEventListener, AdaptiveMediaSourceEventListener,
-    ExtractorMediaSource.EventListener, DefaultDrmSessionManager.EventListener {
+        AudioRendererEventListener, VideoRendererEventListener, AdaptiveMediaSourceEventListener,
+        ExtractorMediaSource.EventListener, DefaultDrmSessionManager.EventListener {
 
-  public EventLogger(MappingTrackSelector trackSelector) {
-  }
+    public EventLogger(MappingTrackSelector trackSelector) {
+    }
 
-  @Override
-  public void onTimelineChanged(Timeline timeline, Object manifest) {
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
 
-  }
+    }
 
-  @Override
-  public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
 
-  }
+    }
 
-  @Override
-  public void onLoadingChanged(boolean isLoading) {
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
 
-  }
+    }
 
-  @Override
-  public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
-  }
+    }
 
-  @Override
-  public void onRepeatModeChanged(int repeatMode) {
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
 
-  }
+    }
 
-  @Override
-  public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+    @Override
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
 
-  }
+    }
 
-  @Override
-  public void onPlayerError(ExoPlaybackException error) {
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
 
-  }
+    }
 
-  @Override
-  public void onPositionDiscontinuity(int reason) {
+    @Override
+    public void onPositionDiscontinuity(int reason) {
 
-  }
+    }
 
-  @Override
-  public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
 
-  }
+    }
 
-  @Override
-  public void onSeekProcessed() {
+    @Override
+    public void onSeekProcessed() {
 
-  }
+    }
 
-  @Override
-  public void onAudioEnabled(DecoderCounters counters) {
+    @Override
+    public void onAudioEnabled(DecoderCounters counters) {
 
-  }
+    }
 
-  @Override
-  public void onAudioSessionId(int audioSessionId) {
+    @Override
+    public void onAudioSessionId(int audioSessionId) {
 
-  }
+    }
 
-  @Override
-  public void onAudioDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
+    @Override
+    public void onAudioDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
 
-  }
+    }
 
-  @Override
-  public void onAudioInputFormatChanged(Format format) {
+    @Override
+    public void onAudioInputFormatChanged(Format format) {
 
-  }
+    }
 
-  @Override
-  public void onAudioSinkUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs) {
+    @Override
+    public void onAudioSinkUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs) {
 
-  }
+    }
 
-  @Override
-  public void onAudioDisabled(DecoderCounters counters) {
+    @Override
+    public void onAudioDisabled(DecoderCounters counters) {
 
-  }
+    }
 
-  @Override
-  public void onDrmKeysLoaded() {
+    @Override
+    public void onDrmKeysLoaded() {
 
-  }
+    }
 
-  @Override
-  public void onDrmSessionManagerError(Exception e) {
+    @Override
+    public void onDrmSessionManagerError(Exception e) {
 
-  }
+    }
 
-  @Override
-  public void onDrmKeysRestored() {
+    @Override
+    public void onDrmKeysRestored() {
 
-  }
+    }
 
-  @Override
-  public void onDrmKeysRemoved() {
+    @Override
+    public void onDrmKeysRemoved() {
 
-  }
+    }
 
-  @Override
-  public void onMetadata(Metadata metadata) {
+    @Override
+    public void onMetadata(Metadata metadata) {
 
-  }
+    }
 
-  @Override
-  public void onLoadError(IOException error) {
+    @Override
+    public void onLoadError(IOException error) {
 
-  }
+    }
 
-  @Override
-  public void onLoadStarted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs) {
+    @Override
+    public void onLoadStarted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs) {
 
-  }
+    }
 
-  @Override
-  public void onLoadCompleted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
+    @Override
+    public void onLoadCompleted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
 
-  }
+    }
 
-  @Override
-  public void onLoadCanceled(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
+    @Override
+    public void onLoadCanceled(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
 
-  }
+    }
 
-  @Override
-  public void onLoadError(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded, IOException error, boolean wasCanceled) {
+    @Override
+    public void onLoadError(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded, IOException error, boolean wasCanceled) {
 
-  }
+    }
 
-  @Override
-  public void onUpstreamDiscarded(int trackType, long mediaStartTimeMs, long mediaEndTimeMs) {
+    @Override
+    public void onUpstreamDiscarded(int trackType, long mediaStartTimeMs, long mediaEndTimeMs) {
 
-  }
+    }
 
-  @Override
-  public void onDownstreamFormatChanged(int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaTimeMs) {
+    @Override
+    public void onDownstreamFormatChanged(int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaTimeMs) {
 
-  }
+    }
 
-  @Override
-  public void onVideoEnabled(DecoderCounters counters) {
+    @Override
+    public void onVideoEnabled(DecoderCounters counters) {
 
-  }
+    }
 
-  @Override
-  public void onVideoDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
+    @Override
+    public void onVideoDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
 
-  }
+    }
 
-  @Override
-  public void onVideoInputFormatChanged(Format format) {
+    @Override
+    public void onVideoInputFormatChanged(Format format) {
 
-  }
+    }
 
-  @Override
-  public void onDroppedFrames(int count, long elapsedMs) {
+    @Override
+    public void onDroppedFrames(int count, long elapsedMs) {
 
-  }
+    }
 
-  @Override
-  public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+    @Override
+    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
 
-  }
+    }
 
-  @Override
-  public void onRenderedFirstFrame(Surface surface) {
+    @Override
+    public void onRenderedFirstFrame(Surface surface) {
 
-  }
+    }
 
-  @Override
-  public void onVideoDisabled(DecoderCounters counters) {
+    @Override
+    public void onVideoDisabled(DecoderCounters counters) {
 
-  }
+    }
 }

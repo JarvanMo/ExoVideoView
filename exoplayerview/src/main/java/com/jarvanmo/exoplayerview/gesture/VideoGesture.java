@@ -58,7 +58,7 @@ public class VideoGesture implements View.OnTouchListener {
 
     private boolean enabled = true;
 
-    public VideoGesture(Context context, OnVideoGestureChangeListener onVideoGestureChangeListener,@NonNull ExoVideoPlaybackControlView.PlayerAccessor playerAccessor) {
+    public VideoGesture(Context context, OnVideoGestureChangeListener onVideoGestureChangeListener, @NonNull ExoVideoPlaybackControlView.PlayerAccessor playerAccessor) {
         this.context = context;
         this.onVideoGestureChangeListener = onVideoGestureChangeListener;
         mAudioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
@@ -76,6 +76,7 @@ public class VideoGesture implements View.OnTouchListener {
         mAudioMax = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
     }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -299,11 +300,11 @@ public class VideoGesture implements View.OnTouchListener {
 
         if (length > 0) {
             //Show the jump's size
-            seekAndShowJump(seek,time + jump, jump > 0);
+            seekAndShowJump(seek, time + jump, jump > 0);
         }
     }
 
-    private void seekAndShowJump(boolean seek,long jumpSize, boolean isFastForward) {
+    private void seekAndShowJump(boolean seek, long jumpSize, boolean isFastForward) {
         if (onVideoGestureChangeListener != null) {
             onVideoGestureChangeListener.onShowSeekSize(jumpSize, isFastForward);
         }

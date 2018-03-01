@@ -4,6 +4,9 @@
 ![happy new year](/images/happy_new_year.jpeg)
 祝各位狗年大吉，财源滚滚～
 
+
+
+
 ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开发的视频播放器.
 ![demo](/images/demo.gif)
 
@@ -37,12 +40,11 @@ implementation 'com.jarvanmo:exoplayerview:2.0.0'
      android:layout_width="match_parent"
      android:layout_height="300dp"/>
 ```
-### 2.在java代码中
+### 3.在java代码中
 ExoVideoView 提供了内建```Player```：
 ```java
 SimpleMediaSource mediaSource = new SimpleMediaSource(url);
 videoView.play(mediaSource);
-videoView.play(mediaSource,where);
 videoView.play(mediaSource,where);//play from a particular position
 ```
 也可以使用自义的Player:
@@ -53,7 +55,7 @@ videoView.setPlayer(player);
 ```java
 videoView.releasePlayer();
 ```
-详情请移步[demo][].
+详情请移步[demo]().
 
 ### 3.方向管理
 ExoVideoView 可以自动处理方向问题，前提是为ExoVideoView设置一个OrientationListener:
@@ -126,7 +128,7 @@ ExoVideoView 内置清晰度选择器.如果开启发多清晰度并添加了多
   videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_TOP_LANDSCAPE, view);
   videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_BOTTOM_LANDSCAPE, view);
 ```
-### 3.使用自定义controller布局
+### 4.使用自定义controller布局
 ```exo_video_playback_control_view.xml```是允许自定义的。其中一些属性在```ExoVideoPlaybackControlView```有定义。具体可看源码。
 ```xml
 app:controller_layout_id="@layout/my_controller"

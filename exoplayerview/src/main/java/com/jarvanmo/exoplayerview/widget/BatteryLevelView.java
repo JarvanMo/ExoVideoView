@@ -32,7 +32,6 @@ public class BatteryLevelView extends View {
     private int measureWidth;
     private int measureHeight;
     /**
-     *
      * 电池参数
      */
     private float mBatteryHeight = 30f; // 电池的高度
@@ -40,7 +39,6 @@ public class BatteryLevelView extends View {
     private float mCapHeight = 15f;
     private float mCapWidth = 5f;
     /**
-     *
      * 电池电量
      */
     private float mPowerPadding = 1;
@@ -50,7 +48,6 @@ public class BatteryLevelView extends View {
             * 2;// 电池身体的总宽度
     private float mPower = 10f;
     /**
-     *
      * 矩形
      */
     private RectF mBatteryRect;
@@ -61,11 +58,11 @@ public class BatteryLevelView extends View {
     private boolean mIsCharging = false;
 
     public BatteryLevelView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public BatteryLevelView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public BatteryLevelView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -135,17 +132,16 @@ public class BatteryLevelView extends View {
     }
 
 
-
-    private int getPowerColor(){
-        if(mIsCharging){
+    private int getPowerColor() {
+        if (mIsCharging) {
             return Color.GREEN;
         }
 
-        if(mPower <= 15){
-            return  Color.RED;
-        }else if(mPower<= 30){
+        if (mPower <= 15) {
+            return Color.RED;
+        } else if (mPower <= 30) {
             return Color.YELLOW;
-        }else {
+        } else {
             return Color.WHITE;
         }
     }
@@ -160,7 +156,7 @@ public class BatteryLevelView extends View {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
-            float percent = ((float)(level * 100)) / scale;
+            float percent = ((float) (level * 100)) / scale;
             setPower(percent);
         }
     };
@@ -168,7 +164,7 @@ public class BatteryLevelView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        getContext().registerReceiver(mPowerConnectionReceiver,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        getContext().registerReceiver(mPowerConnectionReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.google.android.exoplayer2.source.ads.AdsLoader;
  * 剑气纵横三万里 一剑光寒十九洲
  */
 
-public class ExoAdsLoader extends Player.DefaultEventListener implements AdsLoader{
+public class ExoAdsLoader extends Player.DefaultEventListener implements AdsLoader {
 
     @Override
     public void setSupportedContentTypes(int... contentTypes) {

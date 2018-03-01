@@ -36,12 +36,11 @@ Declare ExoVideoView in your layout file as :
      android:layout_width="match_parent"
      android:layout_height="300dp"/>
 ```
-### 2.In Java
+### 3.In Java
 ExoVideoView provides built-in ```Player``` for convenience,so we can play a video as
 ```java
 SimpleMediaSource mediaSource = new SimpleMediaSource(url);
 videoView.play(mediaSource);
-videoView.play(mediaSource,where);
 videoView.play(mediaSource,where);//play from a particular position
 ```
 Passing a player outside to ExoVideoView:
@@ -52,7 +51,7 @@ Note:never forget to release ExoPlayer:
 ```java
 videoView.releasePlayer();
 ```
-see details in [demo][].
+see details in [demo]().
 
 ### 3.Orientation Management
 The ExoVideoView can handle its orientation by sensor automatically only when ExoVideoVIew has a not-null OrientationListener  :
@@ -125,7 +124,7 @@ Views can be added to ```ExoVideoPlaybackController``` in java.
   videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_TOP_LANDSCAPE, view);
   videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_BOTTOM_LANDSCAPE, view);
 ```
-### 3.Specifying A custom Layout File
+### 4.Specifying A custom Layout File
 Defining your own ```exo_video_playback_control_view.xml``` is useful to customize the layout of ```ExoVideoPlaybackControlView``` throughout your application. It's also possible to customize the layout for asingle instance in a layout file. This is achieved by setting the  controller_layout_id attribute on a ```ExoVideoPlaybackControlView```. This will cause the specified layout to be inflated instead of ```code exo_video_playback_control_view.xml``` for only the instance on which the attribute is set.
 ```xml
 app:controller_layout_id="@layout/my_controller"

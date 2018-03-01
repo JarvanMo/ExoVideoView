@@ -21,7 +21,7 @@ public class SensorOrientation {
     private final Context context;
     private final OrientationEventListener screenOrientationEventListener;
 
-    public SensorOrientation(Context context,OnOrientationChangedListener onOrientationChangedListener) {
+    public SensorOrientation(Context context, OnOrientationChangedListener onOrientationChangedListener) {
         this.context = context;
         screenOrientationEventListener = new OrientationEventListener(context) {
             @Override
@@ -74,17 +74,17 @@ public class SensorOrientation {
             gravity = Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
 
         } catch (Settings.SettingNotFoundException e) {
-            Log.e(getClass().getSimpleName(),e.getMessage()+"");
+            Log.e(getClass().getSimpleName(), e.getMessage() + "");
         }
         return 1 == gravity;
 
     }
 
-    public void enable(){
+    public void enable() {
         screenOrientationEventListener.enable();
     }
 
-    public void disable(){
+    public void disable() {
         screenOrientationEventListener.disable();
     }
 }

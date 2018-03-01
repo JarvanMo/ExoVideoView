@@ -13,8 +13,8 @@ import java.lang.annotation.RetentionPolicy;
 public interface OnVideoGestureChangeListener {
 
     int VOLUME_CHANGED_REDUCTION = -1;
-    int VOLUME_CHANGED_MUTE =VOLUME_CHANGED_REDUCTION+1;
-    int VOLUME_CHANGED_INCREMENT =VOLUME_CHANGED_MUTE+1;
+    int VOLUME_CHANGED_MUTE = VOLUME_CHANGED_REDUCTION + 1;
+    int VOLUME_CHANGED_INCREMENT = VOLUME_CHANGED_MUTE + 1;
 
 
     @IntDef({VOLUME_CHANGED_REDUCTION, VOLUME_CHANGED_MUTE, VOLUME_CHANGED_INCREMENT})
@@ -24,7 +24,7 @@ public interface OnVideoGestureChangeListener {
     }
 
 
-    void onVolumeChanged(int range,@VolumeChangeType int type);
+    void onVolumeChanged(int range, @VolumeChangeType int type);
 
     void onBrightnessChanged(int brightnessPercent);
 
