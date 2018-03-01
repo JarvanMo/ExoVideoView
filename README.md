@@ -26,7 +26,7 @@ repositories {
 ```
 Next add a gradle compile dependency to the build.gradle file of your app module:
 ```
-implementation 'com.jarvanmo:exoplayerview:2.0.0'
+implementation 'com.jarvanmo:exoplayerview:2.0.1'
 ```
 ### 2.In Layout
 Declare ExoVideoView in your layout file as :

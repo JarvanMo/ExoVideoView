@@ -30,7 +30,7 @@ repositories {
 ```
 然后在你的项目中添加如下代码：
 ```
-implementation 'com.jarvanmo:exoplayerview:2.0.0'
+implementation 'com.jarvanmo:exoplayerview:2.0.1'
 ```
 ### 2.在xml中定义
 在xml中使用 ExoVideoView:
