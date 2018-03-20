@@ -1,8 +1,6 @@
 ![logo](/images/default_art.png)
 # ExoVideoView
 
-![happy new year](/images/happy_new_year.jpeg)
-祝各位狗年大吉，财源滚滚～
 
 
 
