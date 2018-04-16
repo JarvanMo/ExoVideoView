@@ -42,4 +42,5 @@ dependencies {
     implementation project(':exoplayerview')
 //    compile 'com.jarvanmo:exoplayerview:0.0.1'
 //    implementation 'com.google.android.exoplayer:exoplayer:2.7.3'
+    compileOnly "com.android.support:recyclerview-v7:$rootProject.ext.androidSupportVersion"
 }

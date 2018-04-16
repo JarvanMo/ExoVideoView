@@ -52,12 +52,12 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    implementation "com.android.support:appcompat-v7:$rootProject.ext.androidSupportVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    compileOnly "com.android.support:appcompat-v7:$rootProject.ext.androidSupportVersion"
+    compileOnly 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
 
     api 'com.google.android.exoplayer:exoplayer:2.7.3'
 
 
-    implementation "com.android.support:recyclerview-v7:$rootProject.ext.androidSupportVersion"
+    compileOnly "com.android.support:recyclerview-v7:$rootProject.ext.androidSupportVersion"
 }

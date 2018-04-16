@@ -570,15 +570,15 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private int whichBrightnessImageToUse(int brightnessInt) {
         if (brightnessInt <= 15) {
             return R.drawable.ic_brightness_1_white_36dp;
-        } else if (brightnessInt <= 30 && brightnessInt > 15) {
+        } else if (brightnessInt <= 30) {
             return R.drawable.ic_brightness_2_white_36dp;
-        } else if (brightnessInt <= 45 && brightnessInt > 30) {
+        } else if (brightnessInt <= 45) {
             return R.drawable.ic_brightness_3_white_36dp;
-        } else if (brightnessInt <= 60 && brightnessInt > 45) {
+        } else if (brightnessInt <= 60) {
             return R.drawable.ic_brightness_4_white_36dp;
-        } else if (brightnessInt <= 75 && brightnessInt > 60) {
+        } else if (brightnessInt <= 75) {
             return R.drawable.ic_brightness_5_white_36dp;
-        } else if (brightnessInt <= 90 && brightnessInt > 75) {
+        } else if (brightnessInt <= 90) {
             return R.drawable.ic_brightness_6_white_36dp;
         } else {
             return R.drawable.ic_brightness_7_white_36dp;
