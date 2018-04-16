@@ -6,6 +6,8 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.source.ads.AdsLoader;
 
+import java.io.IOException;
+
 /**
  * Created by mo on 17-11-30.
  * 剑气纵横三万里 一剑光寒十九洲
@@ -30,6 +32,11 @@ public class ExoAdsLoader extends Player.DefaultEventListener implements AdsLoad
 
     @Override
     public void release() {
+
+    }
+
+    @Override
+    public void handlePrepareError(int adGroupIndex, int adIndexInAdGroup, IOException exception) {
 
     }
 }

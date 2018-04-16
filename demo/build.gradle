@@ -39,6 +39,7 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$rootProject.ext.androidSupportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
-    api project(':exoplayerview')
+    implementation project(':exoplayerview')
 //    compile 'com.jarvanmo:exoplayerview:0.0.1'
+//    implementation 'com.google.android.exoplayer:exoplayer:2.7.3'
 }
