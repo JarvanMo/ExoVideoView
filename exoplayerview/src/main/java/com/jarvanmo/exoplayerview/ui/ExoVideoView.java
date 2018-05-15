@@ -445,6 +445,22 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (audioManager != null) {
+           requestAudioFocus();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (audioManager != null) {
+            audioManager.abandonAudioFocus(afChangeListener);
+        }
+    }
+
+    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (player != null && player.isPlayingAd()) {
             // Focus any overlay UI now, in case it's provided by a WebView whose contents may update
@@ -877,7 +893,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
             return;
         }
 
-        if (!player.getPlayWhenReady()) {
+        if (player.getPlayWhenReady()) {
             return;
         }
 
