@@ -41,7 +41,7 @@ implementation 'com.jarvanmo:exoplayerview:2.0.4'
 ### 3.在java代码中
 ExoVideoView 提供了内建```Player```：
 ```java
-SimpleMediaSource mediaSource = new SimpleMediaSource(url);
+SimpleMediaSource mediaSource = new SimpleMediaSource(url);//也支持uri
 videoView.play(mediaSource);
 videoView.play(mediaSource,where);//play from a particular position
 ```

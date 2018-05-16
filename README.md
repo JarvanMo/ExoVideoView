@@ -39,7 +39,7 @@ Declare ExoVideoView in your layout file as :
 ### 3.In Java
 ExoVideoView provides built-in ```Player``` for convenience,so we can play a video as
 ```java
-SimpleMediaSource mediaSource = new SimpleMediaSource(url);
+SimpleMediaSource mediaSource = new SimpleMediaSource(url);//uri also supported
 videoView.play(mediaSource);
 videoView.play(mediaSource,where);//play from a particular position
 ```
