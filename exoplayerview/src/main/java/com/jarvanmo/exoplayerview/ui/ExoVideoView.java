@@ -911,7 +911,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     }
 
     private void playInternal(ExoMediaSource mediaSource, boolean playWhenReady, long where, MediaSourceCreator creator) {
-        MediaSource tmp = creator.buildMediaSource(Uri.parse(mediaSource.url()), mediaSource.extension());
+        MediaSource tmp = creator.buildMediaSource(mediaSource.uri(), mediaSource.extension());
         player.prepare(tmp);
         if (where == C.TIME_UNSET) {
             player.seekTo(0L);
@@ -995,7 +995,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
 
     private void addMultiQualitySelector(ExoMediaSource mediaSource) {
         for (ExoMediaSource.Quality quality : mediaSource.qualities()) {
-            if (TextUtils.equals(quality.url(), mediaSource.url())) {
+            if (TextUtils.equals(quality.uri().toString(), mediaSource.uri().toString())) {
                 if (controller != null) {
                     controller.updateQualityDes(quality.name());
                 }
@@ -1021,7 +1021,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
             long current = player.getCurrentPosition();
             boolean playWhenReady = player.getPlayWhenReady();
             MediaSourceCreator creator = new MediaSourceCreator(getContext().getApplicationContext());
-            MediaSource tmp = creator.buildMediaSource(Uri.parse(mediaSource.url()), null);
+            MediaSource tmp = creator.buildMediaSource(mediaSource.uri(), null);
             player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
             player.prepare(tmp);
             player.seekTo(current);

@@ -1,5 +1,7 @@
 package com.jarvanmo.exoplayerview.media;
 
+import android.net.Uri;
+
 import java.util.List;
 
 /**
@@ -11,13 +13,18 @@ public class SimpleMediaSource implements ExoMediaSource {
 
     private String displayName;
 
-    private String url = "";
+    private Uri uri;
 
     private List<Quality> qualities;
 
     public SimpleMediaSource(String url) {
-        this.url = url;
+        this.uri = Uri.parse(url);
     }
+
+    public SimpleMediaSource(Uri uri) {
+        this.uri = uri;
+    }
+
 
     @Override
     public String name() {
@@ -39,8 +46,8 @@ public class SimpleMediaSource implements ExoMediaSource {
     }
 
     @Override
-    public String url() {
-        return url;
+    public Uri uri() {
+        return uri;
     }
 
     public void setQualities(List<Quality> qualities) {

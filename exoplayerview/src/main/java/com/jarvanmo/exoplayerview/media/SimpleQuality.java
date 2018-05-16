@@ -1,5 +1,7 @@
 package com.jarvanmo.exoplayerview.media;
 
+import android.net.Uri;
+
 /**
  * Created by mo on 18-2-7.
  *
@@ -9,11 +11,11 @@ package com.jarvanmo.exoplayerview.media;
 public class SimpleQuality implements ExoMediaSource.Quality {
 
     private CharSequence name;
-    private String url;
+    private Uri uri;
 
-    public SimpleQuality(CharSequence name, String url) {
+    public SimpleQuality(CharSequence name, Uri uri) {
         this.name = name;
-        this.url = url;
+        this.uri = uri;
     }
 
     @Override
@@ -22,8 +24,8 @@ public class SimpleQuality implements ExoMediaSource.Quality {
     }
 
     @Override
-    public String url() {
-        return url;
+    public Uri uri() {
+        return uri;
     }
 
 

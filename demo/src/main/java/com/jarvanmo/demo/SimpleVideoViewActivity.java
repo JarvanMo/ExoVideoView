@@ -84,13 +84,13 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.YELLOW);
         SpannableString spannableString = new SpannableString("1080p");
         spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        quality = new SimpleQuality(spannableString, mediaSource.url());
+        quality = new SimpleQuality(spannableString, mediaSource.uri());
         qualities.add(quality);
 
         spannableString = new SpannableString("720p");
         colorSpan = new ForegroundColorSpan(Color.LTGRAY);
         spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        quality = new SimpleQuality(spannableString, mediaSource.url());
+        quality = new SimpleQuality(spannableString, mediaSource.uri());
         qualities.add(quality);
 
         mediaSource.setQualities(qualities);

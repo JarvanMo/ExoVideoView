@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 spannableString.setSpan(colorSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
 
-            quality = new SimpleQuality(spannableString, mediaSource.url());
+            quality = new SimpleQuality(spannableString, mediaSource.uri());
             qualities.add(quality);
         }
         mediaSource.setQualities(qualities);

@@ -1,5 +1,7 @@
 package com.jarvanmo.exoplayerview.media;
 
+import android.net.Uri;
+
 import java.util.List;
 
 /**
@@ -12,10 +14,10 @@ public interface ExoMediaSource {
     interface Quality {
         CharSequence name();
 
-        String url();
+        Uri uri();
     }
 
-    String url();
+    Uri uri();
 
     String name();
 
