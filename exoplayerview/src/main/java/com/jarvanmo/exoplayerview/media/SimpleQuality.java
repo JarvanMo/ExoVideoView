@@ -24,8 +24,18 @@ public class SimpleQuality implements ExoMediaSource.Quality {
     }
 
     @Override
-    public Uri uri() {
+    public Uri getUri() {
         return uri;
+    }
+
+    @Override
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
+
+    @Override
+    public void setName(CharSequence name) {
+        this.name = name;
     }
 
 

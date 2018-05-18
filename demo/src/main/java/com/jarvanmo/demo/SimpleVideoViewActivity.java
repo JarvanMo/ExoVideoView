@@ -2,6 +2,7 @@ package com.jarvanmo.demo;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.jarvanmo.exoplayerview.extension.MultiQualitySelectorAdapter;
 import com.jarvanmo.exoplayerview.media.ExoMediaSource;
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource;
 import com.jarvanmo.exoplayerview.media.SimpleQuality;
@@ -95,6 +97,13 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
 
         mediaSource.setQualities(qualities);
 
+        videoView.setMultiQualitySelectorNavigator(new MultiQualitySelectorAdapter.MultiQualitySelectorNavigator() {
+            @Override
+            public boolean onQualitySelected(ExoMediaSource.Quality quality) {
+                quality.setUri(Uri.parse("https://media.w3.org/2010/05/sintel/trailer.mp4"));
+                return false;
+            }
+        });
         videoView.play(mediaSource, false);
 
     }

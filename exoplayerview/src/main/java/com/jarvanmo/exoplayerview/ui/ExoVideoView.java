@@ -8,7 +8,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -92,6 +91,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
 
     private boolean enableMultiQuality = true;
 
+    private MultiQualitySelectorAdapter.MultiQualitySelectorNavigator multiQualitySelectorNavigator;
 
     private final AudioManager audioManager;
     private AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -975,6 +975,10 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     }
 
 
+    public void setMultiQualitySelectorNavigator(MultiQualitySelectorAdapter.MultiQualitySelectorNavigator navigator){
+        this.multiQualitySelectorNavigator = navigator;
+    }
+
     public boolean isPortrait() {
         return controller != null && controller.isPortrait();
     }
@@ -995,7 +999,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
 
     private void addMultiQualitySelector(ExoMediaSource mediaSource) {
         for (ExoMediaSource.Quality quality : mediaSource.qualities()) {
-            if (TextUtils.equals(quality.uri().toString(), mediaSource.uri().toString())) {
+            if (TextUtils.equals(quality.getUri().toString(), mediaSource.uri().toString())) {
                 if (controller != null) {
                     controller.updateQualityDes(quality.name());
                 }
@@ -1015,21 +1019,30 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
 
         MultiQualitySelectorAdapter adapter = new MultiQualitySelectorAdapter(mediaSource.qualities(), quality -> {
             if (player == null) {
-                return;
+                return false;
             }
 
-            long current = player.getCurrentPosition();
-            boolean playWhenReady = player.getPlayWhenReady();
-            MediaSourceCreator creator = new MediaSourceCreator(getContext().getApplicationContext());
-            MediaSource tmp = creator.buildMediaSource(mediaSource.uri(), null);
-            player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
-            player.prepare(tmp);
-            player.seekTo(current);
+
+
+
+
+            if(multiQualitySelectorNavigator == null ||  !multiQualitySelectorNavigator.onQualitySelected(quality)){
+                long current = player.getCurrentPosition();
+                boolean playWhenReady = player.getPlayWhenReady();
+                MediaSourceCreator creator = new MediaSourceCreator(getContext().getApplicationContext());
+                MediaSource tmp = creator.buildMediaSource(quality.getUri(), null);
+                player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
+                player.prepare(tmp);
+                player.seekTo(current);
+            }
+
             if (controller != null) {
                 controller.updateQualityDes(quality.name());
             }
 
             overlayFrameLayout.setVisibility(GONE);
+
+            return false;
 
         });
 

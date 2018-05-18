@@ -1,5 +1,6 @@
 package com.jarvanmo.exoplayerview.extension;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,13 @@ import java.util.List;
 public class MultiQualitySelectorAdapter extends RecyclerView.Adapter<MultiQualitySelectorAdapter.MultiQualitySelectorViewHolder> {
 
     public interface MultiQualitySelectorNavigator {
-        void onQualitySelected(ExoMediaSource.Quality quality);
+
+        /***
+         * @return interrupted if true
+         * */
+        boolean onQualitySelected(ExoMediaSource.Quality quality);
     }
+
 
     public interface VisibilityCallback {
         void shouldChangeVisibility(int visibility);
@@ -36,8 +42,9 @@ public class MultiQualitySelectorAdapter extends RecyclerView.Adapter<MultiQuali
         this.navigator = navigator;
     }
 
+    @NonNull
     @Override
-    public MultiQualitySelectorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MultiQualitySelectorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_quality, parent, false);
         return new MultiQualitySelectorViewHolder(view);
     }

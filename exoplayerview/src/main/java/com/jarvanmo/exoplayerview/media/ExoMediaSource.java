@@ -14,7 +14,11 @@ public interface ExoMediaSource {
     interface Quality {
         CharSequence name();
 
-        Uri uri();
+        Uri getUri();
+
+        void setUri(Uri uri);
+
+        void setName(CharSequence name);
     }
 
     Uri uri();
