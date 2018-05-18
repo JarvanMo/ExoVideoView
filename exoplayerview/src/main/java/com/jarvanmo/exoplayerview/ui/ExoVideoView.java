@@ -1001,7 +1001,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         for (ExoMediaSource.Quality quality : mediaSource.qualities()) {
             if (TextUtils.equals(quality.getUri().toString(), mediaSource.uri().toString())) {
                 if (controller != null) {
-                    controller.updateQualityDes(quality.name());
+                    controller.updateQualityDes(quality.getDisplayName());
                 }
                 break;
             }
@@ -1037,7 +1037,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
             }
 
             if (controller != null) {
-                controller.updateQualityDes(quality.name());
+                controller.updateQualityDes(quality.getDisplayName());
             }
 
             overlayFrameLayout.setVisibility(GONE);

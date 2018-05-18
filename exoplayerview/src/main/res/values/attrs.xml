@@ -32,11 +32,11 @@
     </attr>
     <attr name="show_shuffle_button" format="boolean" />
 
-    <!--<enum name="all" value="0b1111"/>-->
-    <!--<enum name="top" value="0b1000"/>-->
-    <!--<enum name="top_landscape" value="0b0100"/>-->
-    <!--<enum name="bottom" value="0b0010"/>-->
-    <!--<enum name="bottom_landscape" value="0b0001"/>-->
+    <!--<enum getDisplayName="all" value="0b1111"/>-->
+    <!--<enum getDisplayName="top" value="0b1000"/>-->
+    <!--<enum getDisplayName="top_landscape" value="0b0100"/>-->
+    <!--<enum getDisplayName="bottom" value="0b0010"/>-->
+    <!--<enum getDisplayName="bottom_landscape" value="0b0001"/>-->
     <attr name="controller_display_mode">
         <flag name="all" value="15" />
         <flag name="top" value="8" />

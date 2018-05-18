@@ -12,13 +12,18 @@ import java.util.List;
 public interface ExoMediaSource {
 
     interface Quality {
-        CharSequence name();
+        CharSequence getDisplayName();
 
         Uri getUri();
 
         void setUri(Uri uri);
 
-        void setName(CharSequence name);
+        void setDisplayName(CharSequence displayName);
+
+        void setQuality(String quality);
+
+        String getQuality();
+
     }
 
     Uri uri();

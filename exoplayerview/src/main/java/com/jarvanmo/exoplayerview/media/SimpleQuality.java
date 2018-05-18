@@ -12,6 +12,7 @@ public class SimpleQuality implements ExoMediaSource.Quality {
 
     private CharSequence name;
     private Uri uri;
+    private String quality;
 
     public SimpleQuality(CharSequence name, Uri uri) {
         this.name = name;
@@ -19,7 +20,7 @@ public class SimpleQuality implements ExoMediaSource.Quality {
     }
 
     @Override
-    public CharSequence name() {
+    public CharSequence getDisplayName() {
         return name;
     }
 
@@ -34,8 +35,18 @@ public class SimpleQuality implements ExoMediaSource.Quality {
     }
 
     @Override
-    public void setName(CharSequence name) {
+    public void setDisplayName(CharSequence name) {
         this.name = name;
+    }
+
+    @Override
+    public void setQuality(String quality) {
+        this.quality = quality;
+    }
+
+    @Override
+    public String getQuality() {
+        return quality;
     }
 
 

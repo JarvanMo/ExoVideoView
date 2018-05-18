@@ -150,11 +150,11 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private static final long MAX_POSITION_FOR_SEEK_TO_PREVIOUS = 3000;
 
 
-    //        <!--<enum name="all" value="0b1111"/>-->
-//    <!--<enum name="top" value="0b1000"/>-->
-//    <!--<enum name="top_landscape" value="0b0100"/>-->
-//    <!--<enum name="bottom" value="0b0010"/>-->
-//    <!--<enum name="bottom_landscape" value="0b0001"/>-->
+    //        <!--<enum getDisplayName="all" value="0b1111"/>-->
+//    <!--<enum getDisplayName="top" value="0b1000"/>-->
+//    <!--<enum getDisplayName="top_landscape" value="0b0100"/>-->
+//    <!--<enum getDisplayName="bottom" value="0b0010"/>-->
+//    <!--<enum getDisplayName="bottom_landscape" value="0b0001"/>-->
     public static final int CONTROLLER_MODE_NONE = 0b0000;
     public static final int CONTROLLER_MODE_ALL = 0b1111;
     public static final int CONTROLLER_MODE_TOP = 0b1000;

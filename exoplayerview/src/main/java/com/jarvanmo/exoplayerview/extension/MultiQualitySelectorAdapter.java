@@ -52,7 +52,7 @@ public class MultiQualitySelectorAdapter extends RecyclerView.Adapter<MultiQuali
     @Override
     public void onBindViewHolder(MultiQualitySelectorViewHolder holder, int position) {
         holder.rootView.setOnClickListener(view -> navigator.onQualitySelected(qualities.get(position)));
-        holder.qualityDes.setText(qualities.get(position).name());
+        holder.qualityDes.setText(qualities.get(position).getDisplayName());
     }
 
     @Override
