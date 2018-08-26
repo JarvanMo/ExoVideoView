@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
@@ -257,6 +258,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
 
     private final TextView centerError;
+    private final ProgressBar loadingBar;
 
     private boolean portrait = true;
 
@@ -471,7 +473,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         bottomCustomViewLandscape = findViewById(R.id.exo_player_controller_bottom_custom_view_landscape);
 
         centerError = findViewById(R.id.exo_player_center_error);
-
+        loadingBar = findViewById(R.id.exo_player_loading);
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
         showControllerByDisplayMode();
 
@@ -856,6 +858,35 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         updateProgress();
     }
 
+    private void updateNavigation() {
+        if (!isVisible() || !isAttachedToWindow) {
+            return;
+        }
+        Timeline timeline = player != null ? player.getCurrentTimeline() : null;
+        boolean haveNonEmptyTimeline = timeline != null && !timeline.isEmpty();
+        boolean isSeekable = false;
+        boolean enablePrevious = false;
+        boolean enableNext = false;
+        if (haveNonEmptyTimeline && !player.isPlayingAd()) {
+            int windowIndex = player.getCurrentWindowIndex();
+            timeline.getWindow(windowIndex, window);
+            isSeekable = window.isSeekable;
+            enablePrevious = isSeekable || !window.isDynamic
+                    || player.getPreviousWindowIndex() != C.INDEX_UNSET;
+            enableNext = window.isDynamic || player.getNextWindowIndex() != C.INDEX_UNSET;
+        }
+        setButtonEnabled(enablePrevious, previousButton);
+        setButtonEnabled(enableNext, nextButton);
+        setButtonEnabled(fastForwardMs > 0 && isSeekable, fastForwardButton);
+        setButtonEnabled(rewindMs > 0 && isSeekable, rewindButton);
+        if (timeBar != null) {
+            timeBar.setEnabled(isSeekable && !isHls);
+        }
+        if (timeBarLandscape != null) {
+            timeBarLandscape.setEnabled(isSeekable && !isHls);
+        }
+    }
+
     private void updatePlayPauseButton() {
         if (!isVisible() || !isAttachedToWindow) {
             return;
@@ -884,35 +915,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         if (requestPlayPauseFocus) {
             requestPlayPauseFocus();
-        }
-    }
-
-    private void updateNavigation() {
-        if (!isVisible() || !isAttachedToWindow) {
-            return;
-        }
-        Timeline timeline = player != null ? player.getCurrentTimeline() : null;
-        boolean haveNonEmptyTimeline = timeline != null && !timeline.isEmpty();
-        boolean isSeekable = false;
-        boolean enablePrevious = false;
-        boolean enableNext = false;
-        if (haveNonEmptyTimeline && !player.isPlayingAd()) {
-            int windowIndex = player.getCurrentWindowIndex();
-            timeline.getWindow(windowIndex, window);
-            isSeekable = window.isSeekable;
-            enablePrevious = isSeekable || !window.isDynamic
-                    || player.getPreviousWindowIndex() != C.INDEX_UNSET;
-            enableNext = window.isDynamic || player.getNextWindowIndex() != C.INDEX_UNSET;
-        }
-        setButtonEnabled(enablePrevious, previousButton);
-        setButtonEnabled(enableNext, nextButton);
-        setButtonEnabled(fastForwardMs > 0 && isSeekable, fastForwardButton);
-        setButtonEnabled(rewindMs > 0 && isSeekable, rewindButton);
-        if (timeBar != null) {
-            timeBar.setEnabled(isSeekable && !isHls);
-        }
-        if (timeBarLandscape != null) {
-            timeBarLandscape.setEnabled(isSeekable && !isHls);
         }
     }
 
@@ -1592,7 +1594,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
         @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
+        public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+            super.onTimelineChanged(timeline, manifest, reason);
             if (manifest instanceof HlsManifest) {
                 HlsManifest hlsManifest = (HlsManifest) manifest;
                 isHls = !hlsManifest.mediaPlaylist.hasEndTag && hlsManifest.mediaPlaylist.playlistType == HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
@@ -1605,6 +1608,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             updateTimeBarMode();
             updateProgress();
         }
+
 
         @Override
         public void onPlayerError(ExoPlaybackException error) {
