@@ -18,6 +18,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
@@ -477,6 +479,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         sensorOrientation = new SensorOrientation(getContext(), this::changeOrientation);
         showControllerByDisplayMode();
 
+        showUtilHideCalled();
     }
 
 
@@ -1461,6 +1464,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
+
     /**
      * add your view to controller
      *
@@ -1490,6 +1494,28 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     public void addCustomView(@CustomViewType int customViewType, View customView) {
         addCustomView(customViewType, customView, false);
     }
+
+    private void showLoading(boolean isLoading) {
+        if(loadingBar == null ){
+            return;
+        }
+        if (isLoading) {
+            loadingBar.setVisibility(View.VISIBLE);
+        } else {
+            loadingBar.setVisibility(GONE);
+        }
+    }
+
+    public void showUtilHideCalled() {
+        if (!isVisible()) {
+            setVisibility(VISIBLE);
+            if (visibilityListener != null) {
+                visibilityListener.onVisibilityChange(getVisibility());
+            }
+            updateAll();
+        }
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -1568,11 +1594,22 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            updatePlayPauseButton();
-            updateProgress();
+
             if (playbackState != Player.STATE_IDLE && centerError != null && centerError.getVisibility() == VISIBLE) {
                 centerError.setVisibility(GONE);
             }
+
+            if (playbackState == Player.STATE_IDLE || playbackState == Player.STATE_BUFFERING) {
+                removeCallbacks(hideAction);
+                showUtilHideCalled();
+                showLoading(true);
+            } else if (playbackState == Player.STATE_READY && player.getPlayWhenReady() || playbackState == Player.STATE_ENDED) {
+                showLoading(false);
+                hide();
+            }
+
+            updatePlayPauseButton();
+            updateProgress();
         }
 
         @Override
@@ -1613,6 +1650,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         @Override
         public void onPlayerError(ExoPlaybackException error) {
             super.onPlayerError(error);
+            if(loadingBar  != null){
+                loadingBar.setVisibility(GONE);
+            }
             if (centerError != null) {
                 String errorText = getResources().getString(R.string.player_error, error.type);
                 centerError.setText(errorText);
