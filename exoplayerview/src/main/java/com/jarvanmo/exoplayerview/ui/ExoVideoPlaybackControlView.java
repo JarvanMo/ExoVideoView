@@ -38,6 +38,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.RepeatModeUtil;
@@ -262,6 +263,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final TextView centerError;
     private final ProgressBar loadingBar;
 
+
+    private final View back;
+    private final View backLandscape;
+
     private boolean portrait = true;
 
 
@@ -458,6 +463,16 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         exoPlayerVideoNameLandscape = findViewById(R.id.exo_player_video_name_landscape);
         if (exoPlayerVideoNameLandscape != null) {
             exoPlayerVideoNameLandscape.setOnClickListener(componentListener);
+        }
+
+        back = findViewById(R.id.exo_player_controller_back);
+        if (back != null) {
+            back.setOnClickListener(componentListener);
+        }
+
+        backLandscape = findViewById(R.id.exo_player_controller_back_landscape);
+        if(backLandscape != null){
+            backLandscape.setOnClickListener(componentListener);
         }
 
         if (centerInfoWrapper != null) {
@@ -1495,6 +1510,12 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         addCustomView(customViewType, customView, false);
     }
 
+    public void changeWidgetVisibility(int id,int visibility){
+       View view = findViewById(id);
+       if(view != null){
+           view.setVisibility(visibility);
+       }
+    }
     private void showLoading(boolean isLoading) {
         if(loadingBar == null ){
             return;
@@ -1684,13 +1705,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                     changeOrientation(SENSOR_LANDSCAPE);
                 } else if (exitFullscreen == view) {
                     changeOrientation(SENSOR_PORTRAIT);
-                } else if (exoPlayerVideoName == view) {
+                } else if (exoPlayerVideoName == view || back == view) {
                     if (backListener != null) {
                         if (!backListener.onClick(view, portrait)) {
                             changeOrientation(SENSOR_LANDSCAPE);
                         }
                     }
-                } else if (exoPlayerVideoNameLandscape == view) {
+                } else if (exoPlayerVideoNameLandscape == view || backLandscape == view) {
                     if (backListener != null) {
                         if (!backListener.onClick(view, portrait)) {
                             changeOrientation(SENSOR_PORTRAIT);

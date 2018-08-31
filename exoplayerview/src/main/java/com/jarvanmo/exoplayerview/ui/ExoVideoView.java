@@ -990,6 +990,12 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
 
     }
 
+    public void changeWidgetVisibility(int id,int visibility) {
+        if (controller != null) {
+            controller.changeWidgetVisibility(id,visibility);
+        }
+    }
+
     public void setControllerDisplayMode(int displayMode) {
         if (controller != null) {
             controller.setControllerDisplayMode(displayMode);

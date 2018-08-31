@@ -6,19 +6,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/default_playback_background">
 
+    <ImageButton
+        android:id="@id/exo_player_controller_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:contentDescription="back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
     <TextView
         android:id="@id/exo_player_video_name"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        android:drawableStart="@drawable/ic_arrow_back_white_24dp"
         android:gravity="center_vertical|start"
         android:maxLines="1"
         tools:text="正常播放"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/exo_player_controller_back"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
@@ -37,4 +50,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.50" />
+
 </android.support.constraint.ConstraintLayout>

@@ -96,7 +96,7 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
         qualities.add(quality);
 
         mediaSource.setQualities(qualities);
-
+//        videoView.changeWidgetVisibility(R.id.exo_player_controller_back,View.INVISIBLE);
         videoView.setMultiQualitySelectorNavigator(new MultiQualitySelectorAdapter.MultiQualitySelectorNavigator() {
             @Override
             public boolean onQualitySelected(ExoMediaSource.Quality quality) {

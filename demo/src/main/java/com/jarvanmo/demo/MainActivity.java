@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         });
 //
 //
+
+
         videoView.setOrientationListener(orientation -> {
             if (orientation == SENSOR_PORTRAIT) {
                 changeToPortrait();
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 changeToLandscape();
             }
         });
+
 
 //
 
