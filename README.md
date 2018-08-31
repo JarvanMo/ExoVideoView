@@ -1,10 +1,10 @@
-![logo](/images/default_art.png)
+![logo](./images/default_art.png)
 # ExoVideoView
 ExoVideoView is based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
-[中文移步至此](/README_CN.md).
+[中文移步至此](./README_CN.md).
 
-![demo](/images/demo.gif)
+![demo](./images/demo.gif)
 
 **What's in ExoVideoView**
 
@@ -15,6 +15,7 @@ ExoVideoView is based on [ExoPlayer](https://github.com/google/ExoPlayer).
     5.you can add custom views to the default controller.
     6.multiple resize-mode supported
     7.custom controller supported.
+    8.change the widget's visibility if you like.
 ## Using ExoVideoView
 ### 1.Dependency
 The easiest way to get started using ExoVideoView is to add it as a gradle dependency. You need to make sure you have the JCenter and Google repositories included in the build.gradle file in the root of your project:
@@ -129,6 +130,13 @@ Defining your own ```exo_video_playback_control_view.xml``` is useful to customi
 ```xml
 app:controller_layout_id="@layout/my_controller"
 ```
+### 5.Change Visibility
+Sometimes,we may not like the back buttons.So let's hide it:
+```java
+videoView.changeWidgetVisibility(R.id.exo_player_controller_back,View.INVISIBLE);
+```
+For more widgets you can hide or show,see [IDS_IN_CONTROLLER](./exoplayerview/src/main/res/values/ids.xml).
+> NOTE:This is a dangerous operation because I don't know what  will happen to the UI.
 ## Others
 
 ```

@@ -1,4 +1,4 @@
-![logo](/images/default_art.png)
+![logo](./images/default_art.png)
 # ExoVideoView
 
 
@@ -6,7 +6,7 @@
 
 
 ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开发的视频播放器.
-![demo](/images/demo.gif)
+![demo](./images/demo.gif)
 
 **ExoVideoView可以做什么**
 
@@ -17,6 +17,7 @@ ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开�
     5.为控制器添加自定义布局.
     6.调整显示大小。
     7.自定义controller。
+    8.支持调整控件的可见性。
 ## 使用 ExoVideoView
 ### 1.依赖
 最简单的方式是加入gradle依赖。请确认在工程的build.gradle中添加了JCenter和google()。
@@ -131,6 +132,13 @@ ExoVideoView 内置清晰度选择器.如果开启发多清晰度并添加了多
 ```xml
 app:controller_layout_id="@layout/my_controller"
 ```
+### 5.Change Visibility
+有些时候我们可能不太喜欢返回，所以就让我们隐藏起来吧：
+```java
+videoView.changeWidgetVisibility(R.id.exo_player_controller_back,View.INVISIBLE);
+```
+获取更多可隐藏的控件,参看 [ids_in_controller](./exoplayerview/src/main/res/values/ids.xml);
+> 注意：这么做可能比较危险，我不敢保证隐藏以后的效果。
 ## 其他
 
 ```
