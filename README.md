@@ -65,7 +65,7 @@ The ExoVideoView can handle its orientation by sensor automatically only when Ex
             }
         });
 ```
-Note:When the ExoVideoView handle its orientation automatically,The ExoVideoView will call ```activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)``` or ```activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);``` if the ```context``` in controller is an Activity.
+> NOTE:When the ExoVideoView handle its orientation automatically,The ExoVideoView will call ```activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)``` or ```activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);``` if the ```context``` in controller is an Activity.
 The fullscreen management is the same as orientation management.
 
 ### 4.Back Events
