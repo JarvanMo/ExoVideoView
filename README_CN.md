@@ -1,15 +1,10 @@
 ![logo](./images/default_art.png)
 # ExoVideoView
-
-
-
-
-
-ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开发的视频播放器.
 ![demo](./images/demo.gif)
 
-**ExoVideoView可以做什么**
+ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开发的视频播放器.
 
+**ExoVideoView可以做什么**
     1.自动处理音频焦点。
     2.根据传感器自动处理方向。
     3.手势支持。
@@ -94,7 +89,7 @@ ExoVideoView 可以自动处理方向问题，前提是为ExoVideoView设置一�
 ```
 如果返回值是 ```true```, 系统后续动作会被中断.否则，ExoVideoView会自动处理方向，并且会回调```OrientationLister.onOrientationChange()``` .
 ## 高级
-### 1.多清清晰度
+### 1.多清晰度支持
 ExoVideoView 内置清晰度选择器.如果开启发多清晰度并添加了多清晰度，内置清晰度选择器将被加入```overlayFrameLayout```.
 ```java
         List<ExoMediaSource.Quality> qualities = new ArrayList<>();
@@ -127,12 +122,12 @@ ExoVideoView 内置清晰度选择器.如果开启发多清晰度并添加了多
   videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_TOP_LANDSCAPE, view);
   videoView.addCustomView(ExoVideoPlaybackControlView.CUSTOM_VIEW_BOTTOM_LANDSCAPE, view);
 ```
-### 4.使用自定义controller布局
+### 4.使用自定义controller
 ```exo_video_playback_control_view.xml```是允许自定义的。其中一些属性在```ExoVideoPlaybackControlView```有定义。具体可看源码。
 ```xml
 app:controller_layout_id="@layout/my_controller"
 ```
-### 5.Change Visibility
+### 5.更改控件可见性
 有些时候我们可能不太喜欢返回，所以就让我们隐藏起来吧：
 ```java
 videoView.changeWidgetVisibility(R.id.exo_player_controller_back,View.INVISIBLE);
