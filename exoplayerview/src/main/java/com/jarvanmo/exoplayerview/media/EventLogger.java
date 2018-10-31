@@ -15,7 +15,7 @@
  */
 package com.jarvanmo.exoplayerview.media;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.Surface;
 

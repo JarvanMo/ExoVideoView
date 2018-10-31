@@ -19,7 +19,7 @@
         app:default_artwork="@drawable/default_art"
         app:use_artwork="true" />
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:id="@+id/wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/mode_fit"
             app:layout_constraintStart_toEndOf="@+id/mode_fit"
             app:layout_constraintTop_toTopOf="@+id/mode_fit" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
 
 </LinearLayout>
