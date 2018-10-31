@@ -8,7 +8,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 34
-        versionName "2.1.1"
+        versionName "2.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -41,7 +41,7 @@ publish {
     userOrg = 'jarvanmo'
     groupId = 'com.jarvanmo'
     artifactId = 'exoplayerview'
-    publishVersion = '2.1.1'
+    publishVersion = '2.1.2'
     desc = 'exo video view'
     website = 'https://github.com/JarvanMo/ExoVideoView'
 }
