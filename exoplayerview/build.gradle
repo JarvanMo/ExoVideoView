@@ -52,11 +52,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     testImplementation 'junit:junit:4.12'
 
-    api 'com.google.android.exoplayer:exoplayer:2.8.4'
+    api 'com.google.android.exoplayer:exoplayer:2.9.1'
 
 
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
