@@ -19,6 +19,7 @@ allprojects {
         google()
 
     }
+
 }
 
 task clean(type: Delete) {
@@ -33,3 +34,6 @@ ext {
 
     androidSupportVersion = '27.1.1'
 }
+
+
+tasks.getByPath(":exoplayerview:javadocRelease").enabled = false
