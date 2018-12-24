@@ -80,6 +80,9 @@ public class VideoGesture implements View.OnTouchListener {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if(!enabled){
+            return  false;
+        }
         return dispatchCenterWrapperTouchEvent(event);
 
     }

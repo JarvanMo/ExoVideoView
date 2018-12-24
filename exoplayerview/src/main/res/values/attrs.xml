@@ -31,7 +31,7 @@
         <flag name="all" value="2" />
     </attr>
     <attr name="show_shuffle_button" format="boolean" />
-
+    <attr name="enableGesture" format="boolean" />
     <!--<enum getDisplayName="all" value="0b1111"/>-->
     <!--<enum getDisplayName="top" value="0b1000"/>-->
     <!--<enum getDisplayName="top_landscape" value="0b0100"/>-->
@@ -66,6 +66,7 @@
         <attr name="controller_display_mode" />
         <attr name="controller_background" />
         <attr name="enable_multi_quality" format="boolean" />
+        <attr name="enableGesture"/>
     </declare-styleable>
 
 
@@ -78,6 +79,7 @@
         <attr name="controller_layout_id" />
         <attr name="controller_display_mode" />
         <attr name="controller_background" />
+        <attr name="enableGesture"/>
     </declare-styleable>
 
     <declare-styleable name="DefaultTimeBar">

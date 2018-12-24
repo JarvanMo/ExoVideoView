@@ -72,6 +72,7 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
             }
         });
 
+//        videoView.setGestureEnabled(false);
 //
 //
         SimpleMediaSource mediaSource = new SimpleMediaSource("http://flv2.bn.netease.com/videolib3/1604/28/fVobI0704/SD/fVobI0704-mobile.mp4");

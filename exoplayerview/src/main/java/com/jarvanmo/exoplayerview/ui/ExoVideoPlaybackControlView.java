@@ -282,6 +282,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private MultiQualitySelectorAdapter.VisibilityCallback qualityVisibilityCallback;
 
     private VideoViewAccessor videoViewAccessor;
+    private  VideoGesture videoGesture;
 
     public ExoVideoPlaybackControlView(Context context) {
         this(context, null);
@@ -306,6 +307,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         showTimeoutMs = DEFAULT_SHOW_TIMEOUT_MS;
         repeatToggleModes = DEFAULT_REPEAT_TOGGLE_MODES;
         showShuffleButton = false;
+        boolean enableGesture = true;
 
         int controllerBackgroundId = 0;
 
@@ -325,6 +327,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 displayMode = a.getInt(R.styleable.ExoVideoPlaybackControlView_controller_display_mode, CONTROLLER_MODE_ALL);
 
                 controllerBackgroundId = a.getResourceId(R.styleable.ExoVideoPlaybackControlView_controller_background, 0);
+                enableGesture = a.getBoolean(R.styleable.ExoVideoPlaybackControlView_enableGesture,enableGesture);
             } finally {
                 a.recycle();
             }
@@ -475,7 +478,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
 
         if (centerInfoWrapper != null) {
-            setupVideoGesture();
+            setupVideoGesture(enableGesture);
         }
 
         exoPlayerCurrentQualityLandscape = findViewById(R.id.exo_player_current_quality_landscape);
@@ -497,7 +500,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     }
 
 
-    private void setupVideoGesture() {
+    private void setupVideoGesture(boolean enableGesture) {
         OnVideoGestureChangeListener onVideoGestureChangeListener = new OnVideoGestureChangeListener() {
 
             @Override
@@ -557,7 +560,10 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         };
 
 
-        VideoGesture videoGesture = new VideoGesture(getContext(), onVideoGestureChangeListener, () -> player);
+        videoGesture = new VideoGesture(getContext(), onVideoGestureChangeListener, () -> player);
+        if(!enableGesture){
+            videoGesture.disable();
+        }
         centerInfoWrapper.setOnClickListener(componentListener);
         centerInfoWrapper.setOnTouchListener(videoGesture);
 
@@ -1536,6 +1542,22 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         }
     }
 
+    public void setGestureEnabled(boolean enabled){
+        if(centerInfoWrapper == null){
+            return;
+        }
+
+        if (videoGesture == null) {
+            return;
+        }
+
+        if(enabled){
+            videoGesture.enable();
+        }else {
+            videoGesture.disable();
+        }
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -1587,8 +1609,8 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         return true;
     }
 
-    private final class ComponentListener extends Player.DefaultEventListener implements
-            TimeBar.OnScrubListener, OnClickListener {
+    private final class ComponentListener  implements
+            TimeBar.OnScrubListener, OnClickListener,Player.EventListener {
 
         @Override
         public void onScrubStart(TimeBar timeBar, long position) {
@@ -1652,7 +1674,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         @Override
         public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
-            super.onTimelineChanged(timeline, manifest, reason);
             if (manifest instanceof HlsManifest) {
                 HlsManifest hlsManifest = (HlsManifest) manifest;
                 isHls = !hlsManifest.mediaPlaylist.hasEndTag && hlsManifest.mediaPlaylist.playlistType == HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
@@ -1669,7 +1690,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         @Override
         public void onPlayerError(ExoPlaybackException error) {
-            super.onPlayerError(error);
             if(loadingBar  != null){
                 loadingBar.setVisibility(GONE);
             }

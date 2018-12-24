@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -449,7 +450,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (audioManager != null) {
-           requestAudioFocus();
+            requestAudioFocus();
         }
     }
 
@@ -976,7 +977,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     }
 
 
-    public void setMultiQualitySelectorNavigator(MultiQualitySelectorAdapter.MultiQualitySelectorNavigator navigator){
+    public void setMultiQualitySelectorNavigator(MultiQualitySelectorAdapter.MultiQualitySelectorNavigator navigator) {
         this.multiQualitySelectorNavigator = navigator;
     }
 
@@ -991,9 +992,9 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
 
     }
 
-    public void changeWidgetVisibility(int id,int visibility) {
+    public void changeWidgetVisibility(int id, int visibility) {
         if (controller != null) {
-            controller.changeWidgetVisibility(id,visibility);
+            controller.changeWidgetVisibility(id, visibility);
         }
     }
 
@@ -1030,10 +1031,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
             }
 
 
-
-
-
-            if(multiQualitySelectorNavigator == null ||  !multiQualitySelectorNavigator.onQualitySelected(quality)){
+            if (multiQualitySelectorNavigator == null || !multiQualitySelectorNavigator.onQualitySelected(quality)) {
                 long current = player.getCurrentPosition();
                 boolean playWhenReady = player.getPlayWhenReady();
                 MediaSourceCreator creator = new MediaSourceCreator(getContext().getApplicationContext());
@@ -1102,9 +1100,14 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         addCustomView(customViewType, customView, false);
     }
 
+    public void setGestureEnabled(boolean enabled) {
+        if (controller != null) {
+            controller.setGestureEnabled(enabled);
+        }
+    }
 
-    private final class ComponentListener extends Player.DefaultEventListener implements TextOutput,
-            SimpleExoPlayer.VideoListener {
+    private final class ComponentListener   implements TextOutput,Player.EventListener,
+            com.google.android.exoplayer2.video.VideoListener {
 
         // TextOutput implementation
 
