@@ -41,7 +41,7 @@ publish {
     userOrg = 'jarvanmo'
     groupId = 'com.jarvanmo'
     artifactId = 'exoplayerview'
-    publishVersion = '2.1.2'
+    publishVersion = '2.1.3'
     desc = 'exo video view'
     website = 'https://github.com/JarvanMo/ExoVideoView'
 }

@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+
+
 //
 //
 
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 changeToLandscape();
             }
         });
+
 
 
 //
