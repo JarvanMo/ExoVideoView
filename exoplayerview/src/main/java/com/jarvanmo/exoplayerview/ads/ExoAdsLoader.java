@@ -8,6 +8,8 @@ import com.google.android.exoplayer2.source.ads.AdsLoader;
 
 import java.io.IOException;
 
+import androidx.annotation.Nullable;
+
 /**
  * Created by mo on 17-11-30.
  * 剑气纵横三万里 一剑光寒十九洲
@@ -21,12 +23,18 @@ public class ExoAdsLoader extends Player.DefaultEventListener implements AdsLoad
     }
 
     @Override
-    public void attachPlayer(ExoPlayer player, EventListener eventListener, ViewGroup adUiViewGroup) {
+    public void start(EventListener eventListener, AdViewProvider adViewProvider) {
 
     }
 
     @Override
-    public void detachPlayer() {
+    public void stop() {
+
+    }
+
+
+    @Override
+    public void setPlayer(@Nullable Player player) {
 
     }
 
@@ -39,4 +47,5 @@ public class ExoAdsLoader extends Player.DefaultEventListener implements AdsLoad
     public void handlePrepareError(int adGroupIndex, int adIndexInAdGroup, IOException exception) {
 
     }
+
 }
