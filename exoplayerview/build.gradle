@@ -53,7 +53,7 @@ dependencies {
     })
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha4'
     testImplementation 'junit:junit:4.12'
 
     api 'com.google.android.exoplayer:exoplayer:2.9.6'
