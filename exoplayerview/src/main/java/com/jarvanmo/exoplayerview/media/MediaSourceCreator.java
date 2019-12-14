@@ -9,10 +9,9 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
-import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.source.smoothstreaming.DefaultSsChunkSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -53,9 +52,7 @@ public class MediaSourceCreator {
         mediaDataSourceFactory = buildDataSourceFactory(true);
         mainHandler = new Handler();
 
-        TrackSelection.Factory adaptiveTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
-        trackSelector = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
+
         eventLogger = new EventLogger(trackSelector);
     }
 
@@ -63,25 +60,24 @@ public class MediaSourceCreator {
         return eventLogger;
     }
 
-    public DefaultTrackSelector getTrackSelector() {
-        return trackSelector;
-    }
 
     public MediaSource buildMediaSource(Uri uri, String overrideExtension) {
         @C.ContentType int type = TextUtils.isEmpty(overrideExtension) ? Util.inferContentType(uri)
                 : Util.inferContentType("." + overrideExtension);
         switch (type) {
             case C.TYPE_SS:
-                return new SsMediaSource(uri, buildDataSourceFactory(false),
-                        new DefaultSsChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
+                SsMediaSource.Factory factory = new SsMediaSource.Factory(buildDataSourceFactory(false));
+                factory.createMediaSource(uri);
+                return factory.createMediaSource(uri);
             case C.TYPE_DASH:
-                return new DashMediaSource(uri, buildDataSourceFactory(false),
-                        new DefaultDashChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
+                DashMediaSource.Factory factory1 = new DashMediaSource.Factory(buildDataSourceFactory(false));
+                return factory1.createMediaSource(uri);
             case C.TYPE_HLS:
-                return new HlsMediaSource(uri, mediaDataSourceFactory, mainHandler, eventLogger);
+                HlsMediaSource.Factory factory2 = new HlsMediaSource.Factory(buildDataSourceFactory(false));
+                return factory2.createMediaSource(uri);
             case C.TYPE_OTHER:
-                return new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
-                        mainHandler, eventLogger);
+                ProgressiveMediaSource.Factory factory3 = new ProgressiveMediaSource.Factory(buildDataSourceFactory(false));
+                return factory3.createMediaSource(uri);
             default: {
                 throw new IllegalStateException("Unsupported type: " + type);
             }

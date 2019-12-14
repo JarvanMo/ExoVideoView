@@ -75,10 +75,10 @@ public class SimpleVideoViewActivity extends AppCompatActivity {
 //        videoView.setGestureEnabled(false);
 //
 //
-        SimpleMediaSource mediaSource = new SimpleMediaSource("http://flv2.bn.netease.com/videolib3/1604/28/fVobI0704/SD/fVobI0704-mobile.mp4");
+//        SimpleMediaSource mediaSource = new SimpleMediaSource("http://flv2.bn.netease.com/videolib3/1604/28/fVobI0704/SD/fVobI0704-mobile.mp4");
 //        mediaSource.setDisplayName("Apple HLS");
 
-//        SimpleMediaSource mediaSource = new SimpleMediaSource("file:///storage/emulated/0/Download/喜欢你.mp4");
+        SimpleMediaSource mediaSource = new SimpleMediaSource("http://vfx.mtime.cn/Video/2019/03/12/mp4/190312083533415853.mp4");
         mediaSource.setDisplayName("Apple HLS");
 
         //demo only,not real multi quality, urls are the same actually
