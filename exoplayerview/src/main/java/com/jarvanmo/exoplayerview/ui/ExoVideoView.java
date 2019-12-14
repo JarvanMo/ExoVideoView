@@ -9,12 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Build;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -27,10 +21,14 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ControlDispatcher;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.metadata.Metadata;
@@ -39,11 +37,15 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.TextOutput;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SubtitleView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.RepeatModeUtil;
 import com.google.android.exoplayer2.util.Util;
@@ -929,9 +931,16 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
             releasePlayer();
         }
 
-        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(getContext(),
-                null, DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-        SimpleExoPlayer internalPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, creator.getTrackSelector());
+        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
+        renderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+        SimpleExoPlayer.Builder builder = new SimpleExoPlayer.Builder(getContext(), renderersFactory);
+        TrackSelection.Factory adaptiveTrackSelectionFactory =
+                new AdaptiveTrackSelection.Factory();
+        DefaultTrackSelector trackSelector = new DefaultTrackSelector(getContext(),new AdaptiveTrackSelection.Factory());
+        builder.setTrackSelector(new DefaultTrackSelector(getContext(),adaptiveTrackSelectionFactory));
+        builder.setTrackSelector(trackSelector);
+        builder.setBandwidthMeter(new DefaultBandwidthMeter.Builder(getContext()).build());
+        SimpleExoPlayer internalPlayer = builder.build();
         internalPlayer.addListener(componentListener);
         internalPlayer.addListener(creator.getEventLogger());
         internalPlayer.addMetadataOutput(creator.getEventLogger());
@@ -1106,7 +1115,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         }
     }
 
-    private final class ComponentListener   implements TextOutput,Player.EventListener,
+    private final class ComponentListener implements TextOutput, Player.EventListener,
             com.google.android.exoplayer2.video.VideoListener {
 
         // TextOutput implementation

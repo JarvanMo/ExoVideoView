@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 35
-        versionName "2.1.4"
+        versionCode 36
+        versionName "2.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -52,14 +52,14 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
     testImplementation 'junit:junit:4.12'
 
-    api 'com.google.android.exoplayer:exoplayer:2.9.6'
+    api 'com.google.android.exoplayer:exoplayer:2.11.0'
 
 
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }
 
 //tasks.withType(Javadoc) {

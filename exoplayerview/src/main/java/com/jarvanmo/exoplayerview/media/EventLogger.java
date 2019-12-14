@@ -45,15 +45,13 @@ import java.io.IOException;
  * Logs player events using {@link Log}.
  */
 /* package */ final class EventLogger implements Player.EventListener, MetadataOutput,
-        AudioRendererEventListener, VideoRendererEventListener, AdaptiveMediaSourceEventListener,
-        ExtractorMediaSource.EventListener, DefaultDrmSessionManager.EventListener {
+        AudioRendererEventListener, VideoRendererEventListener, MediaSourceEventListener {
 
     public EventLogger(MappingTrackSelector trackSelector) {
     }
 
-
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+    public void onTimelineChanged(Timeline timeline, int reason) {
 
     }
 
@@ -132,35 +130,12 @@ import java.io.IOException;
 
     }
 
-    @Override
-    public void onDrmKeysLoaded() {
-
-    }
-
-    @Override
-    public void onDrmSessionManagerError(Exception e) {
-
-    }
-
-    @Override
-    public void onDrmKeysRestored() {
-
-    }
-
-    @Override
-    public void onDrmKeysRemoved() {
-
-    }
 
     @Override
     public void onMetadata(Metadata metadata) {
 
     }
 
-    @Override
-    public void onLoadError(IOException error) {
-
-    }
 
     @Override
     public void onVideoEnabled(DecoderCounters counters) {
