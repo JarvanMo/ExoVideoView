@@ -6,6 +6,8 @@ ExoVideoView is based on [ExoPlayer](https://github.com/google/ExoPlayer).
 
 ![demo](./images/demo.gif)
 
+### Planning new versions
+
 **What's in ExoVideoView**
 
     1.Process AudioFocus automatically.
