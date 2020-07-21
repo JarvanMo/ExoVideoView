@@ -824,8 +824,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                 visibilityListener.onVisibilityChange(getVisibility());
             }
 
-            changeSystemUiVisibilityPortrait();
-
+            if (portrait) {
+                changeSystemUiVisibilityPortrait();
+            }
 
             updateAll();
             requestPlayPauseFocus();
