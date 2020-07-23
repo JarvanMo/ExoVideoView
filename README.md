@@ -20,16 +20,18 @@ ExoVideoView is based on [ExoPlayer](https://github.com/google/ExoPlayer).
     8.change the widget's visibility if you like.
 ## Using ExoVideoView
 ### 1.Dependency
-The easiest way to get started using ExoVideoView is to add it as a gradle dependency. You need to make sure you have the JCenter and Google repositories included in the build.gradle file in the root of your project:
+The easiest way to get started using ExoVideoView is to add it as a gradle dependency. You need to make sure you have the jitpack repositories included in the build.gradle file in the root of your project:
 ```
-repositories {
-    jcenter()
-    google()
-}
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
 ```
 Next add a gradle compile dependency to the build.gradle file of your app module:
 ```
-implementation 'com.jarvanmo:exoplayerview:2.1.5'
+implementation 'com.github.JarvanMo:ExoVideoView:2.1.6'
 ```
 ### 2.In Layout
 Declare ExoVideoView in your layout file as :

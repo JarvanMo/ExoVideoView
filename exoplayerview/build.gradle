@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'//添加
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -36,15 +35,6 @@ android {
 
 }
 
-//添加
-publish {
-    userOrg = 'jarvanmo'
-    groupId = 'com.jarvanmo'
-    artifactId = 'exoplayerview'
-    publishVersion = '2.1.5'
-    desc = 'exo video view'
-    website = 'https://github.com/JarvanMo/ExoVideoView'
-}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -53,7 +43,7 @@ dependencies {
     })
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta8'
     testImplementation 'junit:junit:4.12'
 
     api 'com.google.android.exoplayer:exoplayer:2.11.0'

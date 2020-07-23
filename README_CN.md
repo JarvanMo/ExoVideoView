@@ -17,14 +17,16 @@ ExoVideoView 是一款基于[ExoPlayer](https://github.com/google/ExoPlayer)开�
 ### 1.依赖
 最简单的方式是加入gradle依赖。请确认在工程的build.gradle中添加了JCenter和google()。
 ```
-repositories {
-    jcenter()
-    google()
-}
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
 ```
 然后在你的项目中添加如下代码：
 ```
-implementation 'com.jarvanmo:exoplayerview:2.1.5'
+implementation 'com.github.JarvanMo:ExoVideoView:2.1.6'
 ```
 ### 2.在xml中定义
 在xml中使用 ExoVideoView:
