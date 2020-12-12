@@ -47,7 +47,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.02'
     testImplementation 'junit:junit:4.13.1'
 
-    api 'com.google.android.exoplayer:exoplayer:2.12.1'
+    api 'com.google.android.exoplayer:exoplayer:2.12.2'
 
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'

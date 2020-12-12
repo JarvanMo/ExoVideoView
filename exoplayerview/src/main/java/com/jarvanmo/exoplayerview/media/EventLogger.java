@@ -121,11 +121,6 @@ import java.io.IOException;
     }
 
     @Override
-    public void onAudioSinkUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs) {
-
-    }
-
-    @Override
     public void onAudioDisabled(DecoderCounters counters) {
 
     }
@@ -172,48 +167,4 @@ import java.io.IOException;
 
     }
 
-    @Override
-    public void onMediaPeriodCreated(int windowIndex, MediaSource.MediaPeriodId mediaPeriodId) {
-
-    }
-
-    @Override
-    public void onMediaPeriodReleased(int windowIndex, MediaSource.MediaPeriodId mediaPeriodId) {
-
-    }
-
-    @Override
-    public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-
-    }
-
-    @Override
-    public void onLoadCompleted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-
-    }
-
-    @Override
-    public void onLoadCanceled(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-
-    }
-
-    @Override
-    public void onLoadError(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException error, boolean wasCanceled) {
-
-    }
-
-    @Override
-    public void onReadingStarted(int windowIndex, MediaSource.MediaPeriodId mediaPeriodId) {
-
-    }
-
-    @Override
-    public void onUpstreamDiscarded(int windowIndex, MediaSource.MediaPeriodId mediaPeriodId, MediaLoadData mediaLoadData) {
-
-    }
-
-    @Override
-    public void onDownstreamFormatChanged(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, MediaLoadData mediaLoadData) {
-
-    }
 }
